@@ -1,6 +1,6 @@
 -- ORG_PHISHING: Detects phishing pretending to be known service brands
--- Fully rebuilt version with brand whitelists, urgency patterns, DKIM levels
--- Compatible with Rspamd 4.1.5
+-- Modern modular version with brand table, urgency patterns, URL + spoof matching
+-- Compatible with Rspamd 4.2.0
 
 local logger = require "rspamd_logger"
 logger.infox("ORG_PHISHING: module loaded")
@@ -18,15 +18,15 @@ end
 ---------------------------------------------------------------------------
 
 local function domain_matches(domain, list)
-  domain = lower(domain)
-  for _, w in ipairs(list) do
-    local pattern = "^" .. w
-      :gsub("%.", "%%.")
-      :gsub("%%%.", "%%%.")
-      :gsub("%%-", "%%-")
-      :gsub("%%d", "%%d") .. "$"
-
-    if domain:match(pattern) then
+  domain = lower(domain or "")
+  for _, candidate in ipairs(list) do
+    local pattern = lower(candidate)
+    if not pattern:find("%%", 1, true) then
+      pattern = pattern:gsub("%.", "%%."):gsub("%-", "%%-")
+    end
+    if domain:match("^" .. pattern .. "$")
+       or domain:match("^.+%." .. pattern .. "$")
+    then
       return true
     end
   end
@@ -34,275 +34,13 @@ local function domain_matches(domain, list)
 end
 
 ---------------------------------------------------------------------------
--- BRAND DEFINITIONS (FULL SET)
+-- BRAND DEFINITIONS
 ---------------------------------------------------------------------------
 
-local brands = {
-
-  ---------------------------------------------------------------------------
-  -- YOUSEE
-  ---------------------------------------------------------------------------
-  YOUSEE = {
-    symbol = "ORG_PHISHING_YOUSEE",
-    score = 8.0,
-    keywords = { "yousee", "you see", "you-see" },
-    domains = {
-      "yousee.dk","yousee.tv","yousee.mail",
-      "carmamail.com",
-      "customer%-%d+%-.+%.carmamail%.com",
-      "sendgrid.net",
-      "klik.yousee.dk","email.yousee.dk"
-    },
-    urgency = {
-      "yousee betaling mangler",
-      "yousee konto låst",
-      "verify your yousee account",
-      "update your yousee payment"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- POSTNORD
-  ---------------------------------------------------------------------------
-  POSTNORD = {
-    symbol = "ORG_PHISHING_POSTNORD",
-    score = 8.0,
-    keywords = { "postnord", "post nord" },
-    domains = {
-      "postnord.dk","postnord.com",
-      "sendgrid.net","postnord.%w+%.sendgrid%.net",
-      "trk.postnord.com","m.postnord.com",
-      "postnord-secure.com","postnord-delivery.com",
-      "postnord-update.com","postnord-verify.com"
-    },
-    urgency = {
-      "din postnord pakke er tilbageholdt",
-      "postnord levering afventer betaling",
-      "postnord pakke mangler information",
-      "verify your postnord delivery"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- COOP
-  ---------------------------------------------------------------------------
-  COOP = {
-    symbol = "ORG_PHISHING_COOP",
-    score = 6.0,
-    keywords = { "coop", "superbrugsen", "kvickly", "irma" },
-    domains = {
-      "coop.dk","brugsen.dk","kvickly.dk","irma.dk",
-      "sendgrid.net","mandrillapp.com","mailchimp.com","sfmc-email.com",
-      "email.coop.dk","trk.coop.dk"
-    },
-    urgency = {
-      "din bonus er udløbet",
-      "aktiver din bonus nu"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- NETFLIX
-  ---------------------------------------------------------------------------
-  NETFLIX = {
-    symbol = "ORG_PHISHING_NETFLIX",
-    score = 8.0,
-    keywords = { "netflix" },
-    domains = {
-      "netflix.com",
-      "mandrillapp.com","sendgrid.net","sfmc-email.com",
-      "email.netflix.com","m.netflix.com",
-      "netflix-secure.com","netflix-billing.com",
-      "netflix-update.com","netflix-verify.com"
-    },
-    urgency = {
-      "din netflix betaling er afvist",
-      "netflix betaling mangler",
-      "din netflix konto er låst",
-      "netflix abonnement udløber",
-      "update your netflix payment",
-      "verify your netflix account"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- MOBILEPAY / MITID (EASYBANK)
-  ---------------------------------------------------------------------------
-  EASYBANK = {
-    symbol = "ORG_PHISHING_EASYBANK",
-    score = 9.0,
-    keywords = { "mobilepay", "mitid", "nemid" },
-    domains = {
-      "mobilepay.dk","mitid.dk","nemid.nu",
-      "digst.dk",
-      "carmamail.com","customer%-%d+%-.+%.carmamail%.com",
-      "sendgrid.net","mandrillapp.com",
-      "trk.mobilepay.dk","email.mobilepay.dk","secure.mitid.dk"
-    },
-    urgency = {
-      "din mitid er spærret",
-      "din mobilepay er spærret",
-      "bekræft din identitet"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- EASYPARK
-  ---------------------------------------------------------------------------
-  EASYPARK = {
-    symbol = "ORG_PHISHING_EASYPARK",
-    score = 8.0,
-    keywords = { "easypark", "easy park", "easy-park" },
-    domains = {
-      "easypark.dk","easypark.se","easypark.no","easypark.fi","easypark.net",
-      "easyparkapp.com","easyparkgroup.com",
-      "sendgrid.net","mandrillapp.com","sfmc-email.com",
-      "examsaide.com","amazonses.com",
-      "eu-central-1.amazonses.com",
-      "smtp-out.eu-central-1.amazonses.com",
-      "b224-6.smtp-out.eu-central-1.amazonses.com"
-    },
-    urgency = {
-      "ubetalt parkering",
-      "ubetalt parkeringsafgift",
-      "betaling for parkering mangler",
-      "din parkering er ugyldig",
-      "verify your easypark account"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- KLARNA
-  ---------------------------------------------------------------------------
-  KLARNA = {
-    symbol = "ORG_PHISHING_KLARNA",
-    score = 9.0,
-    keywords = {
-      "klarna","klarna betaling","klarna pay",
-      "klarna invoice","klarna faktura","klarna konto"
-    },
-    domains = {
-      "klarna.com","klarna.dk","klarna.se","klarna.no","klarna.fi",
-      "klarna.de","klarna.co.uk",
-      "email.klarna.com","m.klarna.com",
-      "klarna.mkt-mail.com","klarna.mkt-cloud.com",
-      "klarnapay.com","klarnasecure.com","klarnaupdate.com",
-      "klarnaverify.com","klarna-check.com","klarna-billing.com"
-    },
-    urgency = {
-      "din klarna betaling er afvist",
-      "klarna betaling mangler",
-      "din klarna faktura er udløbet",
-      "verify your klarna account",
-      "update your klarna payment",
-      "klarna security update",
-      "klarna konto låst"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- DAO
-  ---------------------------------------------------------------------------
-  DAO = {
-    symbol = "ORG_PHISHING_DAO",
-    score = 8.0,
-    keywords = {
-      "dao","dao365","dao 365",
-      "dao levering","dao forsendelse","dao tracking"
-    },
-    domains = {
-      "dao.as","dao365.dk","dao.asia","dao.asn","dao.asn.dk",
-      "dao.asn.email","dao.asn.delivery","dao.asn.services",
-      "email.dao.as","trk.dao.as","m.dao.as",
-      "dao.mkt-mail.com","dao.mkt-cloud.com",
-      "dao-secure.com","dao-delivery.com","dao-update.com",
-      "dao-verify.com","dao-tracking.com","dao365-secure.com"
-    },
-    urgency = {
-      "din dao levering er tilbageholdt",
-      "dao levering afventer betaling",
-      "dao pakke mangler information",
-      "verify your dao delivery",
-      "dao security update",
-      "dao konto låst"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- GLS
-  ---------------------------------------------------------------------------
-  GLS = {
-    symbol = "ORG_PHISHING_GLS",
-    score = 8.0,
-    keywords = {
-      "gls","gls pakke","gls levering","gls forsendelse","gls tracking"
-    },
-    domains = {
-      "gls.dk","gls-group.eu","gls.de","gls.nl","gls.at","gls.it",
-      "email.gls.dk","trk.gls.dk","m.gls.dk",
-      "sendgrid.net","mandrillapp.com",
-      "gls-delivery.com","gls-secure.com","gls-update.com",
-      "gls-verify.com","gls-pakke.com"
-    },
-    urgency = {
-      "din gls pakke er tilbageholdt",
-      "gls levering afventer betaling",
-      "gls pakke mangler information",
-      "verify your gls delivery",
-      "gls security update"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- DHL
-  ---------------------------------------------------------------------------
-  DHL = {
-    symbol = "ORG_PHISHING_DHL",
-    score = 8.5,
-    keywords = {
-      "dhl","dhl express","dhl pakke","dhl tracking"
-    },
-    domains = {
-      "dhl.com","dhl.de","dhl.dk","dhl.se","dhl.fi","dhl.no",
-      "email.dhl.com","trk.dhl.com","m.dhl.com",
-      "sendgrid.net","mandrillapp.com",
-      "dhl-secure.com","dhl-delivery.com","dhl-update.com",
-      "dhl-verify.com","dhl-pakke.com"
-    },
-    urgency = {
-      "din dhl pakke er tilbageholdt",
-      "dhl levering afventer betaling",
-      "dhl shipment on hold",
-      "verify your dhl delivery",
-      "dhl security update"
-    }
-  },
-
-  ---------------------------------------------------------------------------
-  -- FEDEX
-  ---------------------------------------------------------------------------
-  FEDEX = {
-    symbol = "ORG_PHISHING_FEDEX",
-    score = 8.0,
-    keywords = {
-      "fedex","fed ex","fedex tracking","fedex shipment"
-    },
-    domains = {
-      "fedex.com","fedex.com.cn","fedex.com.au","fedex.com.uk",
-      "email.fedex.com","trk.fedex.com","m.fedex.com",
-      "sendgrid.net","mandrillapp.com",
-      "fedex-secure.com","fedex-delivery.com","fedex-update.com",
-      "fedex-verify.com","fedex-shipment.com"
-    },
-    urgency = {
-      "your fedex package is on hold",
-      "fedex shipment requires payment",
-      "fedex delivery pending",
-      "verify your fedex shipment",
-      "fedex security update"
-    }
-  },
-}
+-- 'require' can't see lua.local.d, so load the brands file by explicit path
+local rspamd_paths = rspamd_paths or {}
+local this_dir = debug.getinfo(1, "S").source:match("^@(.*)/[^/]+$") or (rspamd_paths['LOCAL_CONFDIR'] and (rspamd_paths['LOCAL_CONFDIR'] .. '/lua.local.d'))
+local brands = dofile(this_dir .. "/org_phishing_brands.lua")
 
 ---------------------------------------------------------------------------
 -- TEXT MATCH HELPERS
@@ -344,14 +82,54 @@ local function urls_match(task, brand)
     local h = u:get_host()
     if h then
       h = lower(h):gsub("%.$", "")
-      for _, d in ipairs(brand.domains) do
-        d = lower(d)
-        if h == d or h:sub(-(string.len(d) + 1)) == "." .. d then
-          return true
-        end
+      if domain_matches(h, brand.domains) then
+        return true
       end
     end
   end
+  return false
+end
+
+---------------------------------------------------------------------------
+-- SPOOF DETECTION
+---------------------------------------------------------------------------
+
+local function check_spoof(task, brand)
+  local from = task:get_from(1)
+  if not from or not from[1] or not from[1].domain then
+    return false
+  end
+
+  local from_dom = lower(from[1].domain)
+
+  -- Legit domain → not spoof
+  if domain_matches(from_dom, brand.domains) then
+    return false
+  end
+
+  -- Display-name spoof
+  local dn = lower(from[1].name or "")
+  for _, kw in ipairs(brand.keywords) do
+    if dn:find(lower(kw), 1, true) then
+      return true, "display-name-spoof"
+    end
+  end
+
+  -- Reply-To spoof
+  local reply = lower(task:get_header("Reply-To") or "")
+  for _, kw in ipairs(brand.keywords) do
+    if reply:find(lower(kw), 1, true) then
+      return true, "reply-to-spoof"
+    end
+  end
+
+  -- DKIM spoof: DKIM valid, domain not in legit list
+  if task:has_symbol("R_DKIM_ALLOW") then
+    if not domain_matches(from_dom, brand.domains) then
+      return true, "dkim-spoof"
+    end
+  end
+
   return false
 end
 
@@ -388,7 +166,7 @@ local function check_brand(task, brand)
 end
 
 ---------------------------------------------------------------------------
--- REGISTER ONE SYMBOL PER BRAND
+-- REGISTER BRAND SYMBOLS
 ---------------------------------------------------------------------------
 
 for name, brand in pairs(brands) do
@@ -404,7 +182,7 @@ for name, brand in pairs(brands) do
         return false
       end
 
-      -- Whitelist check
+      -- Whitelist legit domains
       local from = task:get_from(1)
       if from and from[1] and from[1].domain then
         if domain_matches(from[1].domain, brand.domains) then
@@ -413,10 +191,54 @@ for name, brand in pairs(brands) do
         end
       end
 
+      -- Spoof detection
+      local spoof, spoof_reason = check_spoof(task, brand)
+      if spoof then
+        task:insert_result("ORG_PHISHING_SPOOF", 4.0, name .. ":" .. spoof_reason)
+      end
+
       logger.infox(task, "ORG_PHISHING: matched %s (%s)", name, reasons)
       return true, reasons
     end,
   })
 end
 
+---------------------------------------------------------------------------
+-- SPOOF SYMBOL (Rspamd 4.1.5 requires callback)
+---------------------------------------------------------------------------
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_SPOOF",
+  score = 4.0,
+  description = "Brand spoofing detected",
+  group = "phishing",
+
+  callback = function(task)
+    -- Passive symbol: only inserted by brand callbacks
+    return false
+  end
+})
+
+---------------------------------------------------------------------------
+-- MASTER SYMBOL (SUMS ALL BRAND HITS)
+---------------------------------------------------------------------------
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING",
+  score = 12.0,
+  description = "Master brand phishing symbol",
+  group = "phishing",
+
+  callback = function(task)
+    for name, brand in pairs(brands) do
+      if task:has_symbol(brand.symbol) then
+        return true, "brand=" .. name
+      end
+    end
+    return false
+  end
+})
+
 logger.infox("ORG_PHISHING: all brand symbols registered")
+
+return true

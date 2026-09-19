@@ -35,6 +35,7 @@ return {
       "postnord.com",
       "trk.postnord.com",
       "m.postnord.com",
+      "em4986.postnord.com",
     },
     urgency = {
       "din postnord pakke er tilbageholdt",

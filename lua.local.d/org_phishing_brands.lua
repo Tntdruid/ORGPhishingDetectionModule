@@ -15,12 +15,6 @@ return {
       "klik.yousee.dk",
       "email.yousee.dk",
     },
-    urgency = {
-      "yousee betaling mangler",
-      "yousee konto låst",
-      "verify your yousee account",
-      "update your yousee payment",
-    }
   },
 
   POSTNORD = {
@@ -36,12 +30,6 @@ return {
       "trk.postnord.com",
       "m.postnord.com",
     },
-    urgency = {
-      "din postnord pakke er tilbageholdt",
-      "postnord levering afventer betaling",
-      "postnord pakke mangler information",
-      "verify your postnord delivery",
-    }
   },
 
   COOP = {
@@ -62,10 +50,6 @@ return {
       "trk.coop.dk",
       "info.coop.dk",
     },
-    urgency = {
-      "din bonus er udløbet",
-      "aktiver din bonus nu",
-    }
   },
 
   NETFLIX = {
@@ -79,14 +63,6 @@ return {
       "email.netflix.com",
       "m.netflix.com",
     },
-    urgency = {
-      "din netflix betaling er afvist",
-      "netflix betaling mangler",
-      "din netflix konto er låst",
-      "netflix abonnement udløber",
-      "update your netflix payment",
-      "verify your netflix account",
-    }
   },
 
   MOBILEPAY = {
@@ -94,18 +70,110 @@ return {
     score = 9.0,
     keywords = {
       "mobilepay",
-      "mitid",
-      "nemid",
     },
     domains = {
       "mobilepay.dk",
       "trk.mobilepay.dk",
       "email.mobilepay.dk",
     },
-    urgency = {
-      "din mobilepay er spærret",
-      "bekræft din identitet",
-    }
+  },
+
+  MITID = {
+    symbol = "ORG_PHISHING_MITID",
+    score = 9.0,
+    keywords = {
+      "mitid",
+      "mit id",
+      "nemid",
+      "nem id",
+    },
+    domains = {
+      "mitid.dk",
+      "www.mitid.dk",
+      "nemid.dk",
+    },
+  },
+
+  EBOKS = {
+    symbol = "ORG_PHISHING_EBOKS",
+    score = 9.0,
+    keywords = {
+      "e-boks",
+      "eboks",
+      "e boks",
+    },
+    domains = {
+      "e-boks.dk",
+      "e-boks.com",
+      "eboks.dk",
+      "eboks.com",
+    },
+  },
+
+  DIGITALPOST = {
+    symbol = "ORG_PHISHING_DIGITALPOST",
+    score = 9.0,
+    keywords = {
+      "digital post",
+      "digitalpost",
+    },
+    domains = {
+      "digitalpost.dk",
+    },
+  },
+
+  DANSKEBANK = {
+    symbol = "ORG_PHISHING_DANSKEBANK",
+    score = 9.0,
+    keywords = {
+      "danske bank",
+      "danskebank",
+    },
+    domains = {
+      "danskebank.dk",
+      "danskebank.com",
+    },
+  },
+
+  NORDEA = {
+    symbol = "ORG_PHISHING_NORDEA",
+    score = 9.0,
+    keywords = {
+      "nordea",
+      "nordea bank",
+    },
+    domains = {
+      "nordea.dk",
+      "nordea.com",
+    },
+  },
+
+  NETS = {
+    symbol = "ORG_PHISHING_NETS",
+    score = 9.0,
+    keywords = {
+      "nets",
+      "nets betaling",
+      "betalingsservice",
+    },
+    domains = {
+      "nets.eu",
+      "nets.dk",
+      "betalingsservice.dk",
+    },
+  },
+
+  PAYPAL = {
+    symbol = "ORG_PHISHING_PAYPAL",
+    score = 9.0,
+    keywords = {
+      "paypal",
+      "pay pal",
+    },
+    domains = {
+      "paypal.com",
+      "paypal.me",
+    },
   },
 
   EASYPARK = {
@@ -123,13 +191,6 @@ return {
       "easypark.fi",
       "easypark.net",
     },
-    urgency = {
-      "ubetalt parkering",
-      "ubetalt parkeringsafgift",
-      "betaling for parkering mangler",
-      "din parkering er ugyldig",
-      "verify your easypark account",
-    }
   },
 
   KLARNA = {
@@ -155,15 +216,6 @@ return {
       "m.klarna.com",
       "klarna.mkt-mail.com",
     },
-    urgency = {
-      "din klarna betaling er afvist",
-      "klarna betaling mangler",
-      "din klarna faktura er udløbet",
-      "verify your klarna account",
-      "update your klarna payment",
-      "klarna security update",
-      "klarna konto låst",
-    }
   },
 
   DAO = {
@@ -184,14 +236,6 @@ return {
       "trk.dao.as",
       "m.dao.as",
     },
-    urgency = {
-      "din dao levering er tilbageholdt",
-      "dao levering afventer betaling",
-      "dao pakke mangler information",
-      "verify your dao delivery",
-      "dao security update",
-      "dao konto låst",
-    }
   },
 
   GLS = {
@@ -221,13 +265,6 @@ return {
       "gls-denmark.com",
       "gls-denmark.dk",
     },
-    urgency = {
-      "din gls pakke er tilbageholdt",
-      "gls levering afventer betaling",
-      "gls pakke mangler information",
-      "verify your gls delivery",
-      "gls security update",
-    }
   },
 
   DHL = {
@@ -250,13 +287,6 @@ return {
       "trk.dhl.com",
       "m.dhl.com",
     },
-    urgency = {
-      "din dhl pakke er tilbageholdt",
-      "dhl levering afventer betaling",
-      "dhl shipment on hold",
-      "verify your dhl delivery",
-      "dhl security update",
-    }
   },
 
   FEDEX = {
@@ -277,13 +307,6 @@ return {
       "trk.fedex.com",
       "m.fedex.com",
     },
-    urgency = {
-      "your fedex package is on hold",
-      "fedex shipment requires payment",
-      "fedex delivery pending",
-      "verify your fedex shipment",
-      "fedex security update",
-    }
   },
 
   SAXOBANK = {
@@ -306,15 +329,6 @@ return {
       "mail.saxobank.com",
       "m.saxobank.com",
     },
-    urgency = {
-      "din saxobank konto er låst",
-      "saxobank konto låst",
-      "verify your saxobank account",
-      "update your saxobank payment",
-      "saxobank security update",
-      "saxobank login issue",
-      "saxobank payment issue",
-    }
   },
 
   ANDELENERGI = {
@@ -328,9 +342,201 @@ return {
       "andelenergi.dk",
       "em6544.kundecenter.andelenergi.dk",
     },
-    urgency = {
-      "Du risikerer at få lukket for strømmen",
-    }
+  },
+
+  ELGIGANTEN = {
+    symbol = "ORG_PHISHING_ELGIGANTEN",
+    score = 8.0,
+    keywords = {
+      "elgiganten",
+      "el giganten",
+      "el-giganten",
+    },
+    domains = {
+      "elgiganten.dk",
+      "email.elgiganten.dk",
+      "kundeservice.elgiganten.dk",
+    },
+  },
+
+  SKAT = {
+    symbol = "ORG_PHISHING_SKAT",
+    score = 8.0,
+    keywords = {
+      "skat",
+      "skattestyrelsen",
+      "tastselv",
+      "tast selv",
+    },
+    domains = {
+      "skat.dk",
+      "tastselv.skat.dk",
+      "logon.skat.dk",
+    },
+  },
+
+  SYGEFORSIKRING = {
+    symbol = "ORG_PHISHING_SYGEFORSIKRING",
+    score = 8.0,
+    keywords = {
+      "sygeforsikring",
+      "sygeforsikringen danmark",
+      "sygeforsikringen 'danmark'",
+    },
+    domains = {
+      "sygeforsikring.dk",
+    },
+  },
+
+  BORGER = {
+    symbol = "ORG_PHISHING_BORGER",
+    score = 8.0,
+    keywords = {
+      "borger.dk",
+      "borger dk",
+    },
+    domains = {
+      "borger.dk",
+    },
+  },
+
+  SUNDHED = {
+    symbol = "ORG_PHISHING_SUNDHED",
+    score = 8.0,
+    keywords = {
+      "sundhed.dk",
+      "sundhed dk",
+    },
+    domains = {
+      "sundhed.dk",
+    },
+  },
+
+  UDBETALINGDANMARK = {
+    symbol = "ORG_PHISHING_UDBETALINGDANMARK",
+    score = 8.0,
+    keywords = {
+      "udbetaling danmark",
+      "udbetalingdanmark",
+    },
+    domains = {
+      "udbetalingdanmark.dk",
+    },
+  },
+
+  TELENOR = {
+    symbol = "ORG_PHISHING_TELENOR",
+    score = 8.0,
+    keywords = {
+      "telenor",
+    },
+    domains = {
+      "telenor.dk",
+    },
+  },
+
+  TELIA = {
+    symbol = "ORG_PHISHING_TELIA",
+    score = 8.0,
+    keywords = {
+      "telia",
+    },
+    domains = {
+      "telia.dk",
+    },
+  },
+
+  THREE = {
+    symbol = "ORG_PHISHING_THREE",
+    score = 8.0,
+    keywords = {
+      "3 mobil",
+      "three",
+    },
+    domains = {
+      "3.dk",
+    },
+  },
+
+  NORLYS = {
+    symbol = "ORG_PHISHING_NORLYS",
+    score = 8.0,
+    keywords = {
+      "norlys",
+    },
+    domains = {
+      "norlys.dk",
+    },
+  },
+
+  SALLINGGROUP = {
+    symbol = "ORG_PHISHING_SALLINGGROUP",
+    score = 8.0,
+    keywords = {
+      "salling group",
+      "sallinggroup",
+    },
+    domains = {
+      "sallinggroup.com",
+    },
+  },
+
+  BILKA = {
+    symbol = "ORG_PHISHING_BILKA",
+    score = 8.0,
+    keywords = {
+      "bilka",
+    },
+    domains = {
+      "bilka.dk",
+    },
+  },
+
+  FOTEX = {
+    symbol = "ORG_PHISHING_FOTEX",
+    score = 8.0,
+    keywords = {
+      "føtex",
+      "fotex",
+    },
+    domains = {
+      "foetex.dk",
+    },
+  },
+
+  LIDL = {
+    symbol = "ORG_PHISHING_LIDL",
+    score = 8.0,
+    keywords = {
+      "lidl",
+    },
+    domains = {
+      "lidl.dk",
+    },
+  },
+
+  POWER = {
+    symbol = "ORG_PHISHING_POWER",
+    score = 8.0,
+    keywords = {
+      "power",
+      "power.dk",
+    },
+    domains = {
+      "power.dk",
+    },
+  },
+
+  NEMLIG = {
+    symbol = "ORG_PHISHING_NEMLIG",
+    score = 8.0,
+    keywords = {
+      "nemlig.com",
+      "nemlig",
+    },
+    domains = {
+      "nemlig.com",
+    },
   },
 
   BRING = {
@@ -349,8 +555,5 @@ return {
       "bring.se",
       "bring.fi",
     },
-    urgency = {
-      "Se hvornår den ankommer",
-    }
   },
 }

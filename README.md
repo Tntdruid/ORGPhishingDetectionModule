@@ -6,7 +6,7 @@
 
 <p align="center">
   Advanced brand-based phishing detection for Rspamd 4.2.0+<br>
-  Supports Danish and international brands, URL heuristics, urgency patterns, and sender spoof detection.
+  Supports Danish and international brands, URL heuristics, suspicious context, and sender spoof detection.
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 
 A modular Rspamd Lua rule set for detecting phishing messages that impersonate known organisations and services.
 
-The filter checks message content, sender data, URLs, urgency phrases, and selected spoofing indicators. Brand definitions are kept separate from the detection logic, so new brands can be added without changing the matcher.
+The filter checks message content, sender data, URLs, suspicious account or payment context, and selected spoofing indicators. Brand definitions are kept separate from the detection logic, so new brands can be added without changing the matcher.
 
 ## Requirements
 
@@ -61,10 +61,9 @@ Each brand can define:
 
 - `keywords`: names and phrases found in the subject, headers, or text body
 - `domains`: legitimate domains and subdomains associated with the brand
-- `urgency`: common payment, account, delivery, or security pressure phrases
 - `score`: the score assigned when the brand symbol matches
 
-A brand match is created when at least one keyword, URL, or urgency phrase is found. Legitimate sender domains are whitelisted for that brand. The module also checks for:
+A brand match requires a brand keyword together with suspicious context or a matching brand URL. Legitimate sender domains are whitelisted for that brand. The module also checks for:
 
 - display-name spoofing
 - Reply-To spoofing
@@ -87,6 +86,13 @@ The individual brand symbols currently cover:
 - Coop
 - Netflix
 - MobilePay
+- MitID
+- e-Boks
+- Digital Post
+- Danske Bank
+- Nordea
+- Nets
+- PayPal
 - EasyPark
 - Klarna
 - DAO
@@ -95,6 +101,22 @@ The individual brand symbols currently cover:
 - FedEx
 - Saxo Bank
 - Andel Energi
+- Elgiganten
+- Skat
+- Sygeforsikringen danmark
+- borger.dk
+- Sundhed.dk
+- Udbetaling Danmark
+- Telenor
+- Telia
+- 3
+- Norlys
+- Salling Group
+- Bilka
+- føtex
+- Lidl
+- Power
+- Nemlig.com
 - Bring
 
 ## Adding a brand
@@ -111,9 +133,6 @@ EXAMPLE = {
   domains = {
     "example.com",
   },
-  urgency = {
-    "verify your example account",
-  }
 },
 ```
 

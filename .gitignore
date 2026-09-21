@@ -15,3 +15,6 @@ WTF/
 *.zip
 *.tar.gz
 *.7z
+
+# Local rule builder
+regelbygger-org-phishing.html

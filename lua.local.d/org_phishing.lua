@@ -1,5 +1,5 @@
 -- ORG_PHISHING: Detects phishing pretending to be known service brands
--- Modern modular version with brand table, urgency patterns, URL + spoof matching
+-- Modern modular version with brand table, context patterns, URL + spoof matching
 -- Compatible with Rspamd 4.2.0
 
 local logger = require "rspamd_logger"
@@ -77,6 +77,14 @@ local function body_contains(task, patterns)
   return false
 end
 
+local suspicious_context = {
+  "betaling", "payment", "konto", "account", "login", "log in",
+  "verify", "verification", "bekræft", "identitet", "identity",
+  "låst", "locked", "spærret", "blocked", "udløber", "expired",
+  "pakke", "package", "levering", "delivery", "forsendelse", "shipment",
+  "afgift", "invoice", "faktura", "abonnement", "subscription",
+}
+
 local function urls_match(task, brand)
   for _, u in ipairs(task:get_urls() or {}) do
     local h = u:get_host()
@@ -140,22 +148,24 @@ end
 local function check_brand(task, brand)
   local reasons = {}
 
-  if subject_contains(task, brand.keywords)
+  local keyword_match = subject_contains(task, brand.keywords)
      or header_contains(task, "From", brand.keywords)
      or header_contains(task, "Reply-To", brand.keywords)
      or body_contains(task, brand.keywords)
-  then
+  local url_match = urls_match(task, brand)
+  local context_match = subject_contains(task, suspicious_context)
+     or body_contains(task, suspicious_context)
+
+  if keyword_match and (context_match or url_match) then
     reasons[#reasons+1] = "keywords"
   end
 
-  if urls_match(task, brand) then
+  if url_match and keyword_match then
     reasons[#reasons+1] = "urls"
   end
 
-  if subject_contains(task, brand.urgency)
-     or body_contains(task, brand.urgency)
-  then
-    reasons[#reasons+1] = "urgency"
+  if context_match and keyword_match then
+    reasons[#reasons+1] = "context"
   end
 
   if #reasons == 0 then

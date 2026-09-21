@@ -1,4 +1,21 @@
-# Rspamd organisation phishing filter
+<p align="center">
+  <img src="https://img.shields.io/badge/Rspamd-Brand%20Phishing%20Module-blue?style=for-the-badge&logo=lua&logoColor=white" alt="Rspamd Brand Phishing Module">
+</p>
+
+<h1 align="center">ORG Phishing Detection Module</h1>
+
+<p align="center">
+  Advanced brand-based phishing detection for Rspamd 4.2.0+<br>
+  Supports Danish and international brands, URL heuristics, urgency patterns, and sender spoof detection.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="Version 1.0.0">
+  <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
+  <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
+  <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
+  <img src="https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square" alt="MIT License">
+</p>
 
 [GitHub repository](https://github.com/Tntdruid/ORGPhishingDetectionModule)
 

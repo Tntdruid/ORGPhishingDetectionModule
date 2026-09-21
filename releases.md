@@ -2,6 +2,10 @@
 
 ## Ikke udgivet endnu
 
+- Kommende ændringer tilføjes her.
+
+## 1.0.0 - 21. september 2026
+
 - Omlagt brandmatch, så der kræves brand-keywords sammen med mistænkelig kontekst eller en URL, der matcher brandet.
 - Tilføjet en godkendt undtagelse for betroede afsendere ved tekstomtale af andre brands, mens URL- og forfalskningskontrol bevares.
 - Fjernet det brede keyword `nemlig` for at undgå match på det almindelige danske ord.
@@ -11,8 +15,6 @@
 - Tilføjet en branddefinition for TV 2 Play.
 - Tilføjet branddefinitioner for Jyske Bank, Sydbank, Lunar, Tryg, Topdanmark, Alm. Brand, DSB, Rejsekort, Matas, Netto, REMA 1000, OK og Clever.
 - Opdateret README og eksempler på brandkonfiguration med den nye matchadfærd og de tilgængelige brands.
-- Dokumentation og branddefinitioner videreudvikles løbende.
-- Tilføj nye organisationsdefinitioner i `lua.local.d/org_phishing_brands.lua`.
 - Validér konfigurationen med `rspamadm configtest` efter ændringer.
 
 ## 0.1.0 - Første udgivelse

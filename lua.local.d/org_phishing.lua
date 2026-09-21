@@ -18,6 +18,10 @@ end
 ---------------------------------------------------------------------------
 
 local function domain_matches(domain, list)
+  if not domain or not list then
+    return false
+  end
+
   domain = lower(domain or "")
   for _, candidate in ipairs(list) do
     local pattern = lower(candidate)
@@ -42,15 +46,48 @@ local rspamd_paths = rspamd_paths or {}
 local this_dir = debug.getinfo(1, "S").source:match("^@(.*)/[^/]+$") or (rspamd_paths['LOCAL_CONFDIR'] and (rspamd_paths['LOCAL_CONFDIR'] .. '/lua.local.d'))
 local brands = dofile(this_dir .. "/org_phishing_brands.lua")
 
+-- First-party senders whose normal messages may mention other brands.
+local trusted_sender_domains = {
+  "nemlig.com",
+}
+
 ---------------------------------------------------------------------------
 -- TEXT MATCH HELPERS
 ---------------------------------------------------------------------------
 
+local function is_word_byte(byte)
+  return byte and (byte >= 128
+    or byte >= 48 and byte <= 57
+    or byte >= 65 and byte <= 90
+    or byte >= 97 and byte <= 122
+    or byte == 95)
+end
+
+local function contains_keyword(text, keyword)
+  local start = 1
+  local value = lower(text)
+  local needle = lower(keyword)
+
+  while true do
+    local match_start, match_end = value:find(needle, start, true)
+    if not match_start then
+      return false
+    end
+
+    local before = match_start > 1 and value:byte(match_start - 1) or nil
+    local after = match_end < #value and value:byte(match_end + 1) or nil
+    if not is_word_byte(before) and not is_word_byte(after) then
+      return true
+    end
+
+    start = match_end + 1
+  end
+end
+
 local function contains_any(text, patterns)
   if not text then return false end
-  local t = lower(text)
   for _, p in ipairs(patterns) do
-    if t:find(lower(p), 1, true) then
+    if contains_keyword(text, p) then
       return true
     end
   end
@@ -75,6 +112,16 @@ local function body_contains(task, patterns)
     end
   end
   return false
+end
+
+local function from_domain(task)
+  local from = task:get_from(1)
+  return from and from[1] and lower(from[1].domain) or nil
+end
+
+local function authenticated_trusted_sender(task)
+  return domain_matches(from_domain(task), trusted_sender_domains)
+    and task:has_symbol("DMARC_POLICY_ALLOW")
 end
 
 local suspicious_context = {
@@ -104,11 +151,10 @@ end
 
 local function check_spoof(task, brand)
   local from = task:get_from(1)
-  if not from or not from[1] or not from[1].domain then
+  local from_dom = from_domain(task)
+  if not from_dom then
     return false
   end
-
-  local from_dom = lower(from[1].domain)
 
   -- Legit domain → not spoof
   if domain_matches(from_dom, brand.domains) then
@@ -116,25 +162,18 @@ local function check_spoof(task, brand)
   end
 
   -- Display-name spoof
-  local dn = lower(from[1].name or "")
+  local dn = from and from[1] and from[1].name or ""
   for _, kw in ipairs(brand.keywords) do
-    if dn:find(lower(kw), 1, true) then
+    if contains_keyword(dn, kw) then
       return true, "display-name-spoof"
     end
   end
 
   -- Reply-To spoof
-  local reply = lower(task:get_header("Reply-To") or "")
+  local reply = task:get_header("Reply-To") or ""
   for _, kw in ipairs(brand.keywords) do
-    if reply:find(lower(kw), 1, true) then
+    if contains_keyword(reply, kw) then
       return true, "reply-to-spoof"
-    end
-  end
-
-  -- DKIM spoof: DKIM valid, domain not in legit list
-  if task:has_symbol("R_DKIM_ALLOW") then
-    if not domain_matches(from_dom, brand.domains) then
-      return true, "dkim-spoof"
     end
   end
 
@@ -172,7 +211,7 @@ local function check_brand(task, brand)
     return false
   end
 
-  return true, table.concat(reasons, ",")
+  return true, table.concat(reasons, ","), url_match
 end
 
 ---------------------------------------------------------------------------
@@ -187,24 +226,31 @@ for name, brand in pairs(brands) do
     group = "phishing",
 
     callback = function(task)
-      local hit, reasons = check_brand(task, brand)
+      local hit, reasons, url_match = check_brand(task, brand)
       if not hit then
         return false
       end
 
       -- Whitelist legit domains
-      local from = task:get_from(1)
-      if from and from[1] and from[1].domain then
-        if domain_matches(from[1].domain, brand.domains) then
-          logger.infox(task, "ORG_PHISHING: %s whitelisted (%s)", name, from[1].domain)
-          return false
-        end
+      local sender_domain = from_domain(task)
+      if domain_matches(sender_domain, brand.domains) then
+        logger.infox(task, "ORG_PHISHING: %s whitelisted (%s)", name, sender_domain)
+        return false
       end
 
       -- Spoof detection
       local spoof, spoof_reason = check_spoof(task, brand)
       if spoof then
         task:insert_result("ORG_PHISHING_SPOOF", 4.0, name .. ":" .. spoof_reason)
+      end
+
+      if authenticated_trusted_sender(task)
+        and name ~= "NEMLIG"
+        and not url_match
+        and not spoof
+      then
+        logger.infox(task, "ORG_PHISHING: trusted sender mention ignored for %s", name)
+        return false
       end
 
       logger.infox(task, "ORG_PHISHING: matched %s (%s)", name, reasons)
@@ -240,12 +286,19 @@ rspamd_config:register_symbol({
   group = "phishing",
 
   callback = function(task)
+    local matches = {}
     for name, brand in pairs(brands) do
       if task:has_symbol(brand.symbol) then
-        return true, "brand=" .. name
+        matches[#matches + 1] = name
       end
     end
-    return false
+
+    if #matches == 0 then
+      return false
+    end
+
+    table.sort(matches)
+    return true, "brands=" .. table.concat(matches, ",")
   end
 })
 

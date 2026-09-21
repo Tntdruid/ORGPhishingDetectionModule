@@ -63,11 +63,11 @@ Each brand can define:
 - `domains`: legitimate domains and subdomains associated with the brand
 - `score`: the score assigned when the brand symbol matches
 
-A brand match requires a brand keyword together with suspicious context or a matching brand URL. Legitimate sender domains are whitelisted for that brand. The module also checks for:
+A brand match requires a brand keyword together with suspicious context or a matching brand URL. Legitimate sender domains are whitelisted for that brand. Authenticated trusted senders configured in `org_phishing.lua` suppress only cross-brand text matches; brand URLs and spoof indicators are still checked. The module also checks for:
 
 - display-name spoofing
 - Reply-To spoofing
-- DKIM-authenticated mail from a domain outside the brand's legitimate domain list
+- authenticated trusted-sender exceptions for cross-brand text mentions
 
 URL and sender domains are matched case-insensitively. Subdomains of configured domains are accepted, and wildcard patterns are supported.
 

@@ -532,7 +532,6 @@ return {
     score = 8.0,
     keywords = {
       "nemlig.com",
-      "nemlig",
     },
     domains = {
       "nemlig.com",

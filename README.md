@@ -85,6 +85,11 @@ De individuelle brandsymboler dækker i øjeblikket:
 - PostNord
 - Coop
 - Netflix
+- Apple
+- Spotify
+- Steam
+- Booking.com
+- Viaplay
 - TV 2 Play
 - MobilePay
 - MitID
@@ -95,6 +100,8 @@ De individuelle brandsymboler dækker i øjeblikket:
 - Jyske Bank
 - Sydbank
 - Lunar
+- Arbejdernes Landsbank
+- Nykredit
 - Nets
 - PayPal
 - EasyPark
@@ -103,6 +110,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - GLS
 - DHL
 - FedEx
+- UPS
 - Saxo Bank
 - Andel Energi
 - Tryg

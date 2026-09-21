@@ -65,6 +65,22 @@ return {
     },
   },
 
+  APPLE = {
+    symbol = "ORG_PHISHING_APPLE",
+    score = 8.0,
+    keywords = {
+      "apple",
+      "apple id",
+      "icloud",
+    },
+    domains = {
+      "apple.com",
+      "icloud.com",
+      "appleid.apple.com",
+      "idmsa.apple.com",
+    },
+  },
+
   TV2PLAY = {
     symbol = "ORG_PHISHING_TV2PLAY",
     score = 8.0,
@@ -711,6 +727,97 @@ return {
     },
     domains = {
       "nemlig.com",
+    },
+  },
+
+  SPOTIFY = {
+    symbol = "ORG_PHISHING_SPOTIFY",
+    score = 8.0,
+    keywords = {
+      "spotify",
+      "spotify premium",
+    },
+    domains = {
+      "spotify.com",
+    },
+  },
+
+  STEAM = {
+    symbol = "ORG_PHISHING_STEAM",
+    score = 8.0,
+    keywords = {
+      "steam",
+      "steam guard",
+      "steampowered",
+    },
+    domains = {
+      "steampowered.com",
+      "steamcommunity.com",
+    },
+  },
+
+  BOOKING = {
+    symbol = "ORG_PHISHING_BOOKING",
+    score = 8.0,
+    keywords = {
+      "booking.com",
+      "booking",
+    },
+    domains = {
+      "booking.com",
+    },
+  },
+
+  VIAPLAY = {
+    symbol = "ORG_PHISHING_VIAPLAY",
+    score = 8.0,
+    keywords = {
+      "viaplay",
+      "viaplay abonnement",
+    },
+    domains = {
+      "viaplay.dk",
+      "viaplay.com",
+    },
+  },
+
+  UPS = {
+    symbol = "ORG_PHISHING_UPS",
+    score = 8.0,
+    keywords = {
+      "ups",
+      "ups levering",
+      "ups tracking",
+    },
+    domains = {
+      "ups.com",
+    },
+  },
+
+  ARBEJDERNESLANDSBANK = {
+    symbol = "ORG_PHISHING_ARBEJDERNESLANDSBANK",
+    score = 9.0,
+    keywords = {
+      "arbejdernes landsbank",
+      "arbejderneslandsbank",
+      "al-bank",
+    },
+    domains = {
+      "al-bank.dk",
+      "al-bank.com",
+    },
+  },
+
+  NYKREDIT = {
+    symbol = "ORG_PHISHING_NYKREDIT",
+    score = 9.0,
+    keywords = {
+      "nykredit",
+      "nykredit bank",
+    },
+    domains = {
+      "nykredit.dk",
+      "nykredit.com",
     },
   },
 

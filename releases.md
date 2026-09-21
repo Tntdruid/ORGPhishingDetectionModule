@@ -1,22 +1,24 @@
-# Releases
+# Udgivelser
 
-## Unreleased
+## Ikke udgivet endnu
 
-- Reworked brand matching to require brand keywords together with suspicious context or a matching brand URL.
-- Added an authenticated trusted-sender exception for cross-brand text mentions while retaining URL and spoof detection.
-- Removed the broad `nemlig` keyword to avoid matching the ordinary Danish word.
-- Added UTF-8-safe word boundaries to reduce short-keyword false positives inside unrelated words.
-- Replaced per-brand urgency lists with shared payment, account, login, identity, delivery, and subscription context patterns.
-- Added brand definitions for MitID, e-Boks, Digital Post, Danske Bank, Nordea, Nets, PayPal, Elgiganten, Skat, public services, telecom providers, retailers, and additional organisations.
-- Updated the README and brand configuration examples to document the new matching behaviour and available brands.
-- Documentation and brand definitions continue to evolve.
-- Add new organisation definitions in `lua.local.d/org_phishing_brands.lua`.
-- Validate configuration with `rspamadm configtest` after changes.
+- Omlagt brandmatch, så der kræves brand-keywords sammen med mistænkelig kontekst eller en URL, der matcher brandet.
+- Tilføjet en godkendt undtagelse for betroede afsendere ved tekstomtale af andre brands, mens URL- og forfalskningskontrol bevares.
+- Fjernet det brede keyword `nemlig` for at undgå match på det almindelige danske ord.
+- Tilføjet UTF-8-sikre ordgrænser for at reducere falske positive på korte keywords inde i andre ord.
+- Erstattet separate hastelister pr. brand med fælles mønstre for betaling, konto, login, identitet, levering og abonnement.
+- Tilføjet branddefinitioner for MitID, e-Boks, Digital Post, Danske Bank, Nordea, Nets, PayPal, Elgiganten, Skat, offentlige tjenester, teleselskaber, detailhandel og flere organisationer.
+- Tilføjet en branddefinition for TV 2 Play.
+- Tilføjet branddefinitioner for Jyske Bank, Sydbank, Lunar, Tryg, Topdanmark, Alm. Brand, DSB, Rejsekort, Matas, Netto, REMA 1000, OK og Clever.
+- Opdateret README og eksempler på brandkonfiguration med den nye matchadfærd og de tilgængelige brands.
+- Dokumentation og branddefinitioner videreudvikles løbende.
+- Tilføj nye organisationsdefinitioner i `lua.local.d/org_phishing_brands.lua`.
+- Validér konfigurationen med `rspamadm configtest` efter ændringer.
 
-## 0.1.0 - Initial release
+## 0.1.0 - Første udgivelse
 
-- Added modular Rspamd phishing detection in `org_phishing.lua`.
-- Added separate brand definitions in `org_phishing_brands.lua`.
-- Added keyword, URL, urgency phrase, and sender spoof detection.
-- Registered individual brand symbols, `ORG_PHISHING_SPOOF`, and the aggregate `ORG_PHISHING` symbol.
-- Added definitions for YouSee, PostNord, Coop, Netflix, MobilePay, EasyPark, Klarna, DAO, GLS, DHL, FedEx, Saxo Bank, Andel Energi, and Bring.
+- Tilføjet modulær Rspamd-phishingdetektering i `org_phishing.lua`.
+- Tilføjet separate branddefinitioner i `org_phishing_brands.lua`.
+- Tilføjet kontrol af keywords, URL'er, hastighedsfraser og afsenderforfalskning.
+- Registreret individuelle brandsymboler, `ORG_PHISHING_SPOOF` og det samlede symbol `ORG_PHISHING`.
+- Tilføjet definitioner for YouSee, PostNord, Coop, Netflix, MobilePay, EasyPark, Klarna, DAO, GLS, DHL, FedEx, Saxo Bank, Andel Energi og Bring.

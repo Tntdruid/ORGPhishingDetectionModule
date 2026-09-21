@@ -2,11 +2,11 @@
   <img src="https://img.shields.io/badge/Rspamd-Brand%20Phishing%20Module-blue?style=for-the-badge&logo=lua&logoColor=white" alt="Rspamd Brand Phishing Module">
 </p>
 
-<h1 align="center">ORG Phishing Detection Module</h1>
+<h1 align="center">ORG Phishing-detekteringsmodul</h1>
 
 <p align="center">
-  Advanced brand-based phishing detection for Rspamd 4.2.0+<br>
-  Supports Danish and international brands, URL heuristics, suspicious context, and sender spoof detection.
+  Avanceret brandbaseret phishing-detektering til Rspamd 4.2.0+<br>
+  Understøtter danske og internationale brands, URL-regler, mistænkelig kontekst og afsenderforfalskning.
 </p>
 
 <p align="center">
@@ -17,80 +17,84 @@
   <img src="https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square" alt="MIT License">
 </p>
 
-[GitHub repository](https://github.com/Tntdruid/ORGPhishingDetectionModule)
+[GitHub-projekt](https://github.com/Tntdruid/ORGPhishingDetectionModule)
 
-A modular Rspamd Lua rule set for detecting phishing messages that impersonate known organisations and services.
+Et modulært Lua-regelsæt til Rspamd, der opdager phishing-mails, som udgiver sig for at komme fra kendte organisationer og tjenester.
 
-The filter checks message content, sender data, URLs, suspicious account or payment context, and selected spoofing indicators. Brand definitions are kept separate from the detection logic, so new brands can be added without changing the matcher.
+Filteret kontrollerer meddelelsens indhold, afsenderdata, URL'er, mistænkelig konto- eller betalingskontekst samt udvalgte tegn på forfalskning. Branddefinitionerne holdes adskilt fra detekteringslogikken, så nye brands kan tilføjes uden at ændre matcheren.
 
-## Requirements
+## Krav
 
-- Rspamd 4.2.0 or newer
-- A Rspamd installation with access to the local Lua configuration directory
+- Rspamd 4.2.0 eller nyere
+- En Rspamd-installation med adgang til den lokale Lua-konfigurationsmappe
 
-The module uses the Rspamd task API and expects `lua.local.d` to be available below the local configuration directory.
+Modulet bruger Rspamd Task API og forventer, at `lua.local.d` findes under den lokale konfigurationsmappe.
 
 ## Installation
 
-Copy both Lua files into Rspamd's `lua.local.d` directory:
+Kopiér begge Lua-filer til Rspamd-mappen `lua.local.d`:
 
 ```text
 lua.local.d/org_phishing.lua
 lua.local.d/org_phishing_brands.lua
 ```
 
-For a standard installation, the destination is commonly one of:
+Ved en standardinstallation er destinationsmappen typisk en af disse:
 
 ```text
 /etc/rspamd/lua.local.d/
 /usr/local/etc/rspamd/lua.local.d/
 ```
 
-Then validate and reload Rspamd:
+Valider derefter konfigurationen, og genindlæs Rspamd:
 
 ```bash
 rspamadm configtest
 systemctl reload rspamd
 ```
 
-Use the equivalent reload command for your platform if Rspamd is managed differently.
+Brug den tilsvarende genindlæsningskommando til din platform, hvis Rspamd administreres på en anden måde.
 
-## Detection behaviour
+## Detekteringsadfærd
 
-Each brand can define:
+Hvert brand kan definere:
 
-- `keywords`: names and phrases found in the subject, headers, or text body
-- `domains`: legitimate domains and subdomains associated with the brand
-- `score`: the score assigned when the brand symbol matches
+- `keywords`: navne og fraser, der findes i emne, headers eller brødtekst
+- `domains`: legitime domæner og underdomæner, der er knyttet til brandet
+- `score`: den score, der tildeles, når brandets symbol matcher
 
-A brand match requires a brand keyword together with suspicious context or a matching brand URL. Legitimate sender domains are whitelisted for that brand. Authenticated trusted senders configured in `org_phishing.lua` suppress only cross-brand text matches; brand URLs and spoof indicators are still checked. The module also checks for:
+Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere, der er konfigureret i `org_phishing.lua`, undertrykker kun tekstmatch på tværs af brands; brand-URL'er og tegn på forfalskning kontrolleres stadig. Modulet kontrollerer også:
 
-- display-name spoofing
-- Reply-To spoofing
-- authenticated trusted-sender exceptions for cross-brand text mentions
+- forfalskning af visningsnavn
+- forfalskning af Reply-To
+- undtagelser for godkendte betroede afsendere ved tekstomtale af andre brands
 
-URL and sender domains are matched case-insensitively. Subdomains of configured domains are accepted, and wildcard patterns are supported.
+URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underdomæner til konfigurerede domæner accepteres, og jokertegn understøttes.
 
-## Registered symbols
+## Registrerede symboler
 
-| Symbol | Purpose | Default score |
+| Symbol | Formål | Standardscore |
 | --- | --- | ---: |
-| `ORG_PHISHING` | Master symbol when one or more brand symbols match | 12.0 |
-| `ORG_PHISHING_SPOOF` | Additional result for a detected brand spoof | 4.0 |
-| `ORG_PHISHING_<BRAND>` | Individual brand match | See brand file |
+| `ORG_PHISHING` | Hovedsymbol, når et eller flere brandsymboler matcher | 12.0 |
+| `ORG_PHISHING_SPOOF` | Ekstra resultat ved opdaget brandforfalskning | 4.0 |
+| `ORG_PHISHING_<BRAND>` | Individuelt brandmatch | Se brandfilen |
 
-The individual brand symbols currently cover:
+De individuelle brandsymboler dækker i øjeblikket:
 
 - YouSee
 - PostNord
 - Coop
 - Netflix
+- TV 2 Play
 - MobilePay
 - MitID
 - e-Boks
 - Digital Post
 - Danske Bank
 - Nordea
+- Jyske Bank
+- Sydbank
+- Lunar
 - Nets
 - PayPal
 - EasyPark
@@ -101,12 +105,17 @@ The individual brand symbols currently cover:
 - FedEx
 - Saxo Bank
 - Andel Energi
+- Tryg
+- Topdanmark
+- Alm. Brand
 - Elgiganten
 - Skat
 - Sygeforsikringen danmark
 - borger.dk
 - Sundhed.dk
 - Udbetaling Danmark
+- DSB
+- Rejsekort
 - Telenor
 - Telia
 - 3
@@ -116,12 +125,17 @@ The individual brand symbols currently cover:
 - føtex
 - Lidl
 - Power
+- Matas
+- Netto
+- REMA 1000
+- OK
+- Clever
 - Nemlig.com
 - Bring
 
-## Adding a brand
+## Tilføjelse af et brand
 
-Edit `lua.local.d/org_phishing_brands.lua` and add a new entry following the existing structure:
+Redigér `lua.local.d/org_phishing_brands.lua`, og tilføj en ny post efter den eksisterende struktur:
 
 ```lua
 EXAMPLE = {
@@ -136,22 +150,22 @@ EXAMPLE = {
 },
 ```
 
-Keep the symbol name unique. After changing the brand file, run `rspamadm configtest` and reload Rspamd.
+Sørg for, at symbolnavnet er unikt. Kør `rspamadm configtest`, og genindlæs Rspamd efter ændringer i brandfilen.
 
-## Testing
+## Test
 
-Always test configuration syntax before reloading:
+Test altid konfigurationssyntaksen før genindlæsning:
 
 ```bash
 rspamadm configtest
 ```
 
-For behavioural testing, send representative test messages through Rspamd and inspect the returned symbols and scores. Test both suspected phishing messages and legitimate messages from configured domains to verify the whitelist behaviour.
+Til funktionstest kan du sende repræsentative testmeddelelser gennem Rspamd og kontrollere de returnerede symboler og scores. Test både mistænkte phishing-mails og legitime meddelelser fra konfigurerede domæner for at kontrollere whitelist-adfærden.
 
-## Notes
+## Bemærkninger
 
-This is a heuristic phishing rule set. It should complement Rspamd's built-in rules, authentication checks, and reputation systems rather than replace them. Review matches and tune scores for your mail flow before using the rules as an automatic rejection criterion.
+Dette er et heuristisk phishing-regelsæt. Det bør supplere Rspamds indbyggede regler, godkendelseskontroller og omdømmesystemer i stedet for at erstatte dem. Gennemgå matches, og justér scores til dit mailflow, før reglerne bruges som grundlag for automatisk afvisning.
 
-## License
+## Licens
 
-This project is released under the [MIT License](https://github.com/Tntdruid/ORGPhishingDetectionModule/blob/main/LICENSE).
+Dette projekt udgives under [MIT-licensen](https://github.com/Tntdruid/ORGPhishingDetectionModule/blob/main/LICENSE).

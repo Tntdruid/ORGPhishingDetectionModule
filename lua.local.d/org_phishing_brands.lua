@@ -65,6 +65,182 @@ return {
     },
   },
 
+  TV2PLAY = {
+    symbol = "ORG_PHISHING_TV2PLAY",
+    score = 8.0,
+    keywords = {
+      "tv2 play",
+      "tv2play",
+      "tv 2 play",
+    },
+    domains = {
+      "tv2.dk",
+      "play.tv2.dk",
+      "tv2play.dk",
+    },
+  },
+
+  JYSKEBANK = {
+    symbol = "ORG_PHISHING_JYSKEBANK",
+    score = 9.0,
+    keywords = {
+      "jyske bank",
+      "jyskebank",
+    },
+    domains = {
+      "jyskebank.dk",
+      "jyskebank.com",
+    },
+  },
+
+  SYDBANK = {
+    symbol = "ORG_PHISHING_SYDBANK",
+    score = 9.0,
+    keywords = {
+      "sydbank",
+      "sydbank bank",
+    },
+    domains = {
+      "sydbank.dk",
+    },
+  },
+
+  LUNAR = {
+    symbol = "ORG_PHISHING_LUNAR",
+    score = 9.0,
+    keywords = {
+      "lunar",
+      "lunar bank",
+    },
+    domains = {
+      "lunar.app",
+      "lunar.com",
+    },
+  },
+
+  TRYG = {
+    symbol = "ORG_PHISHING_TRYG",
+    score = 8.0,
+    keywords = {
+      "tryg",
+      "tryg forsikring",
+    },
+    domains = {
+      "tryg.dk",
+    },
+  },
+
+  TOPDANMARK = {
+    symbol = "ORG_PHISHING_TOPDANMARK",
+    score = 8.0,
+    keywords = {
+      "topdanmark",
+      "top danmark",
+    },
+    domains = {
+      "topdanmark.dk",
+    },
+  },
+
+  ALMBRAND = {
+    symbol = "ORG_PHISHING_ALMBRAND",
+    score = 8.0,
+    keywords = {
+      "alm. brand",
+      "alm brand",
+      "almbrand",
+    },
+    domains = {
+      "almbrand.dk",
+    },
+  },
+
+  DSB = {
+    symbol = "ORG_PHISHING_DSB",
+    score = 8.0,
+    keywords = {
+      "dsb",
+      "dsb billet",
+    },
+    domains = {
+      "dsb.dk",
+    },
+  },
+
+  REJSEKORT = {
+    symbol = "ORG_PHISHING_REJSEKORT",
+    score = 8.0,
+    keywords = {
+      "rejsekort",
+      "rejse kort",
+    },
+    domains = {
+      "rejsekort.dk",
+    },
+  },
+
+  MATAS = {
+    symbol = "ORG_PHISHING_MATAS",
+    score = 8.0,
+    keywords = {
+      "matas",
+      "matas kundeklub",
+    },
+    domains = {
+      "matas.dk",
+    },
+  },
+
+  NETTO = {
+    symbol = "ORG_PHISHING_NETTO",
+    score = 8.0,
+    keywords = {
+      "netto",
+      "netto tilbud",
+    },
+    domains = {
+      "netto.dk",
+    },
+  },
+
+  REMA1000 = {
+    symbol = "ORG_PHISHING_REMA1000",
+    score = 8.0,
+    keywords = {
+      "rema 1000",
+      "rema1000",
+    },
+    domains = {
+      "rema1000.dk",
+    },
+  },
+
+  OK = {
+    symbol = "ORG_PHISHING_OK",
+    score = 8.0,
+    keywords = {
+      "ok a.m.b.a.",
+      "ok energi",
+      "ok benzin",
+    },
+    domains = {
+      "ok.dk",
+    },
+  },
+
+  CLEVER = {
+    symbol = "ORG_PHISHING_CLEVER",
+    score = 8.0,
+    keywords = {
+      "clever",
+      "clever ladestander",
+      "clever abonnement",
+    },
+    domains = {
+      "clever.dk",
+    },
+  },
+
   MOBILEPAY = {
     symbol = "ORG_PHISHING_MobilePay",
     score = 9.0,

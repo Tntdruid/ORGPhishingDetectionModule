@@ -1,12 +1,12 @@
--- ORG_PHISHING: Detects phishing pretending to be known service brands
--- Modern modular version with brand table, context patterns, URL + spoof matching
--- Compatible with Rspamd 4.2.0
+-- ORG_PHISHING: Opdager phishing, der udgiver sig for at komme fra kendte brands
+-- Moderne modulær version med brandtabel, kontekstmønstre samt URL- og forfalskningsmatch
+-- Kompatibel med Rspamd 4.2.0
 
 local logger = require "rspamd_logger"
-logger.infox("ORG_PHISHING: module loaded")
+logger.infox("ORG_PHISHING: modul indlæst")
 
 ---------------------------------------------------------------------------
--- LOWERCASE HELPER
+-- HJÆLPEFUNKTION TIL SMÅ BOGSTAVER
 ---------------------------------------------------------------------------
 
 local function lower(s)
@@ -14,7 +14,7 @@ local function lower(s)
 end
 
 ---------------------------------------------------------------------------
--- DOMAIN MATCH (supports wildcard patterns)
+-- DOMÆNEMATCH (understøtter jokertegn)
 ---------------------------------------------------------------------------
 
 local function domain_matches(domain, list)
@@ -38,21 +38,21 @@ local function domain_matches(domain, list)
 end
 
 ---------------------------------------------------------------------------
--- BRAND DEFINITIONS
+-- BRANDDEFINITIONER
 ---------------------------------------------------------------------------
 
--- 'require' can't see lua.local.d, so load the brands file by explicit path
+-- 'require' kan ikke se lua.local.d, så brandfilen indlæses via en eksplicit sti
 local rspamd_paths = rspamd_paths or {}
 local this_dir = debug.getinfo(1, "S").source:match("^@(.*)/[^/]+$") or (rspamd_paths['LOCAL_CONFDIR'] and (rspamd_paths['LOCAL_CONFDIR'] .. '/lua.local.d'))
 local brands = dofile(this_dir .. "/org_phishing_brands.lua")
 
--- First-party senders whose normal messages may mention other brands.
+-- Førstepartsafsendere, hvis normale meddelelser kan omtale andre brands.
 local trusted_sender_domains = {
   "nemlig.com",
 }
 
 ---------------------------------------------------------------------------
--- TEXT MATCH HELPERS
+-- HJÆLPEFUNKTIONER TIL TEKSTMATCH
 ---------------------------------------------------------------------------
 
 local function is_word_byte(byte)
@@ -146,7 +146,7 @@ local function urls_match(task, brand)
 end
 
 ---------------------------------------------------------------------------
--- SPOOF DETECTION
+-- FORFALSKNINGSKONTROL
 ---------------------------------------------------------------------------
 
 local function check_spoof(task, brand)
@@ -156,12 +156,12 @@ local function check_spoof(task, brand)
     return false
   end
 
-  -- Legit domain → not spoof
+  -- Legitimt domæne betyder, at det ikke er en forfalskning
   if domain_matches(from_dom, brand.domains) then
     return false
   end
 
-  -- Display-name spoof
+  -- Forfalsket visningsnavn
   local dn = from and from[1] and from[1].name or ""
   for _, kw in ipairs(brand.keywords) do
     if contains_keyword(dn, kw) then
@@ -169,7 +169,7 @@ local function check_spoof(task, brand)
     end
   end
 
-  -- Reply-To spoof
+  -- Forfalsket Reply-To
   local reply = task:get_header("Reply-To") or ""
   for _, kw in ipairs(brand.keywords) do
     if contains_keyword(reply, kw) then
@@ -181,7 +181,7 @@ local function check_spoof(task, brand)
 end
 
 ---------------------------------------------------------------------------
--- BRAND CHECK
+-- BRANDKONTROL
 ---------------------------------------------------------------------------
 
 local function check_brand(task, brand)
@@ -215,7 +215,7 @@ local function check_brand(task, brand)
 end
 
 ---------------------------------------------------------------------------
--- REGISTER BRAND SYMBOLS
+-- REGISTRÉR BRANDSYMBOLER
 ---------------------------------------------------------------------------
 
 for name, brand in pairs(brands) do
@@ -231,14 +231,14 @@ for name, brand in pairs(brands) do
         return false
       end
 
-      -- Whitelist legit domains
+      -- Whitelist legitime domæner
       local sender_domain = from_domain(task)
       if domain_matches(sender_domain, brand.domains) then
         logger.infox(task, "ORG_PHISHING: %s whitelisted (%s)", name, sender_domain)
         return false
       end
 
-      -- Spoof detection
+      -- Kontrol af forfalskning
       local spoof, spoof_reason = check_spoof(task, brand)
       if spoof then
         task:insert_result("ORG_PHISHING_SPOOF", 4.0, name .. ":" .. spoof_reason)
@@ -266,23 +266,23 @@ end
 rspamd_config:register_symbol({
   name = "ORG_PHISHING_SPOOF",
   score = 4.0,
-  description = "Brand spoofing detected",
+  description = "Brandforfalskning opdaget",
   group = "phishing",
 
   callback = function(task)
-    -- Passive symbol: only inserted by brand callbacks
+    -- Passivt symbol: indsættes kun af brand-callbacks
     return false
   end
 })
 
 ---------------------------------------------------------------------------
--- MASTER SYMBOL (SUMS ALL BRAND HITS)
+-- HOVEDSYMBOL (SAMLER ALLE BRANDMATCH)
 ---------------------------------------------------------------------------
 
 rspamd_config:register_symbol({
   name = "ORG_PHISHING",
   score = 12.0,
-  description = "Master brand phishing symbol",
+  description = "Hovedsymbol for brandphishing",
   group = "phishing",
 
   callback = function(task)
@@ -302,6 +302,6 @@ rspamd_config:register_symbol({
   end
 })
 
-logger.infox("ORG_PHISHING: all brand symbols registered")
+logger.infox("ORG_PHISHING: alle brandsymboler registreret")
 
 return true

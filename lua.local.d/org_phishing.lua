@@ -46,9 +46,11 @@ local rspamd_paths = rspamd_paths or {}
 local this_dir = debug.getinfo(1, "S").source:match("^@(.*)/[^/]+$") or (rspamd_paths['LOCAL_CONFDIR'] and (rspamd_paths['LOCAL_CONFDIR'] .. '/lua.local.d'))
 local brands = dofile(this_dir .. "/org_phishing_brands.lua")
 
--- Førstepartsafsendere, hvis normale meddelelser kan omtale andre brands.
+-- Legitime afsendere, der kan omtale andre brands i normale kampagne-/CRM-meddelelser.
+-- Disse domæner bør fortsat være gældende, selv når visningsnavnet eller teksten indeholder et brandnavn.
 local trusted_sender_domains = {
   "nemlig.com",
+  "activehosted.com",
 }
 
 ---------------------------------------------------------------------------
@@ -115,7 +117,9 @@ local function body_contains(task, patterns)
 end
 
 local function from_domain(task)
-  local from = task:get_from(1)
+  -- 'mime' henter From-headeren (den viste afsender); 1/'smtp' ville i stedet
+  -- returnere konvolut-afsenderen, som ofte er et andet domæne (fx en mailudbyder)
+  local from = task:get_from('mime')
   return from and from[1] and lower(from[1].domain) or nil
 end
 
@@ -150,7 +154,7 @@ end
 ---------------------------------------------------------------------------
 
 local function check_spoof(task, brand)
-  local from = task:get_from(1)
+  local from = task:get_from('mime')
   local from_dom = from_domain(task)
   if not from_dom then
     return false
@@ -267,7 +271,9 @@ rspamd_config:register_symbol({
   name = "ORG_PHISHING_SPOOF",
   score = 4.0,
   description = "Brandforfalskning opdaget",
-  group = "phishing",
+  -- Eget group, så et max_score-loft på "phishing"-gruppen (brugt af de enkelte
+  -- brandsymboler) ikke også skalerer dette symbol ned til 0
+  group = "phishing_meta",
 
   callback = function(task)
     -- Passivt symbol: indsættes kun af brand-callbacks
@@ -281,9 +287,11 @@ rspamd_config:register_symbol({
 
 rspamd_config:register_symbol({
   name = "ORG_PHISHING",
-  score = 12.0,
+  -- Rent informativt tag ("brands=..."); reel scoring sker via de enkelte
+  -- brandsymboler for at undgå dobbelttælling og group max_score-udhuling
+  score = 0.0,
   description = "Hovedsymbol for brandphishing",
-  group = "phishing",
+  group = "phishing_meta",
 
   callback = function(task)
     local matches = {}

@@ -719,6 +719,123 @@ return {
     },
   },
 
+  BAUHAUS = {
+    symbol = "ORG_PHISHING_BAUHAUS",
+    score = 8.0,
+    keywords = {
+      "bauhaus",
+    },
+    domains = {
+      "bauhaus.dk",
+    },
+  },
+
+  SILVAN = {
+    symbol = "ORG_PHISHING_SILVAN",
+    score = 8.0,
+    keywords = {
+      "silvan",
+    },
+    domains = {
+      "silvan.dk",
+    },
+  },
+
+  STARK = {
+    symbol = "ORG_PHISHING_STARK",
+    score = 8.0,
+    keywords = {
+      "stark",
+    },
+    domains = {
+      "stark.dk",
+    },
+  },
+
+  XL_BYG = {
+    symbol = "ORG_PHISHING_XL_BYG",
+    score = 8.0,
+    keywords = {
+      "xl-byg",
+      "xl byg",
+    },
+    domains = {
+      "xl-byg.dk",
+    },
+  },
+
+  BYGMA = {
+    symbol = "ORG_PHISHING_BYGMA",
+    score = 8.0,
+    keywords = {
+      "bygma",
+    },
+    domains = {
+      "bygma.dk",
+    },
+  },
+
+  DAVIDSEN = {
+    symbol = "ORG_PHISHING_DAVIDSEN",
+    score = 8.0,
+    keywords = {
+      "davidsen",
+    },
+    domains = {
+      "davidsen.dk",
+    },
+  },
+
+  JEMOGFIX = {
+    symbol = "ORG_PHISHING_JEMOGFIX",
+    score = 8.0,
+    keywords = {
+      "jem & fix",
+      "jem og fix",
+      "jemfix",
+      "jemogfix",
+    },
+    domains = {
+      "jemogfix.dk",
+    },
+  },
+
+  HARALDNYBORG = {
+    symbol = "ORG_PHISHING_HARALDNYBORG",
+    score = 8.0,
+    keywords = {
+      "harald nyborg",
+      "harald-nyborg",
+    },
+    domains = {
+      "harald-nyborg.dk",
+    },
+  },
+
+  TEN4 = {
+    symbol = "ORG_PHISHING_TEN4",
+    score = 8.0,
+    keywords = {
+      "10-4",
+      "10 4",
+    },
+    domains = {
+      "10-4.dk",
+    },
+  },
+
+  JOHANNESFOG = {
+    symbol = "ORG_PHISHING_JOHANNESFOG",
+    score = 8.0,
+    keywords = {
+      "johannes fog",
+      "johannesfog",
+    },
+    domains = {
+      "johannesfog.dk",
+    },
+  },
+
   NEMLIG = {
     symbol = "ORG_PHISHING_NEMLIG",
     score = 8.0,
@@ -823,7 +940,7 @@ return {
 
   BRING = {
     symbol = "ORG_PHISHING_BRING",
-    score = 8.0,
+    score = 24.0,
     keywords = {
       "bring",
       "bring pakke",

@@ -1,5 +1,13 @@
 # Udgivelser
 
+## 1.1.0 - 22. september 2026
+
+- Tilføjet branddefinitioner for Bauhaus, Silvan, STARK, XL-BYG, Bygma, Davidsen, Jem & Fix, Harald Nyborg, 10-4 og Johannes Fog.
+- Forbedret håndtering af legitime kampagneafsendere, herunder `activehosted.com`.
+- Opdateret afsenderkontrol til at bruge den viste MIME-afsender ved kontrol af brandforfalskning.
+- Flyttet metadata-symboler til en separat Rspamd-gruppe, så deres score ikke påvirkes af brandgruppens maksimumsscore.
+- Justeret Bring-scoren til 24.0.
+
 ## Ikke udgivet endnu
 
 - Kommende ændringer tilføjes her.

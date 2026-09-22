@@ -133,6 +133,16 @@ De individuelle brandsymboler dækker i øjeblikket:
 - føtex
 - Lidl
 - Power
+- Bauhaus
+- Silvan
+- STARK
+- XL-BYG
+- Bygma
+- Davidsen
+- Jem & Fix
+- Harald Nyborg
+- 10-4
+- Johannes Fog
 - Matas
 - Netto
 - REMA 1000

@@ -51,6 +51,14 @@ local brands = dofile(this_dir .. "/org_phishing_brands.lua")
 local trusted_sender_domains = {
   "nemlig.com",
   "activehosted.com",
+  "3.dk",
+  "burd.dk",
+  "kristeligt-dagblad.dk",
+  "paradoxinteractive.com",
+}
+
+local trusted_newsletter_domains = {
+  "digitalt.tv",
 }
 
 ---------------------------------------------------------------------------
@@ -124,16 +132,33 @@ local function from_domain(task)
 end
 
 local function authenticated_trusted_sender(task)
-  return domain_matches(from_domain(task), trusted_sender_domains)
+  local sender_domain = from_domain(task)
+  if domain_matches(sender_domain, trusted_sender_domains)
     and task:has_symbol("DMARC_POLICY_ALLOW")
+  then
+    return true
+  end
+
+  return domain_matches(sender_domain, trusted_newsletter_domains)
+    and task:has_symbol("R_DKIM_ALLOW")
+    and task:has_symbol("HAS_LIST_UNSUB")
 end
 
 local suspicious_context = {
   "betaling", "payment", "konto", "account", "login", "log in",
+  "logge på",
   "verify", "verification", "bekræft", "identitet", "identity",
   "låst", "locked", "spærret", "blocked", "udløber", "expired",
   "pakke", "package", "levering", "delivery", "forsendelse", "shipment",
   "afgift", "invoice", "faktura", "abonnement", "subscription",
+  "spørgeskema", "survey", "questionnaire", "undersøgelse",
+  "lodtrækning", "lottery", "draw", "trækning", "deltag",
+  "invitation", "inviteret", "tilmelding", "register", "registrering",
+  "giveaway", "gratisgave", "kampagne", "præmie", "konkurrence",
+  "start spørgeskemaet", "deltag i lodtrækningen", "start spørgeskemaet og deltag",
+  "tjek din mail", "oplysninger", "kontaktoplysninger", "betalingsoplysninger",
+  "abonnementsbetaling", "opdater dine betalingsoplysninger", "opdatere",
+  "persondata", "persondatapolitik",
 }
 
 local function urls_match(task, brand)
@@ -244,7 +269,9 @@ for name, brand in pairs(brands) do
 
       -- Kontrol af forfalskning
       local spoof, spoof_reason = check_spoof(task, brand)
-      if spoof then
+      if spoof and not task:has_symbol("ORG_PHISHING_SPOOF") then
+        -- Det samme spoof-begreb kan matche flere brands i én mail; score skal kun
+        -- tælles én gang for selve forfalskningen, ikke én gang per brand.
         task:insert_result("ORG_PHISHING_SPOOF", 4.0, name .. ":" .. spoof_reason)
       end
 
@@ -261,6 +288,8 @@ for name, brand in pairs(brands) do
       return true, reasons
     end,
   })
+
+  rspamd_config:register_dependency(brand.symbol, "DMARC_POLICY_ALLOW")
 end
 
 ---------------------------------------------------------------------------

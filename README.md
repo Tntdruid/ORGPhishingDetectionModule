@@ -65,9 +65,17 @@ Hvert brand kan definere:
 
 Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere, der er konfigureret i `org_phishing.lua`, undertrykker kun tekstmatch på tværs af brands; brand-URL'er og tegn på forfalskning kontrolleres stadig. Modulet kontrollerer også:
 
+- MitID-reglen genkender stavevarianten `MitlD` sammen med mistænkelig kontekst som en opfordring til at logge på.
 - forfalskning af visningsnavn
 - forfalskning af Reply-To
 - undtagelser for godkendte betroede afsendere ved tekstomtale af andre brands
+
+DMARC-godkendte meddelelser fra `burd.dk` kan omtale andre brands, som Burd leverer
+for, uden at udløse et brandmatch alene på grund af tekstomtalen. Det samme gælder
+tekstomtaler i godkendte meddelelser fra `kristeligt-dagblad.dk` og
+`paradoxinteractive.com`; brand-URL'er og tegn på forfalskning udløser stadig
+kontrol. Redaktionelle nyhedsbreve fra `digitalt.tv` med godkendt DKIM og
+`List-Unsubscribe` behandles tilsvarende som betroede tekstomtaler.
 
 URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underdomæner til konfigurerede domæner accepteres, og jokertegn understøttes.
 
@@ -107,6 +115,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - EasyPark
 - Klarna
 - DAO
+- Burd
 - GLS
 - DHL
 - FedEx
@@ -150,6 +159,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - Clever
 - Nemlig.com
 - Bring
+- BroBizz
 
 ## Tilføjelse af et brand
 

@@ -70,6 +70,7 @@ return {
     score = 8.0,
     keywords = {
       "apple",
+      "appie",
       "apple id",
       "icloud",
     },
@@ -85,6 +86,8 @@ return {
     symbol = "ORG_PHISHING_TV2PLAY",
     score = 8.0,
     keywords = {
+      "tv2",
+      "tv 2",
       "tv2 play",
       "tv2play",
       "tv 2 play",
@@ -276,6 +279,7 @@ return {
     keywords = {
       "mitid",
       "mit id",
+      "mitld",
       "nemid",
       "nem id",
     },
@@ -364,6 +368,7 @@ return {
     },
     domains = {
       "paypal.com",
+      "paypal.dk",
       "paypal.me",
     },
   },
@@ -382,6 +387,19 @@ return {
       "easypark.no",
       "easypark.fi",
       "easypark.net",
+    },
+  },
+
+  BROBIZZ = {
+    symbol = "ORG_PHISHING_BROBIZZ",
+    score = 8.0,
+    keywords = {
+      "brobizz",
+      "bro bizz",
+    },
+    domains = {
+      "brobizz.dk",
+      "brobizz.com",
     },
   },
 
@@ -427,6 +445,18 @@ return {
       "email.dao.as",
       "trk.dao.as",
       "m.dao.as",
+    },
+  },
+
+  BURD = {
+    symbol = "ORG_PHISHING_BURD",
+    score = 8.0,
+    keywords = {
+      "burd",
+      "burd delivery",
+    },
+    domains = {
+      "burd.dk",
     },
   },
 
@@ -643,7 +673,6 @@ return {
     score = 8.0,
     keywords = {
       "3 mobil",
-      "three",
     },
     domains = {
       "3.dk",
@@ -940,7 +969,7 @@ return {
 
   BRING = {
     symbol = "ORG_PHISHING_BRING",
-    score = 24.0,
+    score = 9.0,
     keywords = {
       "bring",
       "bring pakke",

@@ -1,16 +1,20 @@
-# Udgivelser
+# Ændringslog
 
 ## 1.2.0 - 1. oktober 2026
 
 - Forbedret MitID-match for efterligninger, der bruger stavemåden `MitlD` og beder modtageren om at logge på.
 - Tilføjet branddefinition for BroBizz med match på betalings- og loginrelateret phishing.
 - Tilføjet branddefinition for Burd med match på leveringsrelateret phishing.
-- Forbedret genkendelse af `Appie`, `TV 2` og `PayPal.dk`.
-- Fjernet det brede keyword `three` fra Three-brandet for at reducere falske positive i legitime mails.
 - Tilladt DMARC-godkendte Burd-meddelelser at omtale leverandørbrands som Matas uden fejlagtigt brandmatch.
 - Undtaget godkendte `digitalt.tv`-nyhedsbreve fra tekstmatch på streamingbrands som Viaplay.
+- Forbedret genkendelse af `MitlD`, `Appie`, `TV 2` og `PayPal.dk`.
+- Fjernet det brede keyword `three` fra Three-brandet for at reducere falske positive.
 - Justeret Bring-scoren til 9.0.
-- Begrænset `ORG_PHISHING_SPOOF` til ét resultat pr. meddelelse.
+- Begrænset `ORG_PHISHING_SPOOF` til ét resultat pr. meddelelse og krævet DMARC-godkendelse for brandafhængigheder.
+
+## Ikke udgivet endnu
+
+- Kommende ændringer tilføjes her.
 
 ## 1.1.0 - 22. september 2026
 
@@ -19,10 +23,6 @@
 - Opdateret afsenderkontrol til at bruge den viste MIME-afsender ved kontrol af brandforfalskning.
 - Flyttet metadata-symboler til en separat Rspamd-gruppe, så deres score ikke påvirkes af brandgruppens maksimumsscore.
 - Justeret Bring-scoren til 24.0.
-
-## Ikke udgivet endnu
-
-- Kommende ændringer tilføjes her.
 
 ## 1.0.0 - 21. september 2026
 
@@ -35,7 +35,7 @@
 - Tilføjet en branddefinition for TV 2 Play.
 - Tilføjet branddefinitioner for Jyske Bank, Sydbank, Lunar, Tryg, Topdanmark, Alm. Brand, DSB, Rejsekort, Matas, Netto, REMA 1000, OK og Clever.
 - Opdateret README og eksempler på brandkonfiguration med den nye matchadfærd og de tilgængelige brands.
-- Validér konfigurationen med `rspamadm configtest` efter ændringer.
+- Dokumenteret validering med `rspamadm configtest` efter ændringer.
 
 ## 0.1.0 - Første udgivelse
 

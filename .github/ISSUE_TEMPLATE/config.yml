@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Dokumentation og installation
+    url: https://github.com/Tntdruid/ORGPhishingDetectionModule#readme
+    about: Læs krav, installation, detekteringsadfærd og validering før du opretter en issue.

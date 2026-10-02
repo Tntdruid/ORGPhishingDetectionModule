@@ -1,5 +1,14 @@
 # Udgivelser
 
+## 1.3.0 - 2. oktober 2026
+
+- Undtaget tekstomtale af NyKredit i DMARC-godkendte e-Boks-meddelelser uden at ignorere NyKredit-links eller afsenderforfalskning.
+- Tilføjet branddefinition for Interactive Brokers med match på konto- og skatteformularrelateret phishing.
+- Undtaget sikre, DMARC-godkendte forsendelsesmeddelelser fra transportørbrands uden at kræve en butiksliste.
+- Tilføjet branddefinitioner for Wolt, MENY, CBB, OiSTER, EWII og NRGi.
+- Undtaget Apple-app-links i DMARC-godkendte PostNord-meddelelser fra `postnord.com` for at undgå falske positive.
+- Undtaget tekstomtale af MitID i DMARC-godkendte YouSee-meddelelser uden at ignorere MitID-links eller afsenderforfalskning.
+
 ## 1.2.0 - 1. oktober 2026
 
 - Forbedret MitID-match for efterligninger, der bruger stavemåden `MitlD` og beder modtageren om at logge på.
@@ -19,10 +28,6 @@
 - Opdateret afsenderkontrol til at bruge den viste MIME-afsender ved kontrol af brandforfalskning.
 - Flyttet metadata-symboler til en separat Rspamd-gruppe, så deres score ikke påvirkes af brandgruppens maksimumsscore.
 - Justeret Bring-scoren til 24.0.
-
-## Ikke udgivet endnu
-
-- Kommende ændringer tilføjes her.
 
 ## 1.0.0 - 21. september 2026
 

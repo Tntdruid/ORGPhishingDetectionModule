@@ -63,7 +63,7 @@ Hvert brand kan definere:
 - `domains`: legitime domæner og underdomæner, der er knyttet til brandet
 - `score`: den score, der tildeles, når brandets symbol matcher
 
-Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere, der er konfigureret i `org_phishing.lua`, undertrykker kun tekstmatch på tværs af brands; brand-URL'er og tegn på forfalskning kontrolleres stadig. Modulet kontrollerer også:
+Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere kan konfigureres globalt i `org_phishing.lua` eller for et enkelt brand i `org_phishing_brands.lua`; de undertrykker kun tekstmatch, mens brand-URL'er og tegn på forfalskning stadig kontrolleres. Modulet kontrollerer også:
 
 - MitID-reglen genkender stavevarianten `MitlD` sammen med mistænkelig kontekst som en opfordring til at logge på.
 - forfalskning af visningsnavn
@@ -76,6 +76,16 @@ tekstomtaler i godkendte meddelelser fra `kristeligt-dagblad.dk` og
 `paradoxinteractive.com`; brand-URL'er og tegn på forfalskning udløser stadig
 kontrol. Redaktionelle nyhedsbreve fra `digitalt.tv` med godkendt DKIM og
 `List-Unsubscribe` behandles tilsvarende som betroede tekstomtaler.
+DMARC-godkendte meddelelser fra `yousee.dk` kan omtale MitID uden et brandmatch;
+MitID-links og tegn på afsenderforfalskning kontrolleres fortsat.
+Apple-reglen ignorerer også Apple-app-links i DMARC-godkendte meddelelser fra
+`postnord.com`, som PostNord bruger i legitime pakkemeddelelser.
+DMARC-godkendte meddelelser fra `e-boks.dk` kan omtale NyKredit uden et
+brandmatch; NyKredit-links og tegn på afsenderforfalskning kontrolleres fortsat.
+Forsendelsesmeddelelser fra transportørbrands kræver ikke en særskilt butiksliste:
+de ignoreres, når afsenderen består DMARC, linkene kun går til afsenderens eget
+domæne eller transportørens domæner, og meddelelsen ikke indeholder betalings-
+eller loginanmodninger. Dette gælder PostNord, DAO, Burd, GLS, DHL, FedEx, UPS og Bring.
 
 URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underdomæner til konfigurerede domæner accepteres, og jokertegn understøttes.
 
@@ -121,6 +131,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - FedEx
 - UPS
 - Saxo Bank
+- Interactive Brokers
 - Andel Energi
 - Tryg
 - Topdanmark
@@ -135,9 +146,14 @@ De individuelle brandsymboler dækker i øjeblikket:
 - Rejsekort
 - Telenor
 - Telia
+- CBB
+- OiSTER
 - 3
+- EWII
+- NRGi
 - Norlys
 - Salling Group
+- MENY
 - Bilka
 - føtex
 - Lidl
@@ -159,6 +175,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - Clever
 - Nemlig.com
 - Bring
+- Wolt
 - BroBizz
 
 ## Tilføjelse af et brand

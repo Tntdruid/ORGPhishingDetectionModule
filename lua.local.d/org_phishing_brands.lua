@@ -30,6 +30,7 @@ return {
       "trk.postnord.com",
       "m.postnord.com",
     },
+    carrier_notification = true,
   },
 
   COOP = {
@@ -79,6 +80,9 @@ return {
       "icloud.com",
       "appleid.apple.com",
       "idmsa.apple.com",
+    },
+    trusted_senders = {
+      "postnord.com",
     },
   },
 
@@ -288,6 +292,9 @@ return {
       "www.mitid.dk",
       "nemid.dk",
     },
+    trusted_mention_senders = {
+      "yousee.dk",
+    },
   },
 
   EBOKS = {
@@ -446,6 +453,7 @@ return {
       "trk.dao.as",
       "m.dao.as",
     },
+    carrier_notification = true,
   },
 
   BURD = {
@@ -458,6 +466,7 @@ return {
     domains = {
       "burd.dk",
     },
+    carrier_notification = true,
   },
 
   GLS = {
@@ -487,6 +496,7 @@ return {
       "gls-denmark.com",
       "gls-denmark.dk",
     },
+    carrier_notification = true,
   },
 
   DHL = {
@@ -509,6 +519,7 @@ return {
       "trk.dhl.com",
       "m.dhl.com",
     },
+    carrier_notification = true,
   },
 
   FEDEX = {
@@ -529,6 +540,7 @@ return {
       "trk.fedex.com",
       "m.fedex.com",
     },
+    carrier_notification = true,
   },
 
   SAXOBANK = {
@@ -550,6 +562,20 @@ return {
       "saxobank.co.uk",
       "mail.saxobank.com",
       "m.saxobank.com",
+    },
+  },
+
+  INTERACTIVEBROKERS = {
+    symbol = "ORG_PHISHING_INTERACTIVEBROKERS",
+    score = 9.0,
+    keywords = {
+      "interactive brokers",
+      "interactivebrokers",
+      "ibkr",
+    },
+    domains = {
+      "interactivebrokers.com",
+      "ibkr.com",
     },
   },
 
@@ -668,6 +694,32 @@ return {
     },
   },
 
+  CBB = {
+    symbol = "ORG_PHISHING_CBB",
+    score = 8.0,
+    keywords = {
+      "cbb",
+      "cbb mobil",
+      "mit cbb",
+    },
+    domains = {
+      "cbb.dk",
+    },
+  },
+
+  OISTER = {
+    symbol = "ORG_PHISHING_OISTER",
+    score = 8.0,
+    keywords = {
+      "oister",
+      "oister mobil",
+      "mit oister",
+    },
+    domains = {
+      "oister.dk",
+    },
+  },
+
   THREE = {
     symbol = "ORG_PHISHING_THREE",
     score = 8.0,
@@ -690,6 +742,30 @@ return {
     },
   },
 
+  EWII = {
+    symbol = "ORG_PHISHING_EWII",
+    score = 8.0,
+    keywords = {
+      "ewii",
+      "ewii energi",
+    },
+    domains = {
+      "ewii.dk",
+    },
+  },
+
+  NRGI = {
+    symbol = "ORG_PHISHING_NRGI",
+    score = 8.0,
+    keywords = {
+      "nrgi",
+      "nrgi energi",
+    },
+    domains = {
+      "nrgi.dk",
+    },
+  },
+
   SALLINGGROUP = {
     symbol = "ORG_PHISHING_SALLINGGROUP",
     score = 8.0,
@@ -699,6 +775,17 @@ return {
     },
     domains = {
       "sallinggroup.com",
+    },
+  },
+
+  MENY = {
+    symbol = "ORG_PHISHING_MENY",
+    score = 8.0,
+    keywords = {
+      "meny",
+    },
+    domains = {
+      "meny.dk",
     },
   },
 
@@ -938,6 +1025,7 @@ return {
     domains = {
       "ups.com",
     },
+    carrier_notification = true,
   },
 
   ARBEJDERNESLANDSBANK = {
@@ -965,6 +1053,9 @@ return {
       "nykredit.dk",
       "nykredit.com",
     },
+    trusted_mention_senders = {
+      "e-boks.dk",
+    },
   },
 
   BRING = {
@@ -982,6 +1073,20 @@ return {
       "bring.no",
       "bring.se",
       "bring.fi",
+    },
+    carrier_notification = true,
+  },
+
+  WOLT = {
+    symbol = "ORG_PHISHING_WOLT",
+    score = 8.0,
+    keywords = {
+      "wolt",
+      "wolt market",
+      "wolt+",
+    },
+    domains = {
+      "wolt.com",
     },
   },
 }

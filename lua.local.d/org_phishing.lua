@@ -144,6 +144,26 @@ local function authenticated_trusted_sender(task)
     and task:has_symbol("HAS_LIST_UNSUB")
 end
 
+local function authenticated_brand_trusted_sender(task, brand)
+  return brand.trusted_senders
+    and domain_matches(from_domain(task), brand.trusted_senders)
+    and task:has_symbol("DMARC_POLICY_ALLOW")
+end
+
+local function authenticated_brand_mention_sender(task, brand)
+  return brand.trusted_mention_senders
+    and domain_matches(from_domain(task), brand.trusted_mention_senders)
+    and task:has_symbol("DMARC_POLICY_ALLOW")
+end
+
+local carrier_risky_context = {
+  "betaling", "payment", "pay", "betale", "afgift", "gebyr", "fee",
+  "faktura", "invoice", "betalingsoplysninger", "kortoplysninger",
+  "konto", "account", "login", "log in", "logge på", "adgangskode",
+  "password", "verify", "verification", "bekræft", "identitet",
+  "identity", "låst", "locked", "spærret", "blocked", "udløber", "expired",
+}
+
 local suspicious_context = {
   "betaling", "payment", "konto", "account", "login", "log in",
   "logge på",
@@ -172,6 +192,33 @@ local function urls_match(task, brand)
     end
   end
   return false
+end
+
+local function authenticated_carrier_notification(task, brand, sender_domain)
+  if not brand.carrier_notification
+    or not sender_domain
+    or not task:has_symbol("DMARC_POLICY_ALLOW")
+    or subject_contains(task, carrier_risky_context)
+    or body_contains(task, carrier_risky_context)
+  then
+    return false
+  end
+
+  for _, u in ipairs(task:get_urls() or {}) do
+    local host = u:get_host()
+    if not host then
+      return false
+    end
+
+    host = lower(host):gsub("%.$", "")
+    if not domain_matches(host, brand.domains)
+      and not domain_matches(host, { sender_domain })
+    then
+      return false
+    end
+  end
+
+  return true
 end
 
 ---------------------------------------------------------------------------
@@ -267,12 +314,31 @@ for name, brand in pairs(brands) do
         return false
       end
 
+      if url_match and authenticated_brand_trusted_sender(task, brand) then
+        logger.infox(task, "ORG_PHISHING: authenticated trusted sender ignored for %s", name)
+        return false
+      end
+
       -- Kontrol af forfalskning
       local spoof, spoof_reason = check_spoof(task, brand)
       if spoof and not task:has_symbol("ORG_PHISHING_SPOOF") then
         -- Det samme spoof-begreb kan matche flere brands i én mail; score skal kun
         -- tælles én gang for selve forfalskningen, ikke én gang per brand.
         task:insert_result("ORG_PHISHING_SPOOF", 4.0, name .. ":" .. spoof_reason)
+      end
+
+      if not url_match and not spoof
+        and authenticated_brand_mention_sender(task, brand)
+      then
+        logger.infox(task, "ORG_PHISHING: authenticated sender mention ignored for %s", name)
+        return false
+      end
+
+      if not spoof and url_match
+        and authenticated_carrier_notification(task, brand, sender_domain)
+      then
+        logger.infox(task, "ORG_PHISHING: authenticated carrier notification ignored for %s", name)
+        return false
       end
 
       if authenticated_trusted_sender(task)

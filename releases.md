@@ -1,5 +1,15 @@
 # Udgivelser
 
+## 1.4.0 - 6. oktober 2026
+
+- Forbedret detektion af Saxo-phishing på fransk ved at udvide den mistænkelige kontekst med fraser som kontobekræftelse og sikkerhedsopdatering.
+- Udvidet Klarna-reglen til at genkende den blandede Unicode- og HTML-entitetstavning fra en phishing-mail om kontoverificering.
+- Reduceret falske TV 2 Play- og Bilka-matches i DMARC-godkendte TV 2 Kosmopol-nyhedsbreve uden at ignorere brand-links eller afsenderforfalskning.
+- Undtaget tekstomtale af Coop i DMARC-godkendte meddelelser fra `advisering.e-boks.dk` uden at ignorere Coop-links eller afsenderforfalskning.
+- Begrænset Apple-match til målrettede konto- og sikkerhedsfraser for at undgå falske positiver fra almindelige produktomtaler.
+- Begrænset Cloud Services-match til specifikke cloud-risikofraser og fjernet generiske Google-, Dropbox- og OneDrive-domæner fra branddefinitionen.
+- Reduceret falske positive fra generiske brandnavne som Power, Nets, Steam, Booking.com, UPS og Bring med brand-specifikke kontekstkrav.
+
 ## 1.3.0 - 2. oktober 2026
 
 - Undtaget tekstomtale af NyKredit i DMARC-godkendte e-Boks-meddelelser uden at ignorere NyKredit-links eller afsenderforfalskning.

@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="Version 1.0.0">
+  <img src="https://img.shields.io/badge/version-1.4.0-blue?style=flat-square" alt="Version 1.4.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -22,6 +22,8 @@
 Et modulært Lua-regelsæt til Rspamd, der opdager phishing-mails, som udgiver sig for at komme fra kendte organisationer og tjenester.
 
 Filteret kontrollerer meddelelsens indhold, afsenderdata, URL'er, mistænkelig konto- eller betalingskontekst samt udvalgte tegn på forfalskning. Branddefinitionerne holdes adskilt fra detekteringslogikken, så nye brands kan tilføjes uden at ændre matcheren.
+Klarna-reglen genkender også blandede Unicode- og HTML-entitetsstavemåder, der skjuler brandnavnet i kontoverificeringsmails.
+Mistænkelig kontekst omfatter også franske kontobekræftelsesfraser, så brandphishing på fransk ikke afhænger af URL-match alene.
 
 ## Krav
 
@@ -60,10 +62,12 @@ Brug den tilsvarende genindlæsningskommando til din platform, hvis Rspamd admin
 Hvert brand kan definere:
 
 - `keywords`: navne og fraser, der findes i emne, headers eller brødtekst
+- `context_keywords`: brand-specifikke risikofraser; udelades feltet, bruges den fælles kontekstliste
+- `url_requires_context`: kræver også en risikofrase, når en brand-URL findes
 - `domains`: legitime domæner og underdomæner, der er knyttet til brandet
 - `score`: den score, der tildeles, når brandets symbol matcher
 
-Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere kan konfigureres globalt i `org_phishing.lua` eller for et enkelt brand i `org_phishing_brands.lua`; de undertrykker kun tekstmatch, mens brand-URL'er og tegn på forfalskning stadig kontrolleres. Modulet kontrollerer også:
+Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Brands med generiske navne kan kræve brand-specifik risikokontekst, også når en URL matcher. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere kan konfigureres globalt i `org_phishing.lua` eller for et enkelt brand i `org_phishing_brands.lua`; de undertrykker kun tekstmatch, mens brand-URL'er og tegn på forfalskning stadig kontrolleres. Modulet kontrollerer også:
 
 - MitID-reglen genkender stavevarianten `MitlD` sammen med mistænkelig kontekst som en opfordring til at logge på.
 - forfalskning af visningsnavn
@@ -76,12 +80,25 @@ tekstomtaler i godkendte meddelelser fra `kristeligt-dagblad.dk` og
 `paradoxinteractive.com`; brand-URL'er og tegn på forfalskning udløser stadig
 kontrol. Redaktionelle nyhedsbreve fra `digitalt.tv` med godkendt DKIM og
 `List-Unsubscribe` behandles tilsvarende som betroede tekstomtaler.
-DMARC-godkendte meddelelser fra `yousee.dk` kan omtale MitID uden et brandmatch;
-MitID-links og tegn på afsenderforfalskning kontrolleres fortsat.
-Apple-reglen ignorerer også Apple-app-links i DMARC-godkendte meddelelser fra
-`postnord.com`, som PostNord bruger i legitime pakkemeddelelser.
+DMARC-godkendte nyhedsbreve fra `tv2kosmopol.dk` kan omtale TV 2 Play og Bilka
+uden at udløse tekstbaserede brandmatches; brand-URL'er og tegn på
+afsenderforfalskning kontrolleres fortsat. TV 2 Play's spoofkontrol bruger
+specifikke stavemåder af tjenestens navn, mens indholdsmatch også genkender
+`TV 2`.
+DMARC-godkendte meddelelser fra `yousee.dk` og `e.telenor.dk` kan omtale MitID
+uden et brandmatch; MitID-links og tegn på afsenderforfalskning kontrolleres
+fortsat.
+Apple-reglen bruger målrettede konto- og sikkerhedsfraser i stedet for den
+fælles liste med brede ord som "bekræft" og "tilmelding". Cloud Services,
+Power, Nets, Steam, Booking.com, UPS og Bring bruger ligeledes målrettet
+kontekst, og brand-URL'er er ikke tilstrækkelige alene for disse brands.
+Cloud Services matcher ikke længere generiske Google-, Dropbox- eller
+OneDrive-domæner. Apple-app-links i DMARC-godkendte meddelelser fra
+`postnord.com` ignoreres fortsat.
 DMARC-godkendte meddelelser fra `e-boks.dk` kan omtale NyKredit uden et
 brandmatch; NyKredit-links og tegn på afsenderforfalskning kontrolleres fortsat.
+DMARC-godkendte meddelelser fra `advisering.e-boks.dk` kan omtale Coop uden et
+brandmatch; Coop-links og tegn på afsenderforfalskning kontrolleres fortsat.
 Forsendelsesmeddelelser fra transportørbrands kræver ikke en særskilt butiksliste:
 de ignoreres, når afsenderen består DMARC, linkene kun går til afsenderens eget
 domæne eller transportørens domæner, og meddelelsen ikke indeholder betalings-
@@ -103,6 +120,8 @@ De individuelle brandsymboler dækker i øjeblikket:
 - PostNord
 - Coop
 - Netflix
+- OpenAI
+- Cloud Services
 - Apple
 - Spotify
 - Steam

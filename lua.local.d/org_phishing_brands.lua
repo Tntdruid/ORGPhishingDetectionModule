@@ -51,6 +51,9 @@ return {
       "trk.coop.dk",
       "info.coop.dk",
     },
+    trusted_mention_senders = {
+      "advisering.e-boks.dk",
+    },
   },
 
   NETFLIX = {
@@ -66,6 +69,58 @@ return {
     },
   },
 
+  OPENAI = {
+    symbol = "ORG_PHISHING_OPENAI",
+    score = 9.0,
+    keywords = {
+      "openai",
+      "chatgpt",
+      "chat gpt",
+      "gpt billing",
+    },
+    domains = {
+      "openai.com",
+      "chatgpt.com",
+      "platform.openai.com",
+    },
+  },
+
+  CLOUDSERVICES = {
+    symbol = "ORG_PHISHING_CLOUDSERVICES",
+    score = 8.0,
+    keywords = {
+      "cloud services",
+      "cloud storage",
+      "storage plan",
+      "storage access",
+      "subscription expired",
+      "renew subscription",
+      "cloud plan",
+    },
+    context_keywords = {
+      "cloud storage is full",
+      "cloud storage quota exceeded",
+      "cloud account locked",
+      "cloud account suspended",
+      "cloud services subscription expired",
+      "cloud storage subscription expired",
+      "renew your cloud storage subscription",
+      "verify your cloud account",
+      "payment for cloud storage failed",
+      "update your payment method to keep your cloud storage",
+      "your cloud files will be deleted",
+      "access to your cloud files has been suspended",
+      "din cloud konto er låst",
+      "din skylagring er fuld",
+      "abonnement på skylagring er udløbet",
+    },
+    domains = {
+      "cloudservices.com",
+      "cloud-services.com",
+    },
+    url_requires_context = true,
+  },
+
   APPLE = {
     symbol = "ORG_PHISHING_APPLE",
     score = 8.0,
@@ -74,6 +129,26 @@ return {
       "appie",
       "apple id",
       "icloud",
+    },
+    context_keywords = {
+      "apple id has been locked",
+      "apple id is locked",
+      "apple id locked",
+      "apple id suspended",
+      "apple id disabled",
+      "verify your apple id",
+      "verify apple id",
+      "confirm your apple id",
+      "reset your apple id password",
+      "unusual activity on your apple id",
+      "icloud account locked",
+      "icloud account suspended",
+      "dit apple id er låst",
+      "apple-id er låst",
+      "bekræft dit apple id",
+      "bekræft apple id",
+      "unormal aktivitet på dit apple id",
+      "din icloud-konto er låst",
     },
     domains = {
       "apple.com",
@@ -96,10 +171,18 @@ return {
       "tv2play",
       "tv 2 play",
     },
+    spoof_keywords = {
+      "tv2 play",
+      "tv2play",
+      "tv 2 play",
+    },
     domains = {
       "tv2.dk",
       "play.tv2.dk",
       "tv2play.dk",
+    },
+    trusted_mention_senders = {
+      "tv2kosmopol.dk",
     },
   },
 
@@ -294,6 +377,7 @@ return {
     },
     trusted_mention_senders = {
       "yousee.dk",
+      "e.telenor.dk",
     },
   },
 
@@ -359,11 +443,23 @@ return {
       "nets betaling",
       "betalingsservice",
     },
+    context_keywords = {
+      "verify your nets account",
+      "nets account locked",
+      "nets card blocked",
+      "nets payment failed",
+      "nets password reset",
+      "update your nets payment details",
+      "bekræft dine betalingsoplysninger til nets",
+      "nets-kontoen er spærret",
+      "betalingsservice konto låst",
+    },
     domains = {
       "nets.eu",
       "nets.dk",
       "betalingsservice.dk",
     },
+    url_requires_context = true,
   },
 
   PAYPAL = {
@@ -420,6 +516,8 @@ return {
       "klarna invoice",
       "klarna faktura",
       "klarna konto",
+      "&kappa;iarոɑ",
+      "Κiarոɑ",
     },
     domains = {
       "klarna.com",
@@ -798,6 +896,9 @@ return {
     domains = {
       "bilka.dk",
     },
+    trusted_mention_senders = {
+      "tv2kosmopol.dk",
+    },
   },
 
   FOTEX = {
@@ -830,9 +931,22 @@ return {
       "power",
       "power.dk",
     },
+    context_keywords = {
+      "verify your power account",
+      "power account locked",
+      "power account suspended",
+      "power password reset",
+      "power payment failed",
+      "power order on hold",
+      "power gift card expired",
+      "bekræft din power konto",
+      "din power konto er låst",
+      "power gavekort er udløbet",
+    },
     domains = {
       "power.dk",
     },
+    url_requires_context = true,
   },
 
   BAUHAUS = {
@@ -983,10 +1097,23 @@ return {
       "steam guard",
       "steampowered",
     },
+    context_keywords = {
+      "verify your steam account",
+      "steam account locked",
+      "steam account suspended",
+      "steam account disabled",
+      "reset your steam password",
+      "steam guard disabled",
+      "unauthorized steam purchase",
+      "steam wallet payment failed",
+      "confirm your steam trade",
+      "steam trade offer cancelled",
+    },
     domains = {
       "steampowered.com",
       "steamcommunity.com",
     },
+    url_requires_context = true,
   },
 
   BOOKING = {
@@ -996,9 +1123,21 @@ return {
       "booking.com",
       "booking",
     },
+    context_keywords = {
+      "verify your booking.com account",
+      "confirm your booking.com account",
+      "booking.com account locked",
+      "booking.com payment failed",
+      "payment required by booking.com",
+      "booking.com reservation cancelled",
+      "booking.com password reset",
+      "update payment method on booking.com",
+      "bekræft din booking.com konto",
+    },
     domains = {
       "booking.com",
     },
+    url_requires_context = true,
   },
 
   VIAPLAY = {
@@ -1022,10 +1161,29 @@ return {
       "ups levering",
       "ups tracking",
     },
+    context_keywords = {
+      "delivery fee",
+      "customs fee",
+      "package held",
+      "parcel held",
+      "payment required for delivery",
+      "pay the delivery fee",
+      "pay customs fee",
+      "verify your delivery address",
+      "confirm your delivery address",
+      "package will be returned",
+      "parcel will be returned",
+      "delivery payment failed",
+      "leveringsgebyr",
+      "pakken tilbageholdes",
+      "bekræft din leveringsadresse",
+      "pakken returneres",
+    },
     domains = {
       "ups.com",
     },
     carrier_notification = true,
+    url_requires_context = true,
   },
 
   ARBEJDERNESLANDSBANK = {
@@ -1068,6 +1226,24 @@ return {
       "bring tracking",
       "bring shipment",
     },
+    context_keywords = {
+      "delivery fee",
+      "customs fee",
+      "package held",
+      "parcel held",
+      "payment required for delivery",
+      "pay the delivery fee",
+      "pay customs fee",
+      "verify your delivery address",
+      "confirm your delivery address",
+      "package will be returned",
+      "parcel will be returned",
+      "delivery payment failed",
+      "leveringsgebyr",
+      "pakken tilbageholdes",
+      "bekræft din leveringsadresse",
+      "pakken returneres",
+    },
     domains = {
       "bring.dk",
       "bring.no",
@@ -1075,6 +1251,7 @@ return {
       "bring.fi",
     },
     carrier_notification = true,
+    url_requires_context = true,
   },
 
   WOLT = {

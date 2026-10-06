@@ -179,6 +179,8 @@ local suspicious_context = {
   "tjek din mail", "oplysninger", "kontaktoplysninger", "betalingsoplysninger",
   "abonnementsbetaling", "opdater dine betalingsoplysninger", "opdatere",
   "persondata", "persondatapolitik",
+  "mise à jour de sécurité", "confirmation requise", "se connecter",
+  "connectez-vous", "votre compte", "vérifier", "verification requise",
 }
 
 local function urls_match(task, brand)
@@ -239,7 +241,8 @@ local function check_spoof(task, brand)
 
   -- Forfalsket visningsnavn
   local dn = from and from[1] and from[1].name or ""
-  for _, kw in ipairs(brand.keywords) do
+  local spoof_keywords = brand.spoof_keywords or brand.keywords
+  for _, kw in ipairs(spoof_keywords) do
     if contains_keyword(dn, kw) then
       return true, "display-name-spoof"
     end
@@ -247,7 +250,7 @@ local function check_spoof(task, brand)
 
   -- Forfalsket Reply-To
   local reply = task:get_header("Reply-To") or ""
-  for _, kw in ipairs(brand.keywords) do
+  for _, kw in ipairs(spoof_keywords) do
     if contains_keyword(reply, kw) then
       return true, "reply-to-spoof"
     end
@@ -268,14 +271,17 @@ local function check_brand(task, brand)
      or header_contains(task, "Reply-To", brand.keywords)
      or body_contains(task, brand.keywords)
   local url_match = urls_match(task, brand)
-  local context_match = subject_contains(task, suspicious_context)
-     or body_contains(task, suspicious_context)
+  local context_keywords = brand.context_keywords or suspicious_context
+  local context_match = subject_contains(task, context_keywords)
+     or body_contains(task, context_keywords)
+  local url_signal = url_match
+     and (context_match or not brand.url_requires_context)
 
-  if keyword_match and (context_match or url_match) then
+  if keyword_match and (context_match or url_signal) then
     reasons[#reasons+1] = "keywords"
   end
 
-  if url_match and keyword_match then
+  if url_signal and keyword_match then
     reasons[#reasons+1] = "urls"
   end
 
@@ -287,7 +293,7 @@ local function check_brand(task, brand)
     return false
   end
 
-  return true, table.concat(reasons, ","), url_match
+  return true, table.concat(reasons, ","), url_signal
 end
 
 ---------------------------------------------------------------------------

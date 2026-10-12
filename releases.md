@@ -1,5 +1,12 @@
 # Udgivelser
 
+## 1.5.0 - 12. oktober 2026
+
+- Tilføjet Punktum.dk-detektering for phishingmails om domænefornyelse og hastebetaling.
+- Tilføjet Telmore-detektering for phishing med abonnements- og betalingskontekst.
+- Tilføjet Hiper-, Fastspeed- og Waoo-detektering med krav om mistænkelig kontekst.
+- Forbedret Andel Energi-detektering med ekstra keyword- og spoof-varianter (`andel energi`, `andel-energi`) for bedre opdagelse af visningsnavn-forfalskning.
+
 ## 1.4.0 - 6. oktober 2026
 
 - Forbedret detektion af Saxo-phishing på fransk ved at udvide den mistænkelige kontekst med fraser som kontobekræftelse og sikkerhedsopdatering.

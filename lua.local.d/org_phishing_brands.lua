@@ -409,6 +409,21 @@ return {
     },
   },
 
+  PUNKTUMDK = {
+    symbol = "ORG_PHISHING_PUNKTUMDK",
+    score = 8.5,
+    keywords = {
+      "punktum.dk",
+      "punktum hosting",
+      "punktumhosting",
+      "domaeneservice",
+    },
+    domains = {
+      "punktum.dk",
+    },
+    url_requires_context = true,
+  },
+
   DANSKEBANK = {
     symbol = "ORG_PHISHING_DANSKEBANK",
     score = 9.0,
@@ -682,6 +697,13 @@ return {
     score = 8.0,
     keywords = {
       "andelenergi",
+      "andel energi",
+      "andel-energi",
+    },
+    spoof_keywords = {
+      "andelenergi",
+      "andel energi",
+      "andel-energi",
     },
     domains = {
       "kundecenter.andelenergi.dk",
@@ -781,6 +803,17 @@ return {
     },
   },
 
+  TELMORE = {
+    symbol = "ORG_PHISHING_TELMORE",
+    score = 8.0,
+    keywords = {
+      "telmore",
+    },
+    domains = {
+      "telmore.dk",
+    },
+  },
+
   TELIA = {
     symbol = "ORG_PHISHING_TELIA",
     score = 8.0,
@@ -840,6 +873,18 @@ return {
     },
   },
 
+  WAOO = {
+    symbol = "ORG_PHISHING_WAOO",
+    score = 8.0,
+    keywords = {
+      "waoo",
+    },
+    domains = {
+      "waoo.dk",
+    },
+    url_requires_context = true,
+  },
+
   EWII = {
     symbol = "ORG_PHISHING_EWII",
     score = 8.0,
@@ -850,6 +895,30 @@ return {
     domains = {
       "ewii.dk",
     },
+  },
+
+  FASTSPEED = {
+    symbol = "ORG_PHISHING_FASTSPEED",
+    score = 8.0,
+    keywords = {
+      "fastspeed",
+    },
+    domains = {
+      "fastspeed.dk",
+    },
+    url_requires_context = true,
+  },
+
+  HIPER = {
+    symbol = "ORG_PHISHING_HIPER",
+    score = 8.0,
+    keywords = {
+      "hiper",
+    },
+    domains = {
+      "hiper.dk",
+    },
+    url_requires_context = true,
   },
 
   NRGI = {

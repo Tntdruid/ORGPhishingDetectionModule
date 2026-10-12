@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.4.0-blue?style=flat-square" alt="Version 1.4.0">
+  <img src="https://img.shields.io/badge/version-1.5.0-blue?style=flat-square" alt="Version 1.5.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -132,6 +132,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - MitID
 - e-Boks
 - Digital Post
+- Punktum.dk
 - Danske Bank
 - Nordea
 - Jyske Bank
@@ -164,14 +165,18 @@ De individuelle brandsymboler dækker i øjeblikket:
 - DSB
 - Rejsekort
 - Telenor
+- Telmore
 - Telia
 - CBB
 - OiSTER
 - 3
 - EWII
+- Fastspeed
+- Hiper
 - NRGi
 - Norlys
 - Salling Group
+- Waoo
 - MENY
 - Bilka
 - føtex

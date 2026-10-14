@@ -92,6 +92,8 @@ Apple-reglen bruger målrettede konto- og sikkerhedsfraser i stedet for den
 fælles liste med brede ord som "bekræft" og "tilmelding". Cloud Services,
 Power, Nets, Steam, Booking.com, UPS og Bring bruger ligeledes målrettet
 kontekst, og brand-URL'er er ikke tilstrækkelige alene for disse brands.
+For Bring omfatter den målrettede kontekst også sporingslokkemidler som
+"spor din pakke" og "sporingsnummer".
 Cloud Services matcher ikke længere generiske Google-, Dropbox- eller
 OneDrive-domæner. Apple-app-links i DMARC-godkendte meddelelser fra
 `postnord.com` ignoreres fortsat.
@@ -113,6 +115,11 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING` | Hovedsymbol, når et eller flere brandsymboler matcher | 12.0 |
 | `ORG_PHISHING_SPOOF` | Ekstra resultat ved opdaget brandforfalskning | 4.0 |
 | `ORG_PHISHING_<BRAND>` | Individuelt brandmatch | Se brandfilen |
+| `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |
+
+Brands med `reject_on_spoof = true` i brandfilen afvises direkte, når både
+brandsymbolet og `ORG_PHISHING_SPOOF` rammer samme mail. Et brandmatch uden
+forfalskning giver fortsat kun score. I øjeblikket gælder dette Punktum.dk.
 
 De individuelle brandsymboler dækker i øjeblikket:
 
@@ -135,6 +142,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - Punktum.dk
 - Danske Bank
 - Nordea
+- JYSK
 - Jyske Bank
 - Sydbank
 - Lunar

@@ -96,6 +96,9 @@ end
 
 local function contains_any(text, patterns)
   if not text then return false end
+  -- Quoted-printable soft line breaks kan splitte ord (fx "Brin=\ng").
+  -- Fjern dem før matching, så brand- og kontekstfraser stadig detekteres.
+  text = tostring(text):gsub("=\r\n", ""):gsub("=\n", "")
   for _, p in ipairs(patterns) do
     if contains_keyword(text, p) then
       return true
@@ -159,16 +162,23 @@ end
 local carrier_risky_context = {
   "betaling", "payment", "pay", "betale", "afgift", "gebyr", "fee",
   "faktura", "invoice", "betalingsoplysninger", "kortoplysninger",
+  "betalingsverifikation", "payment verification",
   "konto", "account", "login", "log in", "logge på", "adgangskode",
   "password", "verify", "verification", "bekræft", "identitet",
-  "identity", "låst", "locked", "spærret", "blocked", "udløber", "expired",
+  "identity", "konto på hold", "konto er sat på hold", "account on hold",
+  "låst", "locked", "spærret", "blocked", "udløber", "expired",
 }
 
 local suspicious_context = {
   "betaling", "payment", "konto", "account", "login", "log in",
   "logge på",
-  "verify", "verification", "bekræft", "identitet", "identity",
+  "verify", "verification", "betalingsverifikation", "payment verification",
+  "betaling verificering", "bekræft", "identitet", "identity",
   "låst", "locked", "spærret", "blocked", "udløber", "expired",
+  "konto på hold", "konto er sat på hold", "account on hold",
+  "netværkssikkerhed", "sikkerhedsprogram", "udgående trafik", "suspenderet",
+  "ikke fuldt beskyttet", "aktivér beskyttelse", "aktiver beskyttelse",
+  "gendan din sikkerhed",
   "pakke", "package", "levering", "delivery", "forsendelse", "shipment",
   "afgift", "invoice", "faktura", "abonnement", "subscription",
   "spørgeskema", "survey", "questionnaire", "undersøgelse",
@@ -330,7 +340,8 @@ for name, brand in pairs(brands) do
       if spoof and not task:has_symbol("ORG_PHISHING_SPOOF") then
         -- Det samme spoof-begreb kan matche flere brands i én mail; score skal kun
         -- tælles én gang for selve forfalskningen, ikke én gang per brand.
-        task:insert_result("ORG_PHISHING_SPOOF", 4.0, name .. ":" .. spoof_reason)
+        -- Andet argument er en vægt, der ganges med symbolets score (ikke selve scoren)
+        task:insert_result("ORG_PHISHING_SPOOF", 1.0, name .. ":" .. spoof_reason)
       end
 
       if not url_match and not spoof
@@ -409,6 +420,39 @@ rspamd_config:register_symbol({
     table.sort(matches)
     return true, "brands=" .. table.concat(matches, ",")
   end
+})
+
+---------------------------------------------------------------------------
+-- AFVISNING VED BRANDMATCH + FORFALSKNING
+---------------------------------------------------------------------------
+
+-- Brands med 'reject_on_spoof = true' afvises direkte, når både brandsymbolet
+-- og ORG_PHISHING_SPOOF har ramt. Et brandmatch alene giver fortsat kun score.
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_REJECT",
+  type = "postfilter",
+  -- Samme mekanisme som Rspamds force_actions-modul (set_pre_result i postfilter)
+  callback = function(task)
+    if not task:has_symbol("ORG_PHISHING_SPOOF") then
+      return
+    end
+
+    local matches = {}
+    for name, brand in pairs(brands) do
+      if brand.reject_on_spoof and task:has_symbol(brand.symbol) then
+        matches[#matches + 1] = name
+      end
+    end
+
+    if #matches == 0 then
+      return
+    end
+
+    table.sort(matches)
+    local which = table.concat(matches, ",")
+    logger.infox(task, "ORG_PHISHING: rejecting brand spoof (%s)", which)
+    task:set_pre_result("reject", "Phishing rejected (brand spoof)", "org_phishing")
+  end,
 })
 
 logger.infox("ORG_PHISHING: alle brandsymboler registreret")

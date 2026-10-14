@@ -91,6 +91,8 @@ return {
     keywords = {
       "cloud services",
       "cloud storage",
+      "cloud backup",
+      "cloud backups",
       "storage plan",
       "storage access",
       "subscription expired",
@@ -110,6 +112,12 @@ return {
       "update your payment method to keep your cloud storage",
       "your cloud files will be deleted",
       "access to your cloud files has been suspended",
+      "scheduled for deletion",
+      "permanent data loss",
+      "renew your storage plan",
+      "your files are scheduled to be removed",
+      "cloud backups",
+      "keep my files",
       "din cloud konto er låst",
       "din skylagring er fuld",
       "abonnement på skylagring er udløbet",
@@ -196,6 +204,22 @@ return {
     domains = {
       "jyskebank.dk",
       "jyskebank.com",
+    },
+  },
+
+  JYSK = {
+    symbol = "ORG_PHISHING_JYSK",
+    score = 8.0,
+    keywords = {
+      "jysk",
+    },
+    context_keywords = {
+      "besvar vores korte spørgeskema",
+      "vælge en gave fra vores aktuelle kampagne",
+    },
+    domains = {
+      "jysk.dk",
+      "jysk.com",
     },
   },
 
@@ -412,11 +436,30 @@ return {
   PUNKTUMDK = {
     symbol = "ORG_PHISHING_PUNKTUMDK",
     score = 8.5,
+    reject_on_spoof = true,
     keywords = {
       "punktum.dk",
       "punktum hosting",
       "punktumhosting",
       "domaeneservice",
+      ".dk domæne",
+      ".dk domæne & hosting",
+      ".dk domaene & hosting",
+      -- Punktum dk's adresse bruges i footeren på falske fornyelsesfakturaer
+      "Ørestads Blvd. 108",
+      "ørestads blvd. 108",
+      "Ørestads Boulevard 108",
+      "ørestads boulevard 108",
+    },
+    spoof_keywords = {
+      "punktum.dk",
+      "punktum hosting",
+      "punktumhosting",
+      "domaeneservice",
+      ".dk domæne",
+      "domænefornyelse",
+      "Domænefornyelse",
+      "domaenefornyelse",
     },
     domains = {
       "punktum.dk",
@@ -1308,6 +1351,16 @@ return {
       "package will be returned",
       "parcel will be returned",
       "delivery payment failed",
+      "track your package",
+      "track package",
+      "tracking number",
+      "shipment status",
+      "spor din pakke",
+      "sporingsnummer",
+      "sporing",
+      "din pakke er på vej",
+      "din ordre er på vej",
+      "transportør",
       "leveringsgebyr",
       "pakken tilbageholdes",
       "bekræft din leveringsadresse",

@@ -55,6 +55,8 @@ local trusted_sender_domains = {
   "burd.dk",
   "kristeligt-dagblad.dk",
   "paradoxinteractive.com",
+  -- e-Boks advarer om ny post fra mange afsendere (fx "ny post fra Andel Energi")
+  "e-boks.dk",
 }
 
 local trusted_newsletter_domains = {

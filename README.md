@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.5.0-blue?style=flat-square" alt="Version 1.5.0">
+  <img src="https://img.shields.io/badge/version-1.6.0-blue?style=flat-square" alt="Version 1.6.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -94,9 +94,15 @@ Power, Nets, Steam, Booking.com, UPS og Bring bruger ligeledes målrettet
 kontekst, og brand-URL'er er ikke tilstrækkelige alene for disse brands.
 For Bring omfatter den målrettede kontekst også sporingslokkemidler som
 "spor din pakke" og "sporingsnummer".
+Spotify og TV 2 Play kræver også mistænkelig kontekst, før links til brandets
+eget domæne tæller, da artikler og nyhedsbreve ofte linker til
+`open.spotify.com` og `tv2.dk`.
 Cloud Services matcher ikke længere generiske Google-, Dropbox- eller
 OneDrive-domæner. Apple-app-links i DMARC-godkendte meddelelser fra
 `postnord.com` ignoreres fortsat.
+DMARC-godkendte meddelelser fra `e-boks.dk` (inkl. `advisering.e-boks.dk`) kan
+omtale alle brands, fx "Du har fået ny post fra Andel Energi", uden et brandmatch;
+brand-links og afsenderforfalskning kontrolleres fortsat.
 DMARC-godkendte meddelelser fra `e-boks.dk` kan omtale NyKredit uden et
 brandmatch; NyKredit-links og tegn på afsenderforfalskning kontrolleres fortsat.
 DMARC-godkendte meddelelser fra `advisering.e-boks.dk` kan omtale Coop uden et

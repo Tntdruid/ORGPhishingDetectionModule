@@ -189,6 +189,8 @@ return {
       "play.tv2.dk",
       "tv2play.dk",
     },
+    -- Artikler og nyhedsbreve linker ofte til tv2.dk uden at være phishing
+    url_requires_context = true,
     trusted_mention_senders = {
       "tv2kosmopol.dk",
     },
@@ -1199,6 +1201,8 @@ return {
     domains = {
       "spotify.com",
     },
+    -- Podcast-/afspilningslinks til open.spotify.com er normale i nyhedsbreve
+    url_requires_context = true,
   },
 
   STEAM = {

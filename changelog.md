@@ -1,7 +1,9 @@
 # Ændringslog
 
-## Ikke udgivet endnu
+## 1.6.0 - 16. oktober 2026
 
+- Spotify og TV 2 Play kræver nu mistænkelig kontekst, før links til brandets eget domæne tæller, så artikler og nyhedsbreve med links til `open.spotify.com` og `tv2.dk` ikke markeres.
+- Undtaget brandomtale i DMARC-godkendte meddelelser fra `e-boks.dk` for alle brands (fx "Du har fået ny post fra Andel Energi"). Brand-links og afsenderforfalskning kontrolleres fortsat.
 - Rettet `ORG_PHISHING_SPOOF`, der gav 4-5 gange for høj score, fordi vægten 4.0 blev ganget med symbolets score. Vægten er nu 1.0.
 - Tilføjet `reject_on_spoof`-flag og postfilteret `ORG_PHISHING_REJECT`, der afviser mails ved brandmatch kombineret med forfalskning. Aktiveret for Punktum.dk.
 - Forbedret Punktum.dk-detektering: visningsnavne som "Domænefornyelse" udløser nu brandforfalskning, og Punktum dk's adresse (Ørestads Blvd. 108) i footeren tæller som brandmatch.

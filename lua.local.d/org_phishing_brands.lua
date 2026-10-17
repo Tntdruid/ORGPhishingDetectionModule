@@ -164,6 +164,8 @@ return {
       "appleid.apple.com",
       "idmsa.apple.com",
     },
+    -- App Store-links (itunes.apple.com, apps.apple.com) er normale i nyhedsbreve
+    url_requires_context = true,
     trusted_senders = {
       "postnord.com",
     },

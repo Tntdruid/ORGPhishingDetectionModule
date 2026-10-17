@@ -94,9 +94,9 @@ Power, Nets, Steam, Booking.com, UPS og Bring bruger ligeledes målrettet
 kontekst, og brand-URL'er er ikke tilstrækkelige alene for disse brands.
 For Bring omfatter den målrettede kontekst også sporingslokkemidler som
 "spor din pakke" og "sporingsnummer".
-Spotify og TV 2 Play kræver også mistænkelig kontekst, før links til brandets
+Apple, Spotify og TV 2 Play kræver også mistænkelig kontekst, før links til brandets
 eget domæne tæller, da artikler og nyhedsbreve ofte linker til
-`open.spotify.com` og `tv2.dk`.
+`itunes.apple.com`, `open.spotify.com` og `tv2.dk`.
 Cloud Services matcher ikke længere generiske Google-, Dropbox- eller
 OneDrive-domæner. Apple-app-links i DMARC-godkendte meddelelser fra
 `postnord.com` ignoreres fortsat.
@@ -121,6 +121,7 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING` | Hovedsymbol, når et eller flere brandsymboler matcher | 12.0 |
 | `ORG_PHISHING_SPOOF` | Ekstra resultat ved opdaget brandforfalskning | 4.0 |
 | `ORG_PHISHING_<BRAND>` | Individuelt brandmatch | Se brandfilen |
+| `ORG_PHISHING_FREEMAIL` | Brandmatch fra en freemail-afsender (fx gmail.com) med links til andre domæner end brandets | 5.0 |
 | `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |
 
 Brands med `reject_on_spoof = true` i brandfilen afvises direkte, når både

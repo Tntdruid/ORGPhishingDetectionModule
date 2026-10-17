@@ -1,5 +1,10 @@
 # Udgivelser
 
+## Ikke udgivet endnu
+
+- Apple kræver nu målrettet kontekst, før links til Apples domæner tæller, så App Store-links i fx Strava-mails ikke giver et Apple-match.
+- Tilføjet `ORG_PHISHING_FREEMAIL` (5.0), der rammer brandmatch fra freemail-afsendere som gmail.com, når mailen linker til andre domæner end brandets egne.
+
 ## 1.6.0 - 16. oktober 2026
 
 - Spotify og TV 2 Play kræver nu mistænkelig kontekst, før links til brandets eget domæne tæller, så artikler og nyhedsbreve med links til `open.spotify.com` og `tv2.dk` ikke markeres.

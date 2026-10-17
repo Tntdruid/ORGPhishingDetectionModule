@@ -396,6 +396,67 @@ rspamd_config:register_symbol({
 })
 
 ---------------------------------------------------------------------------
+-- BRANDMATCH FRA FREEMAIL-AFSENDER
+---------------------------------------------------------------------------
+
+-- Brands sender ikke fra gratis mailkonti. Et brandmatch fra fx gmail.com med
+-- links til andre domæner end brandets egne er et stærkt phishingtegn.
+local freemail_domains = {
+  "gmail.com", "googlemail.com",
+  "outlook.com", "outlook.dk", "hotmail.com", "hotmail.dk", "live.com", "live.dk",
+  "msn.com", "yahoo.com", "yahoo.dk", "ymail.com", "aol.com",
+  "icloud.com", "me.com", "mac.com",
+  "gmx.com", "gmx.net", "mail.com", "proton.me", "protonmail.com",
+  "zoho.com", "yandex.com", "mail.ru",
+}
+
+local function has_foreign_url(task, brand)
+  for _, u in ipairs(task:get_urls() or {}) do
+    local h = u:get_host()
+    if h then
+      h = lower(h):gsub("%.$", "")
+      if not domain_matches(h, brand.domains) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_FREEMAIL",
+  score = 5.0,
+  description = "Brandmatch fra freemail-afsender med fremmede links",
+  -- Separat symbol (ikke ORG_PHISHING_SPOOF), så reject_on_spoof ikke udløses af
+  -- private mails, der blot omtaler et brand
+  group = "phishing_meta",
+
+  callback = function(task)
+    if not domain_matches(from_domain(task), freemail_domains) then
+      return false
+    end
+
+    local matches = {}
+    for name, brand in pairs(brands) do
+      if task:has_symbol(brand.symbol) and has_foreign_url(task, brand) then
+        matches[#matches + 1] = name
+      end
+    end
+
+    if #matches == 0 then
+      return false
+    end
+
+    table.sort(matches)
+    return true, table.concat(matches, ",")
+  end,
+})
+
+for _, brand in pairs(brands) do
+  rspamd_config:register_dependency("ORG_PHISHING_FREEMAIL", brand.symbol)
+end
+
+---------------------------------------------------------------------------
 -- HOVEDSYMBOL (SAMLER ALLE BRANDMATCH)
 ---------------------------------------------------------------------------
 

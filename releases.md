@@ -1,5 +1,10 @@
 # Udgivelser
 
+## 1.9.0 - 18. oktober 2026
+
+- Tilføjet `extra_context_keywords`, der supplerer den fælles mistænkelige kontekst for et brand i stedet for at erstatte den.
+- Forbedret SKAT-detektering med skatteord som "skattekonto", "skatteopgørelse" og "årsopgørelse", tilføjet `sktst.dk` som legitimt domæne og slået `reject_on_spoof` til.
+
 ## 1.8.0 - 18. oktober 2026
 
 - Slået `reject_on_spoof` til for Spotify, så betalingsphishing med visningsnavnet "Spotify" fra fremmede domæner afvises.

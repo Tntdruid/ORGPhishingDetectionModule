@@ -320,6 +320,11 @@ local function check_brand(task, brand)
   local context_keywords = brand.context_keywords or suspicious_context
   local context_match = subject_contains(task, context_keywords)
      or body_contains(task, context_keywords)
+  -- extra_context_keywords supplerer den fælles liste i stedet for at erstatte den
+  if not context_match and brand.extra_context_keywords then
+    context_match = subject_contains(task, brand.extra_context_keywords)
+       or body_contains(task, brand.extra_context_keywords)
+  end
   local url_signal = url_match
      and (context_match or not brand.url_requires_context)
 

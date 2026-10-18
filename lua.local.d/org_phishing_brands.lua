@@ -785,16 +785,32 @@ return {
   SKAT = {
     symbol = "ORG_PHISHING_SKAT",
     score = 8.0,
+    reject_on_spoof = true,
     keywords = {
       "skat",
       "skattestyrelsen",
       "tastselv",
       "tast selv",
     },
+    -- Sammensatte skatteord matcher ikke den fælles kontekst (fx "konto")
+    extra_context_keywords = {
+      "skattekonto",
+      "brugerkonto",
+      "skatteopgørelse",
+      "årsopgørelse",
+      "årsopgørelsen",
+      "skatterefusion",
+      "tilbagebetaling",
+      "overskydende skat",
+      "restskat",
+      "skatterevision",
+      "skatterevisionskontor",
+    },
     domains = {
       "skat.dk",
       "tastselv.skat.dk",
       "logon.skat.dk",
+      "sktst.dk",
     },
   },
 

@@ -1,6 +1,6 @@
 # Udgivelser
 
-## Ikke udgivet endnu
+## 1.7.0 - 18. oktober 2026
 
 - Tilføjet forfalskningsgrunden `subject-spoof`: et emne, der starter med brandnavnet (fx "EasyPark AB-Opdater dine betalingsoplysninger") fra et fremmed domæne, udløser nu `ORG_PHISHING_SPOOF`.
 - Undtaget brandomtale i DMARC-godkendte meddelelser fra transportørernes egne domæner (PostNord, GLS, DAO m.fl.), så pakkeshops som "Pakkeshop Meny" ikke giver et Meny-match.

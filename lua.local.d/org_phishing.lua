@@ -155,10 +155,27 @@ local function authenticated_brand_trusted_sender(task, brand)
     and task:has_symbol("DMARC_POLICY_ALLOW")
 end
 
+-- Transportørernes egne domæner (brands med carrier_notification). Deres
+-- meddelelser nævner pakkeshops som Meny, Netto og Coop som afhentningssted.
+local carrier_domains = {}
+for _, b in pairs(brands) do
+  if b.carrier_notification then
+    for _, d in ipairs(b.domains or {}) do
+      carrier_domains[#carrier_domains + 1] = d
+    end
+  end
+end
+
 local function authenticated_brand_mention_sender(task, brand)
+  local sender_domain = from_domain(task)
+  if not task:has_symbol("DMARC_POLICY_ALLOW") then
+    return false
+  end
+  if domain_matches(sender_domain, carrier_domains) then
+    return true
+  end
   return brand.trusted_mention_senders
-    and domain_matches(from_domain(task), brand.trusted_mention_senders)
-    and task:has_symbol("DMARC_POLICY_ALLOW")
+    and domain_matches(sender_domain, brand.trusted_mention_senders)
 end
 
 local carrier_risky_context = {
@@ -265,6 +282,23 @@ local function check_spoof(task, brand)
   for _, kw in ipairs(spoof_keywords) do
     if contains_keyword(reply, kw) then
       return true, "reply-to-spoof"
+    end
+  end
+
+  -- Emne, der starter med brandnavnet (fx "EasyPark AB-Opdater dine
+  -- betalingsoplysninger"), fra et domæne der ikke tilhører brandet.
+  -- Betroede nyhedsbrevsafsendere undtages, da de kan indlede emner med brands.
+  if not authenticated_trusted_sender(task)
+    and not authenticated_brand_mention_sender(task, brand)
+  then
+    local subject = lower(task:get_subject() or ""):gsub("^%s+", "")
+    for _, kw in ipairs(spoof_keywords) do
+      local needle = lower(kw)
+      if subject:sub(1, #needle) == needle
+        and not is_word_byte(subject:byte(#needle + 1))
+      then
+        return true, "subject-spoof"
+      end
     end
   end
 

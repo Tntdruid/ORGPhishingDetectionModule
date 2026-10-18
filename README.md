@@ -72,6 +72,7 @@ Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en
 - MitID-reglen genkender stavevarianten `MitlD` sammen med mistænkelig kontekst som en opfordring til at logge på.
 - forfalskning af visningsnavn
 - forfalskning af Reply-To
+- emne, der starter med brandnavnet, fra et domæne der ikke tilhører brandet
 - undtagelser for godkendte betroede afsendere ved tekstomtale af andre brands
 
 DMARC-godkendte meddelelser fra `burd.dk` kan omtale andre brands, som Burd leverer
@@ -107,6 +108,9 @@ DMARC-godkendte meddelelser fra `e-boks.dk` kan omtale NyKredit uden et
 brandmatch; NyKredit-links og tegn på afsenderforfalskning kontrolleres fortsat.
 DMARC-godkendte meddelelser fra `advisering.e-boks.dk` kan omtale Coop uden et
 brandmatch; Coop-links og tegn på afsenderforfalskning kontrolleres fortsat.
+DMARC-godkendte meddelelser fra transportørernes egne domæner kan omtale andre
+brands, fx pakkeshops som "Pakkeshop Meny", uden et brandmatch; brand-links og
+afsenderforfalskning kontrolleres fortsat.
 Forsendelsesmeddelelser fra transportørbrands kræver ikke en særskilt butiksliste:
 de ignoreres, når afsenderen består DMARC, linkene kun går til afsenderens eget
 domæne eller transportørens domæner, og meddelelsen ikke indeholder betalings-

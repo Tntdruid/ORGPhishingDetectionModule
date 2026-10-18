@@ -454,6 +454,8 @@ return {
       "ørestads blvd. 108",
       "Ørestads Boulevard 108",
       "ørestads boulevard 108",
+      -- CVR-nummer genbrugt i kampagnens footer
+      "cvr 24210375",
     },
     spoof_keywords = {
       "punktum.dk",
@@ -464,6 +466,12 @@ return {
       "domænefornyelse",
       "Domænefornyelse",
       "domaenefornyelse",
+      ".dk registreringsafdeling",
+      "registreringsafdeling",
+      "domæneafdeling",
+      "domæneafdelingen",
+      "Domæneafdeling",
+      "Domæneafdelingen",
     },
     domains = {
       "punktum.dk",

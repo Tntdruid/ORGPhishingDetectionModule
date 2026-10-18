@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.7.0-blue?style=flat-square" alt="Version 1.7.0">
+  <img src="https://img.shields.io/badge/version-1.8.0-blue?style=flat-square" alt="Version 1.8.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -130,7 +130,9 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 
 Brands med `reject_on_spoof = true` i brandfilen afvises direkte, når både
 brandsymbolet og `ORG_PHISHING_SPOOF` rammer samme mail. Et brandmatch uden
-forfalskning giver fortsat kun score. I øjeblikket gælder dette Punktum.dk.
+forfalskning giver fortsat kun score. Kun forfalsket visningsnavn eller
+Reply-To udløser afvisning; `subject-spoof` giver kun score. I øjeblikket gælder
+dette Punktum.dk og Spotify.
 
 De individuelle brandsymboler dækker i øjeblikket:
 

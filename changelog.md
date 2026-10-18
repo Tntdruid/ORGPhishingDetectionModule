@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.8.0 - 18. oktober 2026
+
+- Slået `reject_on_spoof` til for Spotify, så betalingsphishing med visningsnavnet "Spotify" fra fremmede domæner afvises.
+- `ORG_PHISHING_REJECT` afviser nu kun ved forfalsket visningsnavn eller Reply-To; `subject-spoof` giver fortsat kun score.
+
 ## 1.7.0 - 18. oktober 2026
 
 - Tilføjet forfalskningsgrunden `subject-spoof`: et emne, der starter med brandnavnet (fx "EasyPark AB-Opdater dine betalingsoplysninger") fra et fremmed domæne, udløser nu `ORG_PHISHING_SPOOF`.

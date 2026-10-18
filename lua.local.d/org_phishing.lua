@@ -525,12 +525,37 @@ rspamd_config:register_symbol({
 
 -- Brands med 'reject_on_spoof = true' afvises direkte, når både brandsymbolet
 -- og ORG_PHISHING_SPOOF har ramt. Et brandmatch alene giver fortsat kun score.
+-- Kun forfalsket visningsnavn/Reply-To afviser; subject-spoof er for svagt et
+-- signal alene (fx nyhedsbreve med emnet "Spotify hæver prisen ...").
+local reject_spoof_reasons = {
+  ["display-name-spoof"] = true,
+  ["reply-to-spoof"] = true,
+}
+
+local function spoof_allows_reject(task)
+  local res = task.get_symbol and task:get_symbol("ORG_PHISHING_SPOOF")
+  local opts = res and res[1] and res[1].options
+  if not opts or #opts == 0 then
+    -- Ukendt grund: bevar tidligere adfærd
+    return true
+  end
+  for _, opt in ipairs(opts) do
+    local reason = tostring(opt):match(":(.+)$")
+    if reason and reject_spoof_reasons[reason] then
+      return true
+    end
+  end
+  return false
+end
+
 rspamd_config:register_symbol({
   name = "ORG_PHISHING_REJECT",
   type = "postfilter",
   -- Samme mekanisme som Rspamds force_actions-modul (set_pre_result i postfilter)
   callback = function(task)
-    if not task:has_symbol("ORG_PHISHING_SPOOF") then
+    if not task:has_symbol("ORG_PHISHING_SPOOF")
+      or not spoof_allows_reject(task)
+    then
       return
     end
 

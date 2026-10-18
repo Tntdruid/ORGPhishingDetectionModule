@@ -1204,6 +1204,7 @@ return {
   SPOTIFY = {
     symbol = "ORG_PHISHING_SPOTIFY",
     score = 8.0,
+    reject_on_spoof = true,
     keywords = {
       "spotify",
       "spotify premium",

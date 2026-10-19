@@ -57,6 +57,8 @@ local trusted_sender_domains = {
   "paradoxinteractive.com",
   -- e-Boks advarer om ny post fra mange afsendere (fx "ny post fra Andel Energi")
   "e-boks.dk",
+  -- Kirkeministeriet videresender avisartikler, der nævner brands i forbifarten
+  "km.dk",
 }
 
 local trusted_newsletter_domains = {

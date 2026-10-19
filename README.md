@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.10.0-blue?style=flat-square" alt="Version 1.10.0">
+  <img src="https://img.shields.io/badge/version-1.11.0-blue?style=flat-square" alt="Version 1.11.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -77,7 +77,7 @@ Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en
 
 DMARC-godkendte meddelelser fra `burd.dk` kan omtale andre brands, som Burd leverer
 for, uden at udløse et brandmatch alene på grund af tekstomtalen. Det samme gælder
-tekstomtaler i godkendte meddelelser fra `kristeligt-dagblad.dk` og
+tekstomtaler i godkendte meddelelser fra `kristeligt-dagblad.dk`, `km.dk` og
 `paradoxinteractive.com`; brand-URL'er og tegn på forfalskning udløser stadig
 kontrol. Redaktionelle nyhedsbreve fra `digitalt.tv` med godkendt DKIM og
 `List-Unsubscribe` behandles tilsvarende som betroede tekstomtaler.

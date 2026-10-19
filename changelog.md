@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.11.0 - 19. oktober 2026
+
+- Tilføjet `km.dk` som betroet afsender, så videresendte avisartikler, der nævner brands som Lidl i forbifarten, ikke giver brandmatch. Brand-links og afsenderforfalskning kontrolleres fortsat.
+
 ## 1.10.0 - 19. oktober 2026
 
 - Butikkers DMARC-godkendte ordrebekræftelser, der nævner transportøren og linker til den (fx Matas med Burd), giver ikke længere transportør-match. Links til andre underdomæner af afsenderens domæne accepteres, og "konto" alene tæller ikke som risikokontekst for transportører.

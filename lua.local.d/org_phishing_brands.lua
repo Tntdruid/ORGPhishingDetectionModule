@@ -98,6 +98,8 @@ return {
       "subscription expired",
       "renew subscription",
       "cloud plan",
+      "lagerplads i skyen",
+      "skylagring",
     },
     context_keywords = {
       "cloud storage is full",
@@ -121,6 +123,11 @@ return {
       "din cloud konto er låst",
       "din skylagring er fuld",
       "abonnement på skylagring er udløbet",
+      "i skyen er fuld",
+      "din lagerplads er helt opbrugt",
+      "ingen ledig lagerplads",
+      "der er ikke mere ledig lagerplads",
+      "mere lagerplads",
     },
     domains = {
       "cloudservices.com",

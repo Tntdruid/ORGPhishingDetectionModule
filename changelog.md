@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.12.0 - 19. oktober 2026
+
+- Forbedret Cloud Services-detektering med danske kampagnefraser som "lagerplads i skyen", "din lagerplads er helt opbrugt" og "ingen ledig lagerplads".
+
 ## 1.11.0 - 19. oktober 2026
 
 - Tilføjet `km.dk` som betroet afsender, så videresendte avisartikler, der nævner brands som Lidl i forbifarten, ikke giver brandmatch. Brand-links og afsenderforfalskning kontrolleres fortsat.

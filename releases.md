@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.10.0 - 19. oktober 2026
+
+- Butikkers DMARC-godkendte ordrebekræftelser, der nævner transportøren og linker til den (fx Matas med Burd), giver ikke længere transportør-match. Links til andre underdomæner af afsenderens domæne accepteres, og "konto" alene tæller ikke som risikokontekst for transportører.
+
 ## 1.9.0 - 18. oktober 2026
 
 - Tilføjet `extra_context_keywords`, der supplerer den fælles mistænkelige kontekst for et brand i stedet for at erstatte den.

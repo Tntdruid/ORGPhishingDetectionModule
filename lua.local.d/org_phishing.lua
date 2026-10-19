@@ -182,7 +182,9 @@ local carrier_risky_context = {
   "betaling", "payment", "pay", "betale", "afgift", "gebyr", "fee",
   "faktura", "invoice", "betalingsoplysninger", "kortoplysninger",
   "betalingsverifikation", "payment verification",
-  "konto", "account", "login", "log in", "logge på", "adgangskode",
+  -- "konto"/"account" alene er udeladt: butikkers ordrebekræftelser nævner
+  -- typisk kundekontoen (fx "point ... synlige på din konto")
+  "login", "log in", "logge på", "adgangskode",
   "password", "verify", "verification", "bekræft", "identitet",
   "identity", "konto på hold", "konto er sat på hold", "account on hold",
   "låst", "locked", "spærret", "blocked", "udløber", "expired",
@@ -225,6 +227,12 @@ local function urls_match(task, brand)
   return false
 end
 
+-- Organisatorisk domæne (de to sidste labels), så fx www.matas.dk regnes som
+-- samme afsender som web.matas.dk
+local function base_domain(domain)
+  return domain and domain:match("([^.]+%.[^.]+)$") or domain
+end
+
 local function authenticated_carrier_notification(task, brand, sender_domain)
   if not brand.carrier_notification
     or not sender_domain
@@ -243,7 +251,7 @@ local function authenticated_carrier_notification(task, brand, sender_domain)
 
     host = lower(host):gsub("%.$", "")
     if not domain_matches(host, brand.domains)
-      and not domain_matches(host, { sender_domain })
+      and not domain_matches(host, { base_domain(sender_domain) })
     then
       return false
     end

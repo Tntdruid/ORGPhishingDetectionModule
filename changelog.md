@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.13.0 - 20. oktober 2026
+
+- Tilføjet `ORG_PHISHING_CAMPAIGN`, der genkender kendte kampagnefingeraftryk på tværs af brands og afviser mailen. Første fingeraftryk er Punktum dk A/S' ægte footer (CVR 24210375 og Ørestads Blvd. 108), som svindlere kopierer ind i både falske Punktum.dk- og Spotify-mails. Mails fra `punktum.dk` og `dk-hostmaster.dk` undtages.
+- Tilføjet `dk-hostmaster.dk` som legitimt Punktum.dk-domæne.
+
 ## 1.12.0 - 19. oktober 2026
 
 - Forbedret Cloud Services-detektering med danske kampagnefraser som "lagerplads i skyen", "din lagerplads er helt opbrugt" og "ingen ledig lagerplads".

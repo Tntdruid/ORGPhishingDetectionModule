@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.12.0-blue?style=flat-square" alt="Version 1.12.0">
+  <img src="https://img.shields.io/badge/version-1.13.0-blue?style=flat-square" alt="Version 1.13.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -128,6 +128,7 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING` | Hovedsymbol, når et eller flere brandsymboler matcher | 12.0 |
 | `ORG_PHISHING_SPOOF` | Ekstra resultat ved opdaget brandforfalskning | 4.0 |
 | `ORG_PHISHING_<BRAND>` | Individuelt brandmatch | Se brandfilen |
+| `ORG_PHISHING_CAMPAIGN` | Kendt kampagnefingeraftryk (fx genbrugt footer med CVR og adresse); afvises altid | 10.0 |
 | `ORG_PHISHING_FREEMAIL` | Brandmatch fra en freemail-afsender (fx gmail.com) med links til andre domæner end brandets | 5.0 |
 | `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |
 

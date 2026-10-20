@@ -461,7 +461,7 @@ return {
       "ørestads blvd. 108",
       "Ørestads Boulevard 108",
       "ørestads boulevard 108",
-      -- CVR-nummer genbrugt i kampagnens footer
+      -- Punktum dk A/S' ægte CVR-nummer, kopieret ind i falske footere
       "cvr 24210375",
     },
     spoof_keywords = {
@@ -482,6 +482,8 @@ return {
     },
     domains = {
       "punktum.dk",
+      -- Punktum dk A/S hed tidligere DK Hostmaster
+      "dk-hostmaster.dk",
     },
     url_requires_context = true,
   },

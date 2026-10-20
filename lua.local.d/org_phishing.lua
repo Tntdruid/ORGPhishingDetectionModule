@@ -535,6 +535,52 @@ rspamd_config:register_symbol({
 })
 
 ---------------------------------------------------------------------------
+-- KAMPAGNEFINGERAFTRYK
+---------------------------------------------------------------------------
+
+-- Kendte phishingkampagner, der genbruger samme footer på tværs af brands
+-- (fx falske Punktum.dk- og Spotify-fakturaer). Alle grupper i 'all_of' skal
+-- matche (mindst ét udtryk pr. gruppe). Afsendere fra 'except_domains' undtages.
+local campaign_fingerprints = {
+  {
+    -- Punktum dk A/S' ægte CVR og adresse, kopieret ind i falske footere
+    name = "PUNKTUM_FOOTER",
+    all_of = {
+      { "cvr 24210375" },
+      { "Ørestads Blvd. 108", "ørestads blvd. 108",
+        "Ørestads Boulevard 108", "ørestads boulevard 108" },
+    },
+    except_domains = { "punktum.dk", "dk-hostmaster.dk" },
+  },
+}
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_CAMPAIGN",
+  score = 10.0,
+  description = "Kendt phishingkampagne (genbrugt footer)",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local sender_domain = from_domain(task)
+    for _, fp in ipairs(campaign_fingerprints) do
+      if not domain_matches(sender_domain, fp.except_domains) then
+        local all = true
+        for _, group in ipairs(fp.all_of) do
+          if not (subject_contains(task, group) or body_contains(task, group)) then
+            all = false
+            break
+          end
+        end
+        if all then
+          return true, fp.name
+        end
+      end
+    end
+    return false
+  end,
+})
+
+---------------------------------------------------------------------------
 -- AFVISNING VED BRANDMATCH + FORFALSKNING
 ---------------------------------------------------------------------------
 
@@ -568,6 +614,13 @@ rspamd_config:register_symbol({
   type = "postfilter",
   -- Samme mekanisme som Rspamds force_actions-modul (set_pre_result i postfilter)
   callback = function(task)
+    -- Kendt kampagnefingeraftryk afvises uanset brand og forfalskning
+    if task:has_symbol("ORG_PHISHING_CAMPAIGN") then
+      logger.infox(task, "ORG_PHISHING: rejecting known campaign")
+      task:set_pre_result("reject", "Phishing rejected (known campaign)", "org_phishing")
+      return
+    end
+
     if not task:has_symbol("ORG_PHISHING_SPOOF")
       or not spoof_allows_reject(task)
     then

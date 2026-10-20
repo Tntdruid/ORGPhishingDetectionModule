@@ -488,6 +488,30 @@ return {
     url_requires_context = true,
   },
 
+  HETZNER = {
+    symbol = "ORG_PHISHING_HETZNER",
+    score = 8.5,
+    reject_on_spoof = true,
+    keywords = {
+      "hetzner",
+      "hetzner online",
+    },
+    -- Inkl. stavevarianter, som svindlere bruger i visningsnavnet
+    spoof_keywords = {
+      "hetzner",
+      "hetzner online",
+      "hetznar",
+      "hetzner gmbh",
+      "hetznar online",
+    },
+    domains = {
+      "hetzner.com",
+      "hetzner.de",
+      "hetzner.cloud",
+      "your-server.de",
+    },
+  },
+
   DANSKEBANK = {
     symbol = "ORG_PHISHING_DANSKEBANK",
     score = 9.0,

@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.14.0 - 20. oktober 2026
+
+- Tilføjet Hetzner-detektering for betalingsphishing, inkl. stavevarianten "Hetznar" i visningsnavnet og `reject_on_spoof`.
+
 ## 1.13.0 - 20. oktober 2026
 
 - Tilføjet `ORG_PHISHING_CAMPAIGN`, der genkender kendte kampagnefingeraftryk på tværs af brands og afviser mailen. Første fingeraftryk er Punktum dk A/S' ægte footer (CVR 24210375 og Ørestads Blvd. 108), som svindlere kopierer ind i både falske Punktum.dk- og Spotify-mails. Mails fra `punktum.dk` og `dk-hostmaster.dk` undtages.

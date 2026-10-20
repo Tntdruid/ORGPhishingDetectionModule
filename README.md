@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.14.0-blue?style=flat-square" alt="Version 1.14.0">
+  <img src="https://img.shields.io/badge/version-1.15.0-blue?style=flat-square" alt="Version 1.15.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -73,6 +73,7 @@ Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en
 - forfalskning af visningsnavn
 - forfalskning af Reply-To
 - emne, der starter med brandnavnet, fra et domæne der ikke tilhører brandet
+- visningsnavn med forvekslelige tegn (homoglyffer), fx matematiske Unicode-bogstaver eller latinske bogstaver blandet med græske/kyrilliske tegn; sammen med et brandmatch afvises mailen for alle brands
 - undtagelser for godkendte betroede afsendere ved tekstomtale af andre brands
 
 DMARC-godkendte meddelelser fra `burd.dk` kan omtale andre brands, som Burd leverer
@@ -161,6 +162,7 @@ De individuelle brandsymboler dækker i øjeblikket:
 - Danske Bank
 - Nordea
 - JYSK
+- Magasin
 - Jyske Bank
 - Sydbank
 - Lunar

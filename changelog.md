@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.15.0 - 20. oktober 2026
+
+- Tilføjet forfalskningsgrunden `display-name-homoglyph`: visningsnavne med forvekslelige tegn (fx "𝖪ɑr𝗇ɑ") udløser `ORG_PHISHING_SPOOF`, og sammen med et brandmatch afvises mailen for alle brands.
+- Tilføjet Magasin-detektering for spørgeskema-kampagner med gaveincitament (fx "gratis parfume"), med krav om målrettet kontekst.
+
 ## 1.14.0 - 20. oktober 2026
 
 - Tilføjet Hetzner-detektering for betalingsphishing, inkl. stavevarianten "Hetznar" i visningsnavnet og `reject_on_spoof`.

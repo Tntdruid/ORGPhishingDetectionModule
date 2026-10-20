@@ -266,6 +266,26 @@ end
 -- FORFALSKNINGSKONTROL
 ---------------------------------------------------------------------------
 
+-- Visningsnavne skrevet med forvekslelige tegn (fx "𝖪ɑr𝗇ɑ"): matematiske
+-- Unicode-bogstaver, eller latinske bogstaver blandet med græske, kyrilliske,
+-- armenske eller IPA-tegn.
+local function has_homoglyphs(s)
+  if not s or s == "" then
+    return false
+  end
+  -- Mathematical Alphanumeric Symbols (U+1D400-U+1D7FF)
+  if s:find("\240\157[\144-\159]") then
+    return true
+  end
+  local confusable = s:find("[\206\207][\128-\191]")      -- græsk
+    or s:find("\205[\176-\191]")                           -- græsk
+    or s:find("[\208-\211][\128-\191]")                   -- kyrillisk
+    or s:find("\212[\176-\191]") or s:find("\213[\128-\191]")
+    or s:find("\214[\128-\143]")                           -- armensk
+    or s:find("\201[\144-\191]") or s:find("\202[\128-\175]") -- IPA (fx ɑ)
+  return confusable and s:find("%a") and true or false
+end
+
 local function check_spoof(task, brand)
   local from = task:get_from('mime')
   local from_dom = from_domain(task)
@@ -285,6 +305,10 @@ local function check_spoof(task, brand)
     if contains_keyword(dn, kw) then
       return true, "display-name-spoof"
     end
+  end
+
+  if has_homoglyphs(dn) then
+    return true, "display-name-homoglyph"
   end
 
   -- Forfalsket Reply-To
@@ -591,7 +615,20 @@ rspamd_config:register_symbol({
 local reject_spoof_reasons = {
   ["display-name-spoof"] = true,
   ["reply-to-spoof"] = true,
+  ["display-name-homoglyph"] = true,
 }
+
+-- Brandmatch + visningsnavn med forvekslelige tegn afvises for alle brands,
+-- også uden reject_on_spoof
+local function spoof_is_homoglyph(task)
+  local res = task.get_symbol and task:get_symbol("ORG_PHISHING_SPOOF")
+  for _, opt in ipairs(res and res[1] and res[1].options or {}) do
+    if tostring(opt):match(":display%-name%-homoglyph$") then
+      return true
+    end
+  end
+  return false
+end
 
 local function spoof_allows_reject(task)
   local res = task.get_symbol and task:get_symbol("ORG_PHISHING_SPOOF")
@@ -627,9 +664,10 @@ rspamd_config:register_symbol({
       return
     end
 
+    local homoglyph = spoof_is_homoglyph(task)
     local matches = {}
     for name, brand in pairs(brands) do
-      if brand.reject_on_spoof and task:has_symbol(brand.symbol) then
+      if (brand.reject_on_spoof or homoglyph) and task:has_symbol(brand.symbol) then
         matches[#matches + 1] = name
       end
     end

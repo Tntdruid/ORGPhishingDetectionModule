@@ -234,6 +234,29 @@ return {
     },
   },
 
+  MAGASIN = {
+    symbol = "ORG_PHISHING_MAGASIN",
+    score = 8.0,
+    -- "magasin" er også et almindeligt ord, så der kræves målrettet kontekst
+    keywords = {
+      "magasin",
+      "magasin.dk",
+      "magasin du nord",
+    },
+    context_keywords = {
+      "kundetilfredshedsundersøgelse",
+      "kundetilfredshedsundersøgelse hos magasin",
+      "gratis parfume",
+      "start undersøgelsen",
+      "deltag i undersøgelsen",
+      "som en tak for din deltagelse",
+    },
+    domains = {
+      "magasin.dk",
+    },
+    url_requires_context = true,
+  },
+
   SYDBANK = {
     symbol = "ORG_PHISHING_SYDBANK",
     score = 9.0,

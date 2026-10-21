@@ -1,5 +1,12 @@
 # Ændringslog
 
+## 1.16.0 - 21. oktober 2026
+
+- Udvidet Cloud Services-detektering med "bevar dine filer"-varianten af den danske lagerplads-kampagne.
+- Tilføjet kampagnefingeraftrykket `CLOUD_STORAGE_DK` ("Lagerplads i skyen" med felterne "Dine billeder", "Dine filer" og "Dine e-mails"), som afvises via `ORG_PHISHING_CAMPAIGN`.
+- Visningsnavne genkendes nu også, når brandnavnet er skrevet sammen med skilletegn eller ekstra tegn (fx "Butik-Harald-Nyborgdk"). Gælder nøgleord på mindst 7 tegn.
+- Slået `reject_on_spoof` til for Harald Nyborg.
+
 ## 1.15.0 - 20. oktober 2026
 
 - Tilføjet forfalskningsgrunden `display-name-homoglyph`: visningsnavne med forvekslelige tegn (fx "𝖪ɑr𝗇ɑ") udløser `ORG_PHISHING_SPOOF`, og sammen med et brandmatch afvises mailen for alle brands.

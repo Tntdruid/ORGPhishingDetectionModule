@@ -128,6 +128,11 @@ return {
       "ingen ledig lagerplads",
       "der er ikke mere ledig lagerplads",
       "mere lagerplads",
+      "bevar dine filer",
+      "bevar mine filer",
+      "dine gemte filer",
+      "sletning af dine gemte filer",
+      "sletter udbyderen dine gemte filer",
     },
     domains = {
       "cloudservices.com",
@@ -1229,6 +1234,7 @@ return {
   HARALDNYBORG = {
     symbol = "ORG_PHISHING_HARALDNYBORG",
     score = 8.0,
+    reject_on_spoof = true,
     keywords = {
       "harald nyborg",
       "harald-nyborg",

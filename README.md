@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.15.0-blue?style=flat-square" alt="Version 1.15.0">
+  <img src="https://img.shields.io/badge/version-1.16.0-blue?style=flat-square" alt="Version 1.16.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -70,7 +70,7 @@ Hvert brand kan definere:
 Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en URL, der matcher brandet. Brands med generiske navne kan kræve brand-specifik risikokontekst, også når en URL matcher. Legitime afsenderdomæner whitelistes for det pågældende brand. Godkendte betroede afsendere kan konfigureres globalt i `org_phishing.lua` eller for et enkelt brand i `org_phishing_brands.lua`; de undertrykker kun tekstmatch, mens brand-URL'er og tegn på forfalskning stadig kontrolleres. Modulet kontrollerer også:
 
 - MitID-reglen genkender stavevarianten `MitlD` sammen med mistænkelig kontekst som en opfordring til at logge på.
-- forfalskning af visningsnavn
+- forfalskning af visningsnavn, også når brandnavnet er skrevet sammen med skilletegn eller ekstra tegn (fx "Butik-Harald-Nyborgdk"; gælder nøgleord på mindst 7 tegn)
 - forfalskning af Reply-To
 - emne, der starter med brandnavnet, fra et domæne der ikke tilhører brandet
 - visningsnavn med forvekslelige tegn (homoglyffer), fx matematiske Unicode-bogstaver eller latinske bogstaver blandet med græske/kyrilliske tegn; sammen med et brandmatch afvises mailen for alle brands
@@ -137,7 +137,7 @@ Brands med `reject_on_spoof = true` i brandfilen afvises direkte, når både
 brandsymbolet og `ORG_PHISHING_SPOOF` rammer samme mail. Et brandmatch uden
 forfalskning giver fortsat kun score. Kun forfalsket visningsnavn eller
 Reply-To udløser afvisning; `subject-spoof` giver kun score. I øjeblikket gælder
-dette Punktum.dk, Spotify, SKAT og Hetzner.
+dette Punktum.dk, Spotify, SKAT, Hetzner og Harald Nyborg.
 
 De individuelle brandsymboler dækker i øjeblikket:
 

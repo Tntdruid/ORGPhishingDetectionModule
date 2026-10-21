@@ -307,6 +307,16 @@ local function check_spoof(task, brand)
     end
   end
 
+  -- Kompakt match: "Butik-Harald-Nyborgdk" indeholder "haraldnyborg", når
+  -- skilletegn fjernes. Kun lange nøgleord for at undgå tilfældige træf.
+  local compact_dn = lower(dn):gsub("[%s%p]", "")
+  for _, kw in ipairs(spoof_keywords) do
+    local compact_kw = lower(kw):gsub("[%s%p]", "")
+    if #compact_kw >= 7 and compact_dn:find(compact_kw, 1, true) then
+      return true, "display-name-spoof"
+    end
+  end
+
   if has_homoglyphs(dn) then
     return true, "display-name-homoglyph"
   end
@@ -575,6 +585,18 @@ local campaign_fingerprints = {
         "Ørestads Boulevard 108", "ørestads boulevard 108" },
     },
     except_domains = { "punktum.dk", "dk-hostmaster.dk" },
+  },
+  {
+    -- Dansk "lagerplads i skyen"-kampagne (Cloudnyt, CloudOverblik m.fl.)
+    -- med de faste felter "Dine billeder / Dine filer / Dine e-mails"
+    name = "CLOUD_STORAGE_DK",
+    all_of = {
+      { "lagerplads i skyen" },
+      { "dine billeder" },
+      { "dine filer" },
+      { "dine e-mails" },
+    },
+    except_domains = {},
   },
 }
 

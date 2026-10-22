@@ -88,6 +88,7 @@ return {
   CLOUDSERVICES = {
     symbol = "ORG_PHISHING_CLOUDSERVICES",
     score = 8.0,
+    reject_on_spoof = true,
     keywords = {
       "cloud services",
       "cloud storage",
@@ -133,6 +134,11 @@ return {
       "dine gemte filer",
       "sletning af dine gemte filer",
       "sletter udbyderen dine gemte filer",
+      "100% fyldt op",
+      "lagerplads er nået grænsen",
+      "nye filer og e-mails kan ikke modtages",
+      "se muligheder for mere plads",
+      "nuværende lagerstatus",
     },
     domains = {
       "cloudservices.com",

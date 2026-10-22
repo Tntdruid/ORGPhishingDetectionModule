@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.17.0 - 22. oktober 2026
+
+- Udvidet Cloud Services-detektering med "100% fyldt op"-varianten af den danske lagerplads-kampagne og slået `reject_on_spoof` til (fx visningsnavnet "Cloud Storage Support" fra fremmede domæner).
+
 ## 1.16.0 - 21. oktober 2026
 
 - Udvidet Cloud Services-detektering med "bevar dine filer"-varianten af den danske lagerplads-kampagne.

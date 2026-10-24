@@ -581,6 +581,53 @@ rspamd_config:register_symbol({
 })
 
 ---------------------------------------------------------------------------
+-- FORVEKSLELIGE TEGN UDEN BRANDMATCH
+---------------------------------------------------------------------------
+
+-- Ord, der blander latinske bogstaver med græske/kyrilliske/armenske/IPA-tegn
+-- (fx "Кοnto"). Mindst to ASCII-bogstaver, så enheder som "10kΩ" og "μm"
+-- ikke rammer.
+local function has_homoglyph_word(text)
+  for token in tostring(text):gmatch("%S+") do
+    local _, ascii = token:gsub("%a", "")
+    if ascii >= 2 and has_homoglyphs(token) then
+      return true
+    end
+  end
+  return false
+end
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_HOMOGLYPH",
+  score = 6.0,
+  description = "Visningsnavn eller ord skrevet med forvekslelige tegn",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local reasons = {}
+    local from = task:get_from('mime')
+    local dn = from and from[1] and from[1].name or ""
+    if has_homoglyphs(dn) then
+      reasons[#reasons + 1] = "display-name"
+    end
+    if has_homoglyph_word(task:get_subject() or "") then
+      reasons[#reasons + 1] = "subject"
+    end
+    for _, part in ipairs(task:get_text_parts() or {}) do
+      local c = part:get_content()
+      if c and has_homoglyph_word(c) then
+        reasons[#reasons + 1] = "body"
+        break
+      end
+    end
+    if #reasons == 0 then
+      return false
+    end
+    return true, table.concat(reasons, ",")
+  end,
+})
+
+---------------------------------------------------------------------------
 -- KAMPAGNEFINGERAFTRYK
 ---------------------------------------------------------------------------
 
@@ -618,6 +665,15 @@ local campaign_fingerprints = {
     name = "REPLYTO_SCOTTSDALE",
     all_of = {
       { header = "Reply-To", "scottsdalerheumatologycenter.com" },
+    },
+    except_domains = {},
+  },  {
+    -- Spansk-hostet kampagne (Klarna, PayPal m.fl.) med knappen "Verificer
+    -- Konto" skrevet med kyrillisk К og græsk ο (rå entitet eller afkodet)
+    name = "VERIFICER_KONTO_HOMOGLYPH",
+    all_of = {
+      -- Uden "Verificer": Klarna-varianten har et usynligt tegn foran ordet
+      { "К&omicron;nto", "Кοnto" },
     },
     except_domains = {},
   },

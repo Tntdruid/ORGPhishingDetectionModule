@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.20.0 - 24. oktober 2026
+
+- Tilføjet `ORG_PHISHING_HOMOGLYPH` (6.0), der rammer visningsnavne, emner og ord skrevet med forvekslelige tegn (fx "ᏢɑуΡɑI" og "Кοnto"), også når intet brand nævnes i teksten.
+- Tilføjet kampagnefingeraftrykket `VERIFICER_KONTO_HOMOGLYPH` for den spansk-hostede kampagne med "Verificer Кοnto"-knappen (Klarna, PayPal m.fl.).
+
 ## 1.19.0 - 24. oktober 2026
 
 - Kampagnefingeraftryk kan nu matche på en header (`header = "Reply-To"`). Tilføjet fingeraftrykket `REPLYTO_SCOTTSDALE` for EasyPark-kampagnen med Reply-To til `scottsdalerheumatologycenter.com`, som afvises via `ORG_PHISHING_CAMPAIGN`.

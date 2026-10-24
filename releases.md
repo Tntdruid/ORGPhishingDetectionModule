@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.18.0 - 24. oktober 2026
+
+- Butikkers fakturaer, der nævner transportøren (fx JYSK med GLS), giver ikke længere transportør-match: "faktura" alene tæller ikke som risikokontekst, og links til samme domænenavn under et andet topdomæne (jysk.com/jysk.dk) accepteres.
+
 ## 1.17.0 - 22. oktober 2026
 
 - Udvidet Cloud Services-detektering med "100% fyldt op"-varianten af den danske lagerplads-kampagne og slået `reject_on_spoof` til (fx visningsnavnet "Cloud Storage Support" fra fremmede domæner).

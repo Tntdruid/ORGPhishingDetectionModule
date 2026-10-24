@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.17.0-blue?style=flat-square" alt="Version 1.17.0">
+  <img src="https://img.shields.io/badge/version-1.18.0-blue?style=flat-square" alt="Version 1.18.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -117,8 +117,10 @@ de ignoreres, når afsenderen består DMARC, linkene kun går til afsenderens eg
 domæne eller transportørens domæner, og meddelelsen ikke indeholder betalings-
 eller loginanmodninger. Dette gælder PostNord, DAO, Burd, GLS, DHL, FedEx, UPS og Bring.
 Det dækker også butikkers ordrebekræftelser (fx Matas, der sender med Burd), hvor
-linkene går til butikkens eget domæne (inkl. andre underdomæner) eller transportøren.
-Omtale af kundekontoen ("konto") regnes ikke som risikokontekst her.
+linkene går til butikkens eget domæne (inkl. andre underdomæner og samme navn under
+et andet topdomæne, fx jysk.com/jysk.dk) eller transportøren.
+Omtale af kundekontoen ("konto") eller fakturaen ("faktura") regnes ikke som
+risikokontekst her.
 
 URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underdomæner til konfigurerede domæner accepteres, og jokertegn understøttes.
 

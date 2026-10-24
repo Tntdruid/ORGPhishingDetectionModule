@@ -182,7 +182,9 @@ end
 
 local carrier_risky_context = {
   "betaling", "payment", "pay", "betale", "afgift", "gebyr", "fee",
-  "faktura", "invoice", "betalingsoplysninger", "kortoplysninger",
+  -- "faktura"/"invoice" alene er udeladt: butikkers fakturaer nævner
+  -- transportøren (fx JYSK, der sender med GLS)
+  "betalingsoplysninger", "kortoplysninger",
   "betalingsverifikation", "payment verification",
   -- "konto"/"account" alene er udeladt: butikkers ordrebekræftelser nævner
   -- typisk kundekontoen (fx "point ... synlige på din konto")
@@ -235,6 +237,14 @@ local function base_domain(domain)
   return domain and domain:match("([^.]+%.[^.]+)$") or domain
 end
 
+-- Domænenavnet uden topdomæne (fx "jysk" for både jysk.com og jysk.dk)
+local function base_label(domain)
+  return domain and domain:match("([^.]+)%.[^.]+$") or domain
+end
+
+-- Værter, der ikke siger noget om afsenderen (fx XHTML-namespace)
+local neutral_url_hosts = { "w3.org" }
+
 local function authenticated_carrier_notification(task, brand, sender_domain)
   if not brand.carrier_notification
     or not sender_domain
@@ -254,6 +264,8 @@ local function authenticated_carrier_notification(task, brand, sender_domain)
     host = lower(host):gsub("%.$", "")
     if not domain_matches(host, brand.domains)
       and not domain_matches(host, { base_domain(sender_domain) })
+      and base_label(host) ~= base_label(sender_domain)
+      and not domain_matches(host, neutral_url_hosts)
     then
       return false
     end

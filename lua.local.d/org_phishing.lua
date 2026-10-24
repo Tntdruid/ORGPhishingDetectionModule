@@ -586,7 +586,9 @@ rspamd_config:register_symbol({
 
 -- Kendte phishingkampagner, der genbruger samme footer på tværs af brands
 -- (fx falske Punktum.dk- og Spotify-fakturaer). Alle grupper i 'all_of' skal
--- matche (mindst ét udtryk pr. gruppe). Afsendere fra 'except_domains' undtages.
+-- matche (mindst ét udtryk pr. gruppe). En gruppe med 'header = "..."' matches
+-- mod den header i stedet for emne og brødtekst. Afsendere fra
+-- 'except_domains' undtages.
 local campaign_fingerprints = {
   {
     -- Punktum dk A/S' ægte CVR og adresse, kopieret ind i falske footere
@@ -610,6 +612,15 @@ local campaign_fingerprints = {
     },
     except_domains = {},
   },
+  {
+    -- EasyPark-phishing via kapret SendGrid-konto med Reply-To til en
+    -- amerikansk klinik
+    name = "REPLYTO_SCOTTSDALE",
+    all_of = {
+      { header = "Reply-To", "scottsdalerheumatologycenter.com" },
+    },
+    except_domains = {},
+  },
 }
 
 rspamd_config:register_symbol({
@@ -624,7 +635,13 @@ rspamd_config:register_symbol({
       if not domain_matches(sender_domain, fp.except_domains) then
         local all = true
         for _, group in ipairs(fp.all_of) do
-          if not (subject_contains(task, group) or body_contains(task, group)) then
+          local matched
+          if group.header then
+            matched = header_contains(task, group.header, group)
+          else
+            matched = subject_contains(task, group) or body_contains(task, group)
+          end
+          if not matched then
             all = false
             break
           end

@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.19.0 - 24. oktober 2026
+
+- Kampagnefingeraftryk kan nu matche på en header (`header = "Reply-To"`). Tilføjet fingeraftrykket `REPLYTO_SCOTTSDALE` for EasyPark-kampagnen med Reply-To til `scottsdalerheumatologycenter.com`, som afvises via `ORG_PHISHING_CAMPAIGN`.
+
 ## 1.18.0 - 24. oktober 2026
 
 - Butikkers fakturaer, der nævner transportøren (fx JYSK med GLS), giver ikke længere transportør-match: "faktura" alene tæller ikke som risikokontekst, og links til samme domænenavn under et andet topdomæne (jysk.com/jysk.dk) accepteres.

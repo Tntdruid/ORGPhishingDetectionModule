@@ -802,6 +802,20 @@ local function spoof_allows_reject(task)
   return false
 end
 
+-- Markør for mails, modulet selv afviser. Bruges af metadata_exporter til at
+-- lægge mailen i fuzzy-lagringen automatisk (se examples/ i repoet).
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_REJECTED",
+  score = 0.0,
+  description = "Afvist af ORG_PHISHING (markør til automatisk fuzzy-læring)",
+  group = "phishing_meta",
+
+  callback = function(task)
+    -- Passivt symbol: indsættes kun af ORG_PHISHING_REJECT
+    return false
+  end
+})
+
 rspamd_config:register_symbol({
   name = "ORG_PHISHING_REJECT",
   type = "postfilter",
@@ -810,6 +824,7 @@ rspamd_config:register_symbol({
     -- Kendt kampagnefingeraftryk afvises uanset brand og forfalskning
     if task:has_symbol("ORG_PHISHING_CAMPAIGN") then
       logger.infox(task, "ORG_PHISHING: rejecting known campaign")
+      task:insert_result("ORG_PHISHING_REJECTED", 1.0, "campaign")
       task:set_pre_result("reject", "Phishing rejected (known campaign)", "org_phishing")
       return
     end
@@ -835,6 +850,7 @@ rspamd_config:register_symbol({
     table.sort(matches)
     local which = table.concat(matches, ",")
     logger.infox(task, "ORG_PHISHING: rejecting brand spoof (%s)", which)
+    task:insert_result("ORG_PHISHING_REJECTED", 1.0, "spoof:" .. which)
     task:set_pre_result("reject", "Phishing rejected (brand spoof)", "org_phishing")
   end,
 })

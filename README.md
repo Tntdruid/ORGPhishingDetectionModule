@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.21.0-blue?style=flat-square" alt="Version 1.21.0">
+  <img src="https://img.shields.io/badge/version-1.22.0-blue?style=flat-square" alt="Version 1.22.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -134,6 +134,7 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING_CAMPAIGN` | Kendt kampagnefingeraftryk (fx genbrugt footer med CVR og adresse, eller en fast Reply-To); afvises altid | 10.0 |
 | `ORG_PHISHING_HOMOGLYPH` | Visningsnavn, emne eller ord i teksten skrevet med forvekslelige tegn (fx "ᏢɑуΡɑI" eller "Кοnto"), også uden brandmatch | 6.0 |
 | `GOOGLE_AUTOGEN_FREEMAIL` | Google `autogen-java`-Message-ID fra en freemail-afsender med links uden for Google (misbrug af fx Google Forms/AppSheet) | 6.0 |
+| `ORG_PHISHING_REJECTED` | Markør, når modulet selv afviser en mail; bruges til automatisk fuzzy-læring | 0.0 |
 | `ORG_PHISHING_FREEMAIL` | Brandmatch fra en freemail-afsender (fx gmail.com) med links til andre domæner end brandets | 5.0 |
 | `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |
 
@@ -256,6 +257,23 @@ brand, eller `extra_context_keywords` til at supplere den (fx sammensatte ord so
 "skattekonto", der ikke matcher det fælles ord "konto").
 
 Sørg for, at symbolnavnet er unikt. Kør `rspamadm configtest`, og genindlæs Rspamd efter ændringer i brandfilen.
+
+## Automatisk fuzzy-læring (valgfrit)
+
+Mails, som modulet selv afviser (kampagnefingeraftryk, forvekslelige tegn eller
+forfalsket visningsnavn/Reply-To for brands med `reject_on_spoof`), får markøren
+`ORG_PHISHING_REJECTED`. Med rspamds `metadata_exporter` kan de lægges
+automatisk i den lokale fuzzy-lagring, så gentagelser af samme kampagneskabelon
+rammer fuzzy med det samme, også når afsender og ordlyd skifter.
+
+1. Tilføj et ledigt fuzzy-flag (fx 6, `LOCAL_FUZZY_ORG`) til din lokale fuzzy-regel
+   og giv symbolet en vægt. Se `examples/fuzzy_check.conf`.
+2. Kopiér `examples/metadata_exporter.conf` til `local.d/` og ret stien til
+   controller-socket'en.
+3. Kør `rspamadm configtest`, og genindlæs Rspamd.
+
+Automatisk lærte hashes ligger under deres eget flag, så de kan vægtes for sig og
+ryddes uden at røre manuelt tilføjede hashes.
 
 ## Test
 

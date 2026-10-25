@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.22.0 - 25. oktober 2026
+
+- Tilføjet markøren `ORG_PHISHING_REJECTED`, når modulet selv afviser en mail, samt eksempelkonfiguration i `examples/` til automatisk fuzzy-læring via `metadata_exporter` under et separat fuzzy-flag (`LOCAL_FUZZY_ORG`).
+
 ## 1.21.0 - 25. oktober 2026
 
 - Tilføjet `GOOGLE_AUTOGEN_FREEMAIL` (6.0) for mails med Googles `autogen-java`-Message-ID fra freemail-afsendere med links uden for Google.

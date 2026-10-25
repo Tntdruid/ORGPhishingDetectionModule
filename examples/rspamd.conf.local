@@ -1,0 +1,11 @@
+# Eksempel: tilføj til /etc/rspamd/rspamd.conf.local (opret filen, hvis den ikke findes)
+#
+# Slår automatisk fuzzy-læring til: mails, som ORG_PHISHING selv afviser,
+# læres direkte via fuzzy_check under flag 6 (LOCAL_FUZZY_ORG).
+# Flaget skal findes i din fuzzy_check-regel (se examples/fuzzy_check.conf),
+# og reglen må ikke være read_only.
+
+org_phishing {
+  auto_fuzzy_flag = 6;
+  auto_fuzzy_weight = 10;
+}

@@ -802,8 +802,32 @@ local function spoof_allows_reject(task)
   return false
 end
 
--- Markør for mails, modulet selv afviser. Bruges af metadata_exporter til at
--- lægge mailen i fuzzy-lagringen automatisk (se examples/ i repoet).
+-- Automatisk fuzzy-læring (valgfri). Slås til i rspamd.conf.local:
+--   org_phishing { auto_fuzzy_flag = 6; auto_fuzzy_weight = 10; }
+-- Mails, modulet selv afviser, læres så direkte via fuzzy_check under det flag.
+local org_opts = rspamd_config:get_all_opt("org_phishing") or {}
+local auto_fuzzy_flag = tonumber(org_opts.auto_fuzzy_flag)
+local auto_fuzzy_weight = tonumber(org_opts.auto_fuzzy_weight) or 10
+
+local function auto_fuzzy_learn(task)
+  if not auto_fuzzy_flag then
+    return
+  end
+  local fc = rspamd_plugins and rspamd_plugins["fuzzy_check"]
+  if not (fc and fc.learn) then
+    logger.infox(task, "ORG_PHISHING: fuzzy_check.learn ikke tilgængelig; auto-fuzzy sprunget over")
+    return
+  end
+  local ok, err = pcall(fc.learn, task, auto_fuzzy_flag, auto_fuzzy_weight)
+  if ok then
+    logger.infox(task, "ORG_PHISHING: auto-fuzzy lært (flag %s, vægt %s)",
+      auto_fuzzy_flag, auto_fuzzy_weight)
+  else
+    logger.infox(task, "ORG_PHISHING: auto-fuzzy fejlede: %s", err)
+  end
+end
+
+-- Markør for mails, modulet selv afviser (vises i webgrænsefladen med grund).
 rspamd_config:register_symbol({
   name = "ORG_PHISHING_REJECTED",
   score = 0.0,
@@ -825,6 +849,7 @@ rspamd_config:register_symbol({
     if task:has_symbol("ORG_PHISHING_CAMPAIGN") then
       logger.infox(task, "ORG_PHISHING: rejecting known campaign")
       task:insert_result("ORG_PHISHING_REJECTED", 1.0, "campaign")
+      auto_fuzzy_learn(task)
       task:set_pre_result("reject", "Phishing rejected (known campaign)", "org_phishing")
       return
     end
@@ -851,6 +876,7 @@ rspamd_config:register_symbol({
     local which = table.concat(matches, ",")
     logger.infox(task, "ORG_PHISHING: rejecting brand spoof (%s)", which)
     task:insert_result("ORG_PHISHING_REJECTED", 1.0, "spoof:" .. which)
+    auto_fuzzy_learn(task)
     task:set_pre_result("reject", "Phishing rejected (brand spoof)", "org_phishing")
   end,
 })

@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.22.0-blue?style=flat-square" alt="Version 1.22.0">
+  <img src="https://img.shields.io/badge/version-1.23.0-blue?style=flat-square" alt="Version 1.23.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -27,7 +27,7 @@ Mistænkelig kontekst omfatter også franske kontobekræftelsesfraser, så brand
 
 ## Krav
 
-- Rspamd 4.2.0 eller nyere
+- Rspamd 4.2.0 eller nyere (testet i drift med 4.2.3)
 - En Rspamd-installation med adgang til den lokale Lua-konfigurationsmappe
 
 Modulet bruger Rspamd Task API og forventer, at `lua.local.d` findes under den lokale konfigurationsmappe.
@@ -262,18 +262,22 @@ Sørg for, at symbolnavnet er unikt. Kør `rspamadm configtest`, og genindlæs R
 
 Mails, som modulet selv afviser (kampagnefingeraftryk, forvekslelige tegn eller
 forfalsket visningsnavn/Reply-To for brands med `reject_on_spoof`), får markøren
-`ORG_PHISHING_REJECTED`. Med rspamds `metadata_exporter` kan de lægges
-automatisk i den lokale fuzzy-lagring, så gentagelser af samme kampagneskabelon
-rammer fuzzy med det samme, også når afsender og ordlyd skifter.
+`ORG_PHISHING_REJECTED` og kan læres automatisk i den lokale fuzzy-lagring. Så
+rammer gentagelser af samme kampagneskabelon fuzzy med det samme, også når
+afsender og ordlyd skifter.
 
-1. Tilføj et ledigt fuzzy-flag (fx 6, `LOCAL_FUZZY_ORG`) til din lokale fuzzy-regel
-   og giv symbolet en vægt. Se `examples/fuzzy_check.conf`.
-2. Kopiér `examples/metadata_exporter.conf` til `local.d/` og ret stien til
-   controller-socket'en.
-3. Kør `rspamadm configtest`, og genindlæs Rspamd.
+1. Tilføj et ledigt fuzzy-flag (fx 6, `LOCAL_FUZZY_ORG`) til din lokale
+   fuzzy-regel, og giv symbolet en vægt i `fuzzy_group.conf`. Se
+   `examples/fuzzy_check.conf`. Reglen må ikke være `read_only`.
+2. Slå funktionen til i `rspamd.conf.local` med
+   `org_phishing { auto_fuzzy_flag = 6; auto_fuzzy_weight = 10; }`. Se
+   `examples/rspamd.conf.local`.
+3. Kør `rspamadm configtest`, og genindlæs Rspamd. Loggen viser
+   `ORG_PHISHING: auto-fuzzy lært`, når en mail læres.
 
-Automatisk lærte hashes ligger under deres eget flag, så de kan vægtes for sig og
-ryddes uden at røre manuelt tilføjede hashes.
+Uden `auto_fuzzy_flag` er funktionen slået fra. Automatisk lærte hashes ligger
+under deres eget flag, så de kan vægtes for sig og ryddes uden at røre manuelt
+tilføjede hashes.
 
 ## Test
 

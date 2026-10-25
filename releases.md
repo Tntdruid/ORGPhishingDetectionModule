@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.23.0 - 25. oktober 2026
+
+- Automatisk fuzzy-læring sker nu direkte via `fuzzy_check` i stedet for `metadata_exporter` (backend `pipe` findes ikke i Rspamd 4.2). Slås til med `org_phishing { auto_fuzzy_flag = 6; }` i `rspamd.conf.local`. `examples/metadata_exporter.conf` er erstattet af `examples/rspamd.conf.local`.
+
 ## 1.22.0 - 25. oktober 2026
 
 - Tilføjet markøren `ORG_PHISHING_REJECTED`, når modulet selv afviser en mail, samt eksempelkonfiguration i `examples/` til automatisk fuzzy-læring via `metadata_exporter` under et separat fuzzy-flag (`LOCAL_FUZZY_ORG`).

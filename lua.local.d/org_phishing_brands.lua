@@ -101,6 +101,8 @@ return {
       "cloud plan",
       "lagerplads i skyen",
       "skylagring",
+      "cloud®",
+      "cloud-abonnement",
     },
     context_keywords = {
       "cloud storage is full",
@@ -139,6 +141,9 @@ return {
       "nye filer og e-mails kan ikke modtages",
       "se muligheder for mere plads",
       "nuværende lagerstatus",
+      "lagerabonnement",
+      "afbrydelser af din lagertjeneste",
+      "dine filer, sikkert opbevaret",
     },
     domains = {
       "cloudservices.com",

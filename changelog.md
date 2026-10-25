@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.21.0 - 25. oktober 2026
+
+- Tilføjet `GOOGLE_AUTOGEN_FREEMAIL` (6.0) for mails med Googles `autogen-java`-Message-ID fra freemail-afsendere med links uden for Google.
+- Udvidet Cloud Services med "Cloud®"/"Cloud-abonnement" og kontekst fra betalingsvarianten, og tilføjet kampagnefingeraftrykket `CLOUD_REG_DK`.
+
 ## 1.20.0 - 24. oktober 2026
 
 - Tilføjet `ORG_PHISHING_HOMOGLYPH` (6.0), der rammer visningsnavne, emner og ord skrevet med forvekslelige tegn (fx "ᏢɑуΡɑI" og "Кοnto"), også når intet brand nævnes i teksten.

@@ -552,6 +552,46 @@ for _, brand in pairs(brands) do
 end
 
 ---------------------------------------------------------------------------
+-- GOOGLE AUTOGEN FRA FREEMAIL-AFSENDER
+---------------------------------------------------------------------------
+
+-- Googles egne systemer (fx Forms/AppSheet) laver Message-ID'er som
+-- <autogen-java-...@google.com>. Rigtige Google-meddelelser kommer fra Googles
+-- egne domæner; fra en privat gmail.com-afsender med links ud af Google er det
+-- et kendt misbrugsmønster.
+local google_domains = {
+  "google.com", "google.dk", "googleapis.com", "gstatic.com",
+  "googleusercontent.com", "youtube.com", "gmail.com",
+}
+
+rspamd_config:register_symbol({
+  name = "GOOGLE_AUTOGEN_FREEMAIL",
+  score = 6.0,
+  description = "Google autogen-java Message-ID fra freemail-afsender med fremmede links",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local mid = lower(task:get_header("Message-ID") or "")
+    if not mid:find("autogen%-java%-[^@]*@google%.com") then
+      return false
+    end
+    if not domain_matches(from_domain(task), freemail_domains) then
+      return false
+    end
+    for _, u in ipairs(task:get_urls() or {}) do
+      local h = u:get_host()
+      if h then
+        h = lower(h):gsub("%.$", "")
+        if not domain_matches(h, google_domains) then
+          return true, h
+        end
+      end
+    end
+    return false
+  end,
+})
+
+---------------------------------------------------------------------------
 -- HOVEDSYMBOL (SAMLER ALLE BRANDMATCH)
 ---------------------------------------------------------------------------
 
@@ -674,6 +714,15 @@ local campaign_fingerprints = {
     all_of = {
       -- Uden "Verificer": Klarna-varianten har et usynligt tegn foran ordet
       { "К&omicron;nto", "Кοnto" },
+    },
+    except_domains = {},
+  },
+  {
+    -- "Cloud®"-kampagne via Google autogen (betalingsoplysninger)
+    name = "CLOUD_REG_DK",
+    all_of = {
+      { "cloud®-kontoadministration" },
+      { "dine filer, sikkert opbevaret" },
     },
     except_domains = {},
   },

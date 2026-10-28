@@ -621,6 +621,41 @@ rspamd_config:register_symbol({
 })
 
 ---------------------------------------------------------------------------
+-- MAIL FRA SCRIPT I HACKET WEBSITE
+---------------------------------------------------------------------------
+
+-- cPanel/Exim tilføjer X-Source-Dir med scriptets mappe. Legitim WordPress-post
+-- sendes fra sidens rod eller wp-admin; et script i wp-includes, uploads eller
+-- cache-mapper er typisk en webshell på en hacket side.
+local compromised_script_dirs = {
+  "/wp%-includes/",
+  "/wp%-content/uploads/",
+  "/wp%-content/cache/",
+  "/wp%-content/upgrade/",
+  "/%.well%-known/",
+}
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_HACKED_SITE",
+  score = 6.0,
+  description = "Sendt af et script i en typisk webshell-mappe (X-Source-Dir)",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local dir = lower(task:get_header("X-Source-Dir") or "")
+    if dir == "" then
+      return false
+    end
+    for _, pattern in ipairs(compromised_script_dirs) do
+      if dir:find(pattern) then
+        return true, (pattern:gsub("%%", ""))
+      end
+    end
+    return false
+  end,
+})
+
+---------------------------------------------------------------------------
 -- FORVEKSLELIGE TEGN UDEN BRANDMATCH
 ---------------------------------------------------------------------------
 
@@ -852,6 +887,25 @@ rspamd_config:register_symbol({
       auto_fuzzy_learn(task)
       task:set_pre_result("reject", "Phishing rejected (known campaign)", "org_phishing")
       return
+    end
+
+    -- Brandmatch fra et script i en hacket website afvises for alle brands
+    if task:has_symbol("ORG_PHISHING_HACKED_SITE") then
+      local hacked = {}
+      for name, brand in pairs(brands) do
+        if task:has_symbol(brand.symbol) then
+          hacked[#hacked + 1] = name
+        end
+      end
+      if #hacked > 0 then
+        table.sort(hacked)
+        local which = table.concat(hacked, ",")
+        logger.infox(task, "ORG_PHISHING: rejecting brand mail from hacked site (%s)", which)
+        task:insert_result("ORG_PHISHING_REJECTED", 1.0, "hacked-site:" .. which)
+        auto_fuzzy_learn(task)
+        task:set_pre_result("reject", "Phishing rejected (compromised site)", "org_phishing")
+        return
+      end
     end
 
     if not task:has_symbol("ORG_PHISHING_SPOOF")

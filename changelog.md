@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.24.0 - 28. oktober 2026
+
+- Tilføjet `ORG_PHISHING_HACKED_SITE` (6.0) for mails sendt af scripts i typiske webshell-mapper på hackede websites (`X-Source-Dir` i `wp-includes`, `wp-content/uploads` m.fl.). Sammen med et brandmatch afvises mailen for alle brands.
+
 ## 1.23.0 - 25. oktober 2026
 
 - Automatisk fuzzy-læring sker nu direkte via `fuzzy_check` i stedet for `metadata_exporter` (backend `pipe` findes ikke i Rspamd 4.2). Slås til med `org_phishing { auto_fuzzy_flag = 6; }` i `rspamd.conf.local`. `examples/metadata_exporter.conf` er erstattet af `examples/rspamd.conf.local`.

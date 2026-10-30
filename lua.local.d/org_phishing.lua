@@ -656,6 +656,39 @@ rspamd_config:register_symbol({
 })
 
 ---------------------------------------------------------------------------
+-- MISBRUG AF JIRA SERVICE MANAGEMENT
+---------------------------------------------------------------------------
+
+-- Svindlere opretter gratis Jira-sider (*.atlassian.net) og sender phishing via
+-- funktionen til kundeinvitationer, så SPF/DKIM/DMARC består for atlassian.net.
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_JIRA_ABUSE",
+  score = 6.0,
+  description = "Kundeinvitation fra Jira Service Management med links ud af Atlassian",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local trigger = lower(task:get_header("X-Atl-Po-Triggerid") or "")
+    if not trigger:find("jsm%-cn%-customer%-invite") then
+      return false
+    end
+    if not domain_matches(from_domain(task), { "atlassian.net" }) then
+      return false
+    end
+    for _, u in ipairs(task:get_urls() or {}) do
+      local h = u:get_host()
+      if h then
+        h = lower(h):gsub("%.$", "")
+        if not domain_matches(h, { "atlassian.net", "atlassian.com" }) then
+          return true, h
+        end
+      end
+    end
+    return false
+  end,
+})
+
+---------------------------------------------------------------------------
 -- FORVEKSLELIGE TEGN UDEN BRANDMATCH
 ---------------------------------------------------------------------------
 
@@ -889,8 +922,11 @@ rspamd_config:register_symbol({
       return
     end
 
-    -- Brandmatch fra et script i en hacket website afvises for alle brands
-    if task:has_symbol("ORG_PHISHING_HACKED_SITE") then
+    -- Brandmatch fra en hacket website eller misbrugt platform (Jira) afvises
+    -- for alle brands
+    local abused = task:has_symbol("ORG_PHISHING_HACKED_SITE") and "hacked-site"
+      or task:has_symbol("ORG_PHISHING_JIRA_ABUSE") and "jira-abuse"
+    if abused then
       local hacked = {}
       for name, brand in pairs(brands) do
         if task:has_symbol(brand.symbol) then
@@ -900,10 +936,10 @@ rspamd_config:register_symbol({
       if #hacked > 0 then
         table.sort(hacked)
         local which = table.concat(hacked, ",")
-        logger.infox(task, "ORG_PHISHING: rejecting brand mail from hacked site (%s)", which)
-        task:insert_result("ORG_PHISHING_REJECTED", 1.0, "hacked-site:" .. which)
+        logger.infox(task, "ORG_PHISHING: rejecting brand mail via %s (%s)", abused, which)
+        task:insert_result("ORG_PHISHING_REJECTED", 1.0, abused .. ":" .. which)
         auto_fuzzy_learn(task)
-        task:set_pre_result("reject", "Phishing rejected (compromised site)", "org_phishing")
+        task:set_pre_result("reject", "Phishing rejected (" .. abused .. ")", "org_phishing")
         return
       end
     end

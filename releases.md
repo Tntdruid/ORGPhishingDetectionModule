@@ -1,5 +1,10 @@
 # Udgivelser
 
+## 1.25.0 - 30. oktober 2026
+
+- Tilføjet `ORG_PHISHING_JIRA_ABUSE` (6.0) for phishing sendt via Jira Service Managements kundeinvitationer fra gratis `*.atlassian.net`-sider. Sammen med et brandmatch afvises mailen for alle brands.
+- Tilføjet Saphe-detektering (inkl. stavefejlen "Saphe Pemium") med `reject_on_spoof`.
+
 ## 1.24.0 - 28. oktober 2026
 
 - Tilføjet `ORG_PHISHING_HACKED_SITE` (6.0) for mails sendt af scripts i typiske webshell-mapper på hackede websites (`X-Source-Dir` i `wp-includes`, `wp-content/uploads` m.fl.). Sammen med et brandmatch afvises mailen for alle brands.

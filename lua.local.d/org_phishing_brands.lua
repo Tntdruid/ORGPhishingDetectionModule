@@ -551,6 +551,22 @@ return {
     },
   },
 
+  SAPHE = {
+    symbol = "ORG_PHISHING_SAPHE",
+    score = 8.0,
+    reject_on_spoof = true,
+    keywords = {
+      "saphe",
+      "saphe premium",
+      -- Stavefejl brugt i kampagner
+      "saphe pemium",
+      "saphe link",
+    },
+    domains = {
+      "saphe.com",
+    },
+  },
+
   DANSKEBANK = {
     symbol = "ORG_PHISHING_DANSKEBANK",
     score = 9.0,

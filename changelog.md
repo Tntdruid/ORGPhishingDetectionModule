@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.28.0 - 30. oktober 2026
+
+- Tilføjet `ORG_PHISHING_LOOKALIKE_DOMAIN` (4.0) for afsenderdomæner, der indeholder et brands navn eller er ét bogstav fra det (fx `streamingpotify.dk`). Sammen med et brandmatch tæller det som forfalskning (`sender-domain-lookalike`) og afviser for brands med `reject_on_spoof`.
+- Tilføjet `ORG_PHISHING_FREE_HOSTING` (5.0) for brandmatch med links til gratis hosting eller viderestilling (fx `storage.googleapis.com`, `systeme.io`, `google.com/goto`).
+
 ## 1.27.0 - 30. oktober 2026
 
 - Tilføjet regressionstest i `tests/` (`lua tests/run.lua`), der kører modulet mod en simuleret Rspamd med sager for alle kendte kampagner og tidligere falske markeringer.

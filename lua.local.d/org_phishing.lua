@@ -298,6 +298,108 @@ local function has_homoglyphs(s)
   return confusable and s:find("%a") and true or false
 end
 
+-- Domænenavne, der ligner et brand (fx "streamingpotify.dk", "svindelpunktum.dk").
+-- Brandets navne tages fra dets egne domæner. Generiske ord udelades, da de
+-- indgår i mange almindelige domænenavne.
+local lookalike_stoplist = {
+  apple = true, booking = true, borger = true, bring = true, clever = true,
+  magasin = true, netto = true, power = true, stark = true, sundhed = true,
+  lunar = true, davidsen = true, brugsen = true, mktmail = true,
+  yourserver = true, pakkeshop = true, silvan = true, matas = true,
+  bilka = true, hiper = true, nemlig = true, norlys = true, telia = true,
+}
+
+local function brand_labels(brand)
+  if brand._labels then
+    return brand._labels
+  end
+  local labels, seen = {}, {}
+  for _, d in ipairs(brand.domains or {}) do
+    local label = lower(d):match("([^.]+)%.[^.]+$") or lower(d)
+    label = label:gsub("%-", "")
+    if #label >= 5 and not lookalike_stoplist[label] and not seen[label] then
+      seen[label] = true
+      labels[#labels + 1] = label
+    end
+  end
+  brand._labels = labels
+  return labels
+end
+
+-- Højst én redigering (indsæt, slet eller erstat) mellem a og b
+local function within_one_edit(a, b)
+  local la, lb = #a, #b
+  if math.abs(la - lb) > 1 then
+    return false
+  end
+  local i, j, edits = 1, 1, 0
+  while i <= la and j <= lb do
+    if a:byte(i) == b:byte(j) then
+      i, j = i + 1, j + 1
+    else
+      edits = edits + 1
+      if edits > 1 then
+        return false
+      end
+      if la > lb then
+        i = i + 1
+      elseif lb > la then
+        j = j + 1
+      else
+        i, j = i + 1, j + 1
+      end
+    end
+  end
+  return edits + (la - i + 1) + (lb - j + 1) <= 1
+end
+
+-- Indeholder 'label' brandnavnet eksakt (mindst 6 tegn), eller en del, der
+-- kun er én redigering fra det (mindst 7 tegn)?
+local function label_looks_like(label, brand_label, min_exact)
+  if #brand_label >= min_exact and label:find(brand_label, 1, true) then
+    return true
+  end
+  if #brand_label >= 7 then
+    for len = #brand_label - 1, #brand_label + 1 do
+      for i = 1, #label - len + 1 do
+        if within_one_edit(label:sub(i, i + len - 1), brand_label) then
+          return true
+        end
+      end
+    end
+  end
+  return false
+end
+
+-- Domænets labels uden topdomæne, uden bindestreger, samt hele navnet samlet
+local function sender_labels(domain)
+  local parts = {}
+  for part in lower(domain or ""):gmatch("[^.]+") do
+    parts[#parts + 1] = part
+  end
+  table.remove(parts)
+  local labels = {}
+  for _, p in ipairs(parts) do
+    labels[#labels + 1] = (p:gsub("%-", ""))
+  end
+  labels[#labels + 1] = table.concat(labels, "")
+  return labels
+end
+
+local function domain_looks_like_brand(domain, brand, min_exact)
+  if not domain or domain_matches(domain, brand.domains) then
+    return false
+  end
+  for _, label in ipairs(sender_labels(domain)) do
+    for _, bl in ipairs(brand_labels(brand)) do
+      if label ~= bl and label_looks_like(label, bl, min_exact) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 local function check_spoof(task, brand)
   local from = task:get_from('mime')
   local from_dom = from_domain(task)
@@ -331,6 +433,11 @@ local function check_spoof(task, brand)
 
   if has_homoglyphs(dn) then
     return true, "display-name-homoglyph"
+  end
+
+  -- Afsenderdomæne, der ligner brandet (fx "streamingpotify.dk")
+  if domain_looks_like_brand(from_dom, brand, 5) then
+    return true, "sender-domain-lookalike"
   end
 
   -- Forfalsket Reply-To
@@ -549,6 +656,108 @@ rspamd_config:register_symbol({
 
 for _, brand in pairs(brands) do
   rspamd_config:register_dependency("ORG_PHISHING_FREEMAIL", brand.symbol)
+end
+
+---------------------------------------------------------------------------
+-- AFSENDERDOMÆNE, DER LIGNER ET BRAND (UDEN BRANDMATCH)
+---------------------------------------------------------------------------
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_LOOKALIKE_DOMAIN",
+  score = 4.0,
+  description = "Afsenderdomænet ligner et kendt brands domæne",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local sender_domain = from_domain(task)
+    if not sender_domain then
+      return false
+    end
+    -- Domænet tilhører et kendt brand: ikke en efterligning
+    for _, brand in pairs(brands) do
+      if domain_matches(sender_domain, brand.domains) then
+        return false
+      end
+    end
+    local matches = {}
+    for name, brand in pairs(brands) do
+      if domain_looks_like_brand(sender_domain, brand, 6) then
+        matches[#matches + 1] = name
+      end
+    end
+    if #matches == 0 then
+      return false
+    end
+    table.sort(matches)
+    return true, table.concat(matches, ",")
+  end,
+})
+
+---------------------------------------------------------------------------
+-- BRANDMATCH MED LINK TIL GRATIS HOSTING ELLER VIDERESTILLING
+---------------------------------------------------------------------------
+
+-- Tjenester, hvor alle kan lægge en side op eller lave en viderestilling.
+-- Legitime hver for sig, men ægte brands sender ikke kunder derhen.
+local free_hosting_domains = {
+  "storage.googleapis.com", "firebasestorage.googleapis.com", "sites.google.com",
+  "forms.gle", "firebaseapp.com", "web.app",
+  "s3.amazonaws.com", "s3.dualstack.us-east-1.amazonaws.com",
+  "systeme.io", "r2.dev", "pages.dev", "workers.dev", "netlify.app",
+  "vercel.app", "github.io", "glitch.me", "weebly.com", "wixsite.com",
+  "square.site", "webflow.io", "framer.website", "tempurl.host",
+  "bit.ly", "tinyurl.com", "is.gd", "cutt.ly", "rebrand.ly", "t.ly",
+  "shorturl.at", "rb.gy", "dke.to", "flowto.it",
+}
+
+local function url_free_hosting(u)
+  local host = u:get_host()
+  if not host then
+    return nil
+  end
+  host = lower(host):gsub("%.$", "")
+  if domain_matches(host, free_hosting_domains) then
+    return host
+  end
+  -- Åbne viderestillinger hos Google (fx www.google.com/goto?url=...)
+  if host:match("^www%.google%.[%a.]+$") or host:match("^google%.[%a.]+$") then
+    local path = lower(u.get_path and u:get_path() or ""):gsub("^/", "")
+    if path:match("^goto") or path:match("^url") then
+      return host .. "/" .. path:match("^%a+")
+    end
+  end
+  return nil
+end
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_FREE_HOSTING",
+  score = 5.0,
+  description = "Brandmatch med link til gratis hosting eller viderestilling",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local hit_brand = false
+    for _, brand in pairs(brands) do
+      if task:has_symbol(brand.symbol) then
+        hit_brand = true
+        break
+      end
+    end
+    if not hit_brand then
+      return false
+    end
+    for _, u in ipairs(task:get_urls() or {}) do
+      local found = url_free_hosting(u)
+      if found then
+        return true, found
+      end
+    end
+    return false
+  end,
+})
+
+for _, brand in pairs(brands) do
+  rspamd_config:register_dependency("ORG_PHISHING_FREE_HOSTING", brand.symbol)
 end
 
 ---------------------------------------------------------------------------
@@ -849,6 +1058,7 @@ local reject_spoof_reasons = {
   ["display-name-spoof"] = true,
   ["reply-to-spoof"] = true,
   ["display-name-homoglyph"] = true,
+  ["sender-domain-lookalike"] = true,
 }
 
 -- Brandmatch + visningsnavn med forvekslelige tegn afvises for alle brands,

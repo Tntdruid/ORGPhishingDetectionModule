@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.27.0-blue?style=flat-square" alt="Version 1.27.0">
+  <img src="https://img.shields.io/badge/version-1.28.0-blue?style=flat-square" alt="Version 1.28.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -73,6 +73,7 @@ Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en
 - forfalskning af visningsnavn, også når brandnavnet er skrevet sammen med skilletegn eller ekstra tegn (fx "Butik-Harald-Nyborgdk"; gælder nøgleord på mindst 7 tegn)
 - forfalskning af Reply-To
 - emne, der starter med brandnavnet, fra et domæne der ikke tilhører brandet
+- afsenderdomæne, der ligner brandets (fx `svindelpunktum.dk`); giver afvisning for brands med `reject_on_spoof`
 - visningsnavn med forvekslelige tegn (homoglyffer), fx matematiske Unicode-bogstaver eller latinske bogstaver blandet med græske/kyrilliske tegn; sammen med et brandmatch afvises mailen for alle brands
 - undtagelser for godkendte betroede afsendere ved tekstomtale af andre brands
 
@@ -136,6 +137,8 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `GOOGLE_AUTOGEN_FREEMAIL` | Google `autogen-java`-Message-ID fra en freemail-afsender med links uden for Google (misbrug af fx Google Forms/AppSheet) | 6.0 |
 | `ORG_PHISHING_HACKED_SITE` | Sendt af et script i en typisk webshell-mappe ifølge `X-Source-Dir` (fx `wp-includes`, `wp-content/uploads`); sammen med et brandmatch afvises mailen for alle brands | 6.0 |
 | `ORG_PHISHING_JIRA_ABUSE` | Kundeinvitation fra Jira Service Management (`*.atlassian.net`) med links ud af Atlassian; sammen med et brandmatch afvises mailen for alle brands | 6.0 |
+| `ORG_PHISHING_LOOKALIKE_DOMAIN` | Afsenderdomænet indeholder et brands navn eller er ét bogstav fra det (fx `streamingpotify.dk`), også uden brandmatch; generiske ord som "power" og "booking" udelades | 4.0 |
+| `ORG_PHISHING_FREE_HOSTING` | Brandmatch med link til gratis hosting eller viderestilling (fx `storage.googleapis.com`, `systeme.io`, `google.com/goto`) | 5.0 |
 | `ORG_PHISHING_REJECTED` | Markør, når modulet selv afviser en mail; bruges til automatisk fuzzy-læring | 0.0 |
 | `ORG_PHISHING_FREEMAIL` | Brandmatch fra en freemail-afsender (fx gmail.com) med links til andre domæner end brandets | 5.0 |
 | `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |

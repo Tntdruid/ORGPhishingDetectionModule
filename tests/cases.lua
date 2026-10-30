@@ -359,6 +359,94 @@ return {
     body = "Hej, vi ses på fredag. Mvh Søren",
     miss = { "ORG_PHISHING_HOMOGLYPH" },
   },
+  -------------------------------------------------------------------------
+  -- Afsenderdomæner, der ligner et brand
+  -------------------------------------------------------------------------
+  {
+    name = "Lookalike: streamingpotify.dk uden brand i teksten",
+    subject = "Din betalingsmetode skal opdateres",
+    from_name = "Kontoservice", from_domain = "streamingpotify.dk",
+    body = "Dit betalingskort er udløbet. Opdater betalingsoplysninger inden for 24 timer.",
+    urls = { "py.alinanutrisport.com" },
+    hit = { "ORG_PHISHING_LOOKALIKE_DOMAIN" },
+    option = { ORG_PHISHING_LOOKALIKE_DOMAIN = "SPOTIFY" },
+  },
+  {
+    name = "Lookalike: svindelpunktum.dk med Punktum-brandhit afvises",
+    subject = "Faktura for dit domæne",
+    from_name = "Kundeservice", from_domain = "svindelpunktum.dk",
+    body = "Dit .dk domæne skal fornyes. Betaling mangler.",
+    urls = { "evil.example" },
+    hit = { "ORG_PHISHING_PUNKTUMDK", "ORG_PHISHING_SPOOF", "ORG_PHISHING_LOOKALIKE_DOMAIN" },
+    option = { ORG_PHISHING_SPOOF = "PUNKTUMDK:sender-domain-lookalike" },
+    reject = true,
+  },
+  {
+    name = "Lookalike: ét bogstav fra hetzner (hetzmer-billing.com)",
+    subject = "Invoice overdue",
+    from_name = "Billing", from_domain = "hetzmer-billing.com",
+    body = "Your server will be suspended. Update payment.",
+    urls = { "hetzmer-billing.com" },
+    hit = { "ORG_PHISHING_LOOKALIKE_DOMAIN" },
+    option = { ORG_PHISHING_LOOKALIKE_DOMAIN = "HETZNER" },
+  },
+  {
+    name = "Ikke lookalike: almindelige ord (sundhedsklinik, powerbank, booking)",
+    subject = "Nyhedsbrev",
+    from_name = "Klinikken", from_domain = "sundhedsklinik-powerbank-tablebooking.dk",
+    body = "Hej, her er vores nyhedsbrev.",
+    urls = { "sundhedsklinik-powerbank-tablebooking.dk" },
+    miss = { "ORG_PHISHING_LOOKALIKE_DOMAIN" },
+  },
+  {
+    name = "Ikke lookalike: brandets eget domæne",
+    subject = "Kvittering",
+    from_name = "Spotify", from_domain = "spotify.com",
+    body = "Tak for din betaling.",
+    urls = { "www.spotify.com" },
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_LOOKALIKE_DOMAIN", "ORG_PHISHING_SPOOF" },
+  },
+
+  -------------------------------------------------------------------------
+  -- Brandmatch med link til gratis hosting / viderestilling
+  -------------------------------------------------------------------------
+  {
+    name = "Free hosting: Spotify-phishing på storage.googleapis.com",
+    subject = "Din betaling blev afvist",
+    from_name = "Support", from_domain = "engage.popupbook.de",
+    body = "Banken afviste betalingen for dit Spotify Premium-abonnement. Opdater betalingsoplysninger",
+    urls = { "storage.googleapis.com/spotify-nordic/index.html" },
+    symbols = DMARC,
+    hit = { "ORG_PHISHING_SPOTIFY", "ORG_PHISHING_FREE_HOSTING" },
+    option = { ORG_PHISHING_FREE_HOSTING = "storage.googleapis.com" },
+  },
+  {
+    name = "Free hosting: google.com/goto-viderestilling",
+    subject = "vigtige ændringer på din konto",
+    from_name = "Kundeservice", from_domain = "garmendiarepresentaciones.com",
+    body = "For at sikre din Klarna-konto beder vi dig om at bekræfte din profil.",
+    urls = { "www.google.com/goto?url=CAESWgHr" },
+    hit = { "ORG_PHISHING_KLARNA", "ORG_PHISHING_FREE_HOSTING" },
+    option = { ORG_PHISHING_FREE_HOSTING = "www.google.com/goto" },
+  },
+  {
+    name = "Ikke free hosting uden brandhit (nyhedsbrev med bit.ly)",
+    subject = "Ugens tilbud",
+    from_name = "Butikken", from_domain = "butik.example",
+    body = "Se ugens tilbud her.",
+    urls = { "bit.ly/abc123" },
+    miss = { "ORG_PHISHING_FREE_HOSTING" },
+  },
+  {
+    name = "Ikke free hosting: almindeligt Google-søgelink",
+    subject = "Konto",
+    from_name = "Kundeservice", from_domain = "evil.example",
+    body = "For at sikre din Klarna-konto beder vi dig om at bekræfte din profil.",
+    urls = { "www.google.com/search?q=klarna" },
+    miss = { "ORG_PHISHING_FREE_HOSTING" },
+  },
+
   {
     name = "Kontaktformular fra wp-admin",
     subject = "Ny besked fra kontaktformular",

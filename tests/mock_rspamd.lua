@@ -67,8 +67,13 @@ local function new_task(case)
   end
   function t:get_urls()
     local r = {}
-    for _, host in ipairs(case.urls or {}) do
-      r[#r + 1] = { get_host = function() return host end }
+    -- "host" eller "host/sti"
+    for _, u in ipairs(case.urls or {}) do
+      local host, path = u:match("^([^/]+)/?(.*)$")
+      r[#r + 1] = {
+        get_host = function() return host end,
+        get_path = function() return path end,
+      }
     end
     return r
   end

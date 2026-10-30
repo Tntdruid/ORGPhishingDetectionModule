@@ -129,6 +129,45 @@ return {
     reject = false,
   },
   {
+    name = "Webapoteket: ordre sendt med DAO (Betaling: Betalingskort, føler dig tryg)",
+    subject = "Din ordre er afsendt",
+    from_name = "Webapoteket", from_domain = "webapoteket.dk",
+    body = "Din pakke er på vej til dig. Betaling: Betalingskort Levering: DAO hjemmelevering. "
+      .. "Vores apoteksteam hjælper dig videre, så du altid føler dig tryg og godt vejledt. Min konto",
+    urls = { "cdn.webapoteket.dk", "www.webapoteket.dk", "www.dao.as" },
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_DAO", "ORG_PHISHING_TRYG" },
+    reject = false,
+  },
+  {
+    name = "Vivara: Hjemlevering med PostNord uden PostNord-link",
+    subject = "Din følgeseddel for bestillingen Vivara",
+    from_name = "Vivara Naturprodukter", from_domain = "vivara.dk",
+    body = "Betalingsmetode: Kreditkort Leveringsmetode: Hjemlevering med PostNord. "
+      .. "Du kan tjekke status for din ordre ved at logge ind på din konto.",
+    urls = { "webcdn.vivara.com", "www.vivara.dk" },
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_POSTNORD" },
+    reject = false,
+  },
+  {
+    name = "Tryg-phishing med forsikringskontekst",
+    subject = "Din forsikring udløber",
+    from_name = "Tryg", from_domain = "evil.example",
+    body = "Din Tryg forsikring udløber. Betal præmie for at bevare dækning.",
+    urls = { "evil.example" },
+    hit = { "ORG_PHISHING_TRYG", "ORG_PHISHING_SPOOF" },
+  },
+  {
+    name = "PostNord-phishing med gebyr og eget domæne",
+    subject = "Din pakke venter",
+    from_name = "Pakkeservice", from_domain = "evil.example",
+    body = "Din PostNord-pakke kan ikke leveres. Betal et gebyr på 12 kr.",
+    urls = { "pay.evil.example" },
+    symbols = DMARC,
+    hit = { "ORG_PHISHING_POSTNORD" },
+  },
+  {
     name = "Ægte Hetzner-mail fra hetzner.com",
     subject = "Your invoice",
     from_name = "Hetzner Online GmbH", from_domain = "hetzner.com",
@@ -306,6 +345,28 @@ return {
   -------------------------------------------------------------------------
   -- Kampagner og generelle signaler
   -------------------------------------------------------------------------
+  {
+    name = "Generisk engelsk pakkesvindel uden transportør (JordanDelivery)",
+    subject = "Delivery unsuccessful, please arrange a new date",
+    from_name = "JordanDelivery", from_domain = "nextfriend.co.uk",
+    body = "We missed you today. Our courier stopped by, but no one was available to receive the parcel. "
+      .. "From your tracking page you can choose a new delivery date. View my options",
+    urls = { "s9hdj5bv.r.eu-west-2.awstrack.me", "www.flexitrongroup.com" },
+    symbols = DMARC,
+    hit = { "ORG_PHISHING_CAMPAIGN" },
+    option = { ORG_PHISHING_CAMPAIGN = "MISSED_DELIVERY_EN" },
+    reject = true,
+  },
+  {
+    name = "Ægte Royal Mail med samme vending",
+    subject = "We missed you",
+    from_name = "Royal Mail", from_domain = "royalmail.com",
+    body = "We missed you today. Our courier stopped by, but no one was available to receive the parcel.",
+    urls = { "www.royalmail.com" },
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_CAMPAIGN" },
+    reject = false,
+  },
   {
     name = "Lagerplads i skyen (CLOUD_STORAGE_DK)",
     subject = "⚠️ Tiden løber: Se, hvordan du bevarer dine filer",

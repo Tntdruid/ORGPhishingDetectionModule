@@ -181,7 +181,9 @@ local function authenticated_brand_mention_sender(task, brand)
 end
 
 local carrier_risky_context = {
-  "betaling", "payment", "pay", "betale", "afgift", "gebyr", "fee",
+  -- "betaling"/"payment" alene er udeladt: ordrebekræftelser har linjer som
+  -- "Betaling: Betalingskort" (fx Webapoteket, der sender med DAO)
+  "betal", "betale", "afgift", "gebyr", "fee", "told", "toldgebyr",
   -- "faktura"/"invoice" alene er udeladt: butikkers fakturaer nævner
   -- transportøren (fx JYSK, der sender med GLS)
   "betalingsoplysninger", "kortoplysninger",
@@ -555,7 +557,9 @@ for name, brand in pairs(brands) do
         return false
       end
 
-      if not spoof and url_match
+      -- Også uden link til transportøren: butikker skriver fx "Hjemlevering med
+      -- PostNord" og linker kun til eget domæne (kontrolleres i funktionen)
+      if not spoof
         and authenticated_carrier_notification(task, brand, sender_domain)
       then
         logger.infox(task, "ORG_PHISHING: authenticated carrier notification ignored for %s", name)
@@ -1011,6 +1015,20 @@ local campaign_fingerprints = {
       { "hopvinna" },
     },
     except_domains = { "e-boks.dk", "e-boks.com" },
+  },
+  {
+    -- Generisk engelsk "missed delivery"-skabelon uden navngivet transportør
+    name = "MISSED_DELIVERY_EN",
+    all_of = {
+      { "we missed you today" },
+      { "our courier stopped by" },
+    },
+    except_domains = {
+      "royalmail.com", "parcelforce.com", "evri.com", "hermesworld.com",
+      "dpd.co.uk", "dpd.com", "dpd.dk", "yodel.co.uk", "dhl.com", "dhl.co.uk",
+      "ups.com", "fedex.com", "gls-group.eu", "postnord.com", "postnord.dk",
+      "amazon.com", "amazon.co.uk", "amazon.de",
+    },
   },
 }
 

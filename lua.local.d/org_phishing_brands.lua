@@ -305,6 +305,13 @@ return {
       "tryg",
       "tryg forsikring",
     },
+    -- "tryg" er også et almindeligt ord ("føler dig tryg"), så der kræves
+    -- forsikringskontekst
+    context_keywords = {
+      "forsikring", "forsikringen", "police", "policen", "skadeanmeldelse",
+      "anmeld skade", "selvrisiko", "forsikringspræmie", "præmie", "dækning",
+      "erstatning", "udbetaling af erstatning",
+    },
     domains = {
       "tryg.dk",
     },

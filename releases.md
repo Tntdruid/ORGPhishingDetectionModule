@@ -1,5 +1,11 @@
 # Udgivelser
 
+## 1.29.0 - 30. oktober 2026
+
+- Tilføjet kampagnefingeraftrykket `MISSED_DELIVERY_EN` for en generisk engelsk pakkesvindel uden navngivet transportør ("We missed you today … Our courier stopped by"). Ægte transportørers domæner er undtaget.
+- Butikkers ordrebekræftelser, der nævner transportøren (fx Webapoteket med DAO og Vivara med PostNord), giver ikke længere transportør-match: "betaling"/"payment" alene tæller ikke som risikokontekst, og undtagelsen gælder også, når transportøren kun nævnes uden link.
+- TRYG kræver nu forsikringskontekst, så "føler dig tryg" ikke giver et Tryg-match.
+
 ## 1.28.0 - 30. oktober 2026
 
 - Tilføjet `ORG_PHISHING_LOOKALIKE_DOMAIN` (4.0) for afsenderdomæner, der indeholder et brands navn eller er ét bogstav fra det (fx `streamingpotify.dk`). Sammen med et brandmatch tæller det som forfalskning (`sender-domain-lookalike`) og afviser for brands med `reject_on_spoof`.

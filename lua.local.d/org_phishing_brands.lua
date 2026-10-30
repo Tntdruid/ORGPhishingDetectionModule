@@ -437,6 +437,7 @@ return {
   MITID = {
     symbol = "ORG_PHISHING_MITID",
     score = 9.0,
+    reject_on_spoof = true,
     keywords = {
       "mitid",
       "mit id",
@@ -458,6 +459,7 @@ return {
   EBOKS = {
     symbol = "ORG_PHISHING_EBOKS",
     score = 9.0,
+    reject_on_spoof = true,
     keywords = {
       "e-boks",
       "eboks",

@@ -794,6 +794,15 @@ local campaign_fingerprints = {
     },
     except_domains = {},
   },
+  {
+    -- Falsk e-Boks/MitID-besked med fejloversat tekst ("Danmarks mest
+    -- anvendte hopvinna selskaber")
+    name = "EBOKS_HOPVINNA",
+    all_of = {
+      { "hopvinna" },
+    },
+    except_domains = { "e-boks.dk", "e-boks.com" },
+  },
 }
 
 rspamd_config:register_symbol({

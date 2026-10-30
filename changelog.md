@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.26.0 - 30. oktober 2026
+
+- Slået `reject_on_spoof` til for e-Boks og MitID, så falske "E-Boks"-afsendere med MitID-lokkemidler afvises.
+- Tilføjet kampagnefingeraftrykket `EBOKS_HOPVINNA` for den falske e-Boks/MitID Business-skabelon.
+
 ## 1.25.0 - 30. oktober 2026
 
 - Tilføjet `ORG_PHISHING_JIRA_ABUSE` (6.0) for phishing sendt via Jira Service Managements kundeinvitationer fra gratis `*.atlassian.net`-sider. Sammen med et brandmatch afvises mailen for alle brands.

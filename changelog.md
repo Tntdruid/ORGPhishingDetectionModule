@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.27.0 - 30. oktober 2026
+
+- Tilføjet regressionstest i `tests/` (`lua tests/run.lua`), der kører modulet mod en simuleret Rspamd med sager for alle kendte kampagner og tidligere falske markeringer.
+
 ## 1.26.0 - 30. oktober 2026
 
 - Slået `reject_on_spoof` til for e-Boks og MitID, så falske "E-Boks"-afsendere med MitID-lokkemidler afvises.

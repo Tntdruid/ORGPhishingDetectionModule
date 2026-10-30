@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.26.0-blue?style=flat-square" alt="Version 1.26.0">
+  <img src="https://img.shields.io/badge/version-1.27.0-blue?style=flat-square" alt="Version 1.27.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -289,6 +289,23 @@ Test altid konfigurationssyntaksen før genindlæsning:
 ```bash
 rspamadm configtest
 ```
+
+### Regressionstest
+
+Repoet indeholder en regressionstest, der kører modulet mod en simuleret Rspamd
+(kræver kun Lua 5.1+ eller LuaJIT, ikke Rspamd):
+
+```bash
+lua tests/run.lua
+```
+
+Sagerne i `tests/cases.lua` er forkortede versioner af rigtige phishing-mails og
+legitime mails, der tidligere gav falske markeringer (fx JYSK med GLS, Matas med
+Burd og PostNord med Pakkeshop Meny). Hver sag angiver, hvilke symboler der skal
+og ikke må ramme, og om mailen skal afvises. Tilføj en sag, når en ny kampagne
+eller falsk markering rettes, så rettelsen ikke går tabt senere.
+
+### Test på serveren
 
 Til funktionstest kan du sende repræsentative testmeddelelser gennem Rspamd og kontrollere de returnerede symboler og scores. Test både mistænkte phishing-mails og legitime meddelelser fra konfigurerede domæner for at kontrollere whitelist-adfærden.
 

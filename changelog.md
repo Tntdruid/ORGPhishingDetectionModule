@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.30.0 - 31. oktober 2026
+
+- Brandmatch sammen med `GOOGLE_AUTOGEN_FREEMAIL` afvises nu for alle brands, ligesom hackede websites og Jira-misbrug.
+- Udvidet Cloud Services med "Cloudlager" og kontekst fra den variant ("dit cloudlager er fyldt op", "0 byte ledig" m.fl.).
+
 ## 1.29.0 - 30. oktober 2026
 
 - Tilføjet kampagnefingeraftrykket `MISSED_DELIVERY_EN` for en generisk engelsk pakkesvindel uden navngivet transportør ("We missed you today … Our courier stopped by"). Ægte transportørers domæner er undtaget.

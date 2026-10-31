@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.29.0-blue?style=flat-square" alt="Version 1.29.0">
+  <img src="https://img.shields.io/badge/version-1.30.0-blue?style=flat-square" alt="Version 1.30.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -135,7 +135,7 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING_<BRAND>` | Individuelt brandmatch | Se brandfilen |
 | `ORG_PHISHING_CAMPAIGN` | Kendt kampagnefingeraftryk (fx genbrugt footer med CVR og adresse, eller en fast Reply-To); afvises altid | 10.0 |
 | `ORG_PHISHING_HOMOGLYPH` | Visningsnavn, emne eller ord i teksten skrevet med forvekslelige tegn (fx "ᏢɑуΡɑI" eller "Кοnto"), også uden brandmatch | 6.0 |
-| `GOOGLE_AUTOGEN_FREEMAIL` | Google `autogen-java`-Message-ID fra en freemail-afsender med links uden for Google (misbrug af fx Google Forms/AppSheet) | 6.0 |
+| `GOOGLE_AUTOGEN_FREEMAIL` | Google `autogen-java`-Message-ID fra en freemail-afsender med links uden for Google (misbrug af fx Google Forms/AppSheet); sammen med et brandmatch afvises mailen for alle brands | 6.0 |
 | `ORG_PHISHING_HACKED_SITE` | Sendt af et script i en typisk webshell-mappe ifølge `X-Source-Dir` (fx `wp-includes`, `wp-content/uploads`); sammen med et brandmatch afvises mailen for alle brands | 6.0 |
 | `ORG_PHISHING_JIRA_ABUSE` | Kundeinvitation fra Jira Service Management (`*.atlassian.net`) med links ud af Atlassian; sammen med et brandmatch afvises mailen for alle brands | 6.0 |
 | `ORG_PHISHING_LOOKALIKE_DOMAIN` | Afsenderdomænet indeholder et brands navn eller er ét bogstav fra det (fx `streamingpotify.dk`), også uden brandmatch; generiske ord som "power" og "booking" udelades | 4.0 |

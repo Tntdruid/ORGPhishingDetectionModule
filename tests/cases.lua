@@ -389,6 +389,18 @@ return {
     reject = true,
   },
   {
+    name = "Cloudlager via Google autogen fra Gmail",
+    subject = "Sikr dig at alle dine enheder synkroniserer korrekt",
+    from_name = "Cloudlager Brugerinformation NN", from_domain = "gmail.com",
+    headers = { ["Message-ID"] = "<autogen-java-f77d06ce-dedc-4b1a-9abe-f4110db6ca17@google.com>" },
+    body = "Cloudlager. Dit cloudlager er fyldt op lige nu. Da du har overskredet grænsen for din lagerplan, "
+      .. "bliver dine billeder ikke længere sikkerhedskopieret til skyen. Lagerkapacitet: 0 byte ledig",
+    urls = { "cheapseats.info" },
+    symbols = DMARC,
+    hit = { "ORG_PHISHING_CLOUDSERVICES", "GOOGLE_AUTOGEN_FREEMAIL" },
+    reject = true,
+  },
+  {
     name = "Gmail-afsender med autogen og kun Google-links",
     subject = "Formular",
     from_name = "Hans", from_domain = "gmail.com",

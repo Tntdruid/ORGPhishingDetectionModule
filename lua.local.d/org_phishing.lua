@@ -1159,10 +1159,12 @@ rspamd_config:register_symbol({
       return
     end
 
-    -- Brandmatch fra en hacket website eller misbrugt platform (Jira) afvises
+    -- Brandmatch fra en hacket website eller misbrugt platform (Jira, Google
+    -- autogen fra Gmail) afvises
     -- for alle brands
     local abused = task:has_symbol("ORG_PHISHING_HACKED_SITE") and "hacked-site"
       or task:has_symbol("ORG_PHISHING_JIRA_ABUSE") and "jira-abuse"
+      or task:has_symbol("GOOGLE_AUTOGEN_FREEMAIL") and "google-autogen"
     if abused then
       local hacked = {}
       for name, brand in pairs(brands) do

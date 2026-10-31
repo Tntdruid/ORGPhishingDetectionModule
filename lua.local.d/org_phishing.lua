@@ -765,6 +765,62 @@ for _, brand in pairs(brands) do
 end
 
 ---------------------------------------------------------------------------
+-- QR-PHISHING (QUISHING)
+---------------------------------------------------------------------------
+
+-- Mails, der beder modtageren scanne en kode i stedet for at klikke på et link,
+-- så linkfiltre og URL-blokliste ikke kan se destinationen.
+local qr_scan_phrases = {
+  "scan venligst koden", "scan koden nedenfor", "scan koden herunder",
+  "scan qr-koden", "scan qr koden", "scan venligst qr-koden",
+  "scan the qr code", "scan the code below", "please scan the code",
+}
+
+local qr_risky_context = {
+  "adressebekræftelse", "bekræft", "verificer", "påkrævet", "forsinkelse",
+  "returnering", "betaling", "konto", "login", "log ind", "opdater",
+  "verify", "confirm", "required", "payment", "account", "delivery",
+}
+
+-- Værter, der ikke er rigtige destinationer (skrifttyper, namespaces)
+local qr_neutral_hosts = { "fonts.googleapis.com", "fonts.gstatic.com", "w3.org" }
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_QR_LURE",
+  score = 6.0,
+  description = "Beder om at scanne en kode og har ingen rigtige links (quishing)",
+  group = "phishing_meta",
+
+  callback = function(task)
+    if not (subject_contains(task, qr_scan_phrases) or body_contains(task, qr_scan_phrases)) then
+      return false
+    end
+    if not (subject_contains(task, qr_risky_context) or body_contains(task, qr_risky_context)) then
+      return false
+    end
+    -- Ægte transportører med DMARC (fx returlabels med QR-kode) undtages
+    local sender_domain = from_domain(task)
+    if task:has_symbol("DMARC_POLICY_ALLOW") then
+      for _, brand in pairs(brands) do
+        if brand.carrier_notification and domain_matches(sender_domain, brand.domains) then
+          return false
+        end
+      end
+    end
+    for _, u in ipairs(task:get_urls() or {}) do
+      local h = u:get_host()
+      if h then
+        h = lower(h):gsub("%.$", "")
+        if not domain_matches(h, qr_neutral_hosts) then
+          return false
+        end
+      end
+    end
+    return true, "no-links"
+  end,
+})
+
+---------------------------------------------------------------------------
 -- GOOGLE AUTOGEN FRA FREEMAIL-AFSENDER
 ---------------------------------------------------------------------------
 
@@ -1029,6 +1085,15 @@ local campaign_fingerprints = {
       "ups.com", "fedex.com", "gls-group.eu", "postnord.com", "postnord.dk",
       "amazon.com", "amazon.co.uk", "amazon.de",
     },
+  },
+  {
+    -- UPS' footer kopieret til falske transportører ("ParcelLink, the
+    -- ParcelLink brandmark, and the colour brown are trademarks ...")
+    name = "UPS_FOOTER_CLONE",
+    all_of = {
+      { "the colour brown are trademarks", "the color brown are trademarks" },
+    },
+    except_domains = { "ups.com" },
   },
 }
 

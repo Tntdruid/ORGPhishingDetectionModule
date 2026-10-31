@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.30.0-blue?style=flat-square" alt="Version 1.30.0">
+  <img src="https://img.shields.io/badge/version-1.31.0-blue?style=flat-square" alt="Version 1.31.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -140,6 +140,7 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING_JIRA_ABUSE` | Kundeinvitation fra Jira Service Management (`*.atlassian.net`) med links ud af Atlassian; sammen med et brandmatch afvises mailen for alle brands | 6.0 |
 | `ORG_PHISHING_LOOKALIKE_DOMAIN` | Afsenderdomænet indeholder et brands navn eller er ét bogstav fra det (fx `streamingpotify.dk`), også uden brandmatch; generiske ord som "power" og "booking" udelades | 4.0 |
 | `ORG_PHISHING_FREE_HOSTING` | Brandmatch med link til gratis hosting eller viderestilling (fx `storage.googleapis.com`, `systeme.io`, `google.com/goto`) | 5.0 |
+| `ORG_PHISHING_QR_LURE` | Beder om at scanne en kode (QR-phishing) og har ingen rigtige links, sammen med bekræftelses-, leverings- eller betalingskontekst; ægte transportører med DMARC undtages | 6.0 |
 | `ORG_PHISHING_REJECTED` | Markør, når modulet selv afviser en mail; bruges til automatisk fuzzy-læring | 0.0 |
 | `ORG_PHISHING_FREEMAIL` | Brandmatch fra en freemail-afsender (fx gmail.com) med links til andre domæner end brandets | 5.0 |
 | `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |

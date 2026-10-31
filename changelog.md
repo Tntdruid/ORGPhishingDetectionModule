@@ -1,5 +1,10 @@
 # Ændringslog
 
+## 1.31.0 - 31. oktober 2026
+
+- Tilføjet `ORG_PHISHING_QR_LURE` (6.0) for QR-phishing: mails, der beder om at scanne en kode, ikke har rigtige links og har bekræftelses-, leverings- eller betalingskontekst. Ægte transportører med DMARC undtages.
+- Tilføjet kampagnefingeraftrykket `UPS_FOOTER_CLONE` for falske transportører, der kopierer UPS' footer ("the colour brown are trademarks").
+
 ## 1.30.0 - 31. oktober 2026
 
 - Brandmatch sammen med `GOOGLE_AUTOGEN_FREEMAIL` afvises nu for alle brands, ligesom hackede websites og Jira-misbrug.

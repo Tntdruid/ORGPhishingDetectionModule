@@ -168,6 +168,17 @@ return {
     hit = { "ORG_PHISHING_POSTNORD" },
   },
   {
+    name = "minvaccination.dk: påmindelse, der nævner e-Boks og MitID",
+    subject = "Påmindelse om vaccination",
+    from_name = "Min Vaccination", from_domain = "minvaccination.dk",
+    body = "Det er tid til din næste vaccination. Du kan også modtage påmindelser i e-Boks. "
+      .. "Log på med MitID for at se din vaccinationsstatus og bekræft din tid.",
+    urls = { "www.minvaccination.dk" },
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_EBOKS", "ORG_PHISHING_MITID" },
+    reject = false,
+  },
+  {
     name = "Ægte Hetzner-mail fra hetzner.com",
     subject = "Your invoice",
     from_name = "Hetzner Online GmbH", from_domain = "hetzner.com",
@@ -563,6 +574,25 @@ return {
     miss = { "ORG_PHISHING_FREE_HOSTING" },
   },
 
+  {
+    name = "Punktum dk: hacket side med tilfældige mapper og beacons.ai",
+    subject = "Punktum dk – Betalingspåmindelse",
+    from_name = "Support DK", from_domain = "atithi.bugfreesolution.com",
+    headers = { ["X-Source-Dir"] = "atithi.bugfreesolution.com:/public_html/ndysmgz/kiwxlym/pmdvkor" },
+    body = "Punktum dk – Betalingspåmindelse. Dit .dk-domæne er suspenderet på grund af manglende betaling af det årlige gebyr på 125 DKK. Betal sikkert nu",
+    urls = { "beacons.ai/suppourone" },
+    hit = { "ORG_PHISHING_PUNKTUMDK", "ORG_PHISHING_HACKED_SITE", "ORG_PHISHING_FREE_HOSTING", "ORG_PHISHING_SPOOF" },
+    option = { ORG_PHISHING_HACKED_SITE = "random-dirs", ORG_PHISHING_SPOOF = "PUNKTUMDK:subject-spoof" },
+    reject = true,
+  },
+  {
+    name = "Ikke hacket side: almindelige mappenavne",
+    subject = "Ny ordre",
+    from_name = "Webshop", from_domain = "shop.example",
+    headers = { ["X-Source-Dir"] = "shop.example:/public_html/shop/app/library/vendors/symfony" },
+    body = "Tak for din ordre",
+    miss = { "ORG_PHISHING_HACKED_SITE" },
+  },
   {
     name = "Kontaktformular fra wp-admin",
     subject = "Ny besked fra kontaktformular",

@@ -509,6 +509,8 @@ return {
       "punktumhosting",
       "domaeneservice",
       ".dk domæne",
+      ".dk-domæne",
+      "punktum dk",
       ".dk domæne & hosting",
       ".dk domaene & hosting",
       -- Punktum dk's adresse bruges i footeren på falske fornyelsesfakturaer
@@ -521,6 +523,7 @@ return {
     },
     spoof_keywords = {
       "punktum.dk",
+      "punktum dk",
       "punktum hosting",
       "punktumhosting",
       "domaeneservice",

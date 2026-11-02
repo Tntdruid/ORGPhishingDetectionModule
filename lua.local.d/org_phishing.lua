@@ -59,6 +59,8 @@ local trusted_sender_domains = {
   "e-boks.dk",
   -- Kirkeministeriet videresender avisartikler, der nævner brands i forbifarten
   "km.dk",
+  -- Vaccinationspåmindelser, der henviser til e-Boks/MitID
+  "minvaccination.dk",
 }
 
 local trusted_newsletter_domains = {
@@ -711,7 +713,7 @@ local free_hosting_domains = {
   "vercel.app", "github.io", "glitch.me", "weebly.com", "wixsite.com",
   "square.site", "webflow.io", "framer.website", "tempurl.host",
   "bit.ly", "tinyurl.com", "is.gd", "cutt.ly", "rebrand.ly", "t.ly",
-  "shorturl.at", "rb.gy", "dke.to", "flowto.it",
+  "shorturl.at", "rb.gy", "dke.to", "flowto.it", "beacons.ai", "linktr.ee",
 }
 
 local function url_free_hosting(u)
@@ -896,6 +898,11 @@ rspamd_config:register_symbol({
 -- cPanel/Exim tilføjer X-Source-Dir med scriptets mappe. Legitim WordPress-post
 -- sendes fra sidens rod eller wp-admin; et script i wp-includes, uploads eller
 -- cache-mapper er typisk en webshell på en hacket side.
+-- Mindst tre konsonanter (eller cifre) i træk; y regnes som vokal
+local function looks_random(word)
+  return word:find("[bcdfghjklmnpqrstvwxz%d][bcdfghjklmnpqrstvwxz%d][bcdfghjklmnpqrstvwxz%d]") ~= nil
+end
+
 local compromised_script_dirs = {
   "/wp%-includes/",
   "/wp%-content/uploads/",
@@ -919,6 +926,14 @@ rspamd_config:register_symbol({
       if dir:find(pattern) then
         return true, (pattern:gsub("%%", ""))
       end
+    end
+    -- Phishingkit, der lægger sig i tre tilfældige mapper på 7 tegn
+    -- (fx /public_html/ndysmgz/kiwxlym/pmdvkor). Tilfældige navne har klumper
+    -- af mindst tre konsonanter; almindelige ord (library, vendors) har ikke.
+    local seg = "([%l%d][%l%d][%l%d][%l%d][%l%d][%l%d][%l%d])"
+    local a, b, c = dir:match("/" .. seg .. "/" .. seg .. "/" .. seg .. "/?$")
+    if a and looks_random(a) and looks_random(b) and looks_random(c) then
+      return true, "random-dirs"
     end
     return false
   end,

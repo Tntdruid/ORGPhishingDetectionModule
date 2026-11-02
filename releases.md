@@ -1,5 +1,12 @@
 # Udgivelser
 
+## 1.32.0 - 2. november 2026
+
+- Tilføjet `minvaccination.dk` som betroet afsender, så vaccinationspåmindelser, der henviser til e-Boks eller MitID, ikke giver brandmatch.
+- Udvidet Punktum.dk med "Punktum dk" og ".dk-domæne" (også som `spoof_keywords`).
+- `ORG_PHISHING_HACKED_SITE` genkender nu også phishingkits i tre tilfældige mapper på 7 tegn (fx `/public_html/ndysmgz/kiwxlym/pmdvkor`).
+- Tilføjet `beacons.ai` og `linktr.ee` til listen over gratis hosting.
+
 ## 1.31.0 - 31. oktober 2026
 
 - Tilføjet `ORG_PHISHING_QR_LURE` (6.0) for QR-phishing: mails, der beder om at scanne en kode, ikke har rigtige links og har bekræftelses-, leverings- eller betalingskontekst. Ægte transportører med DMARC undtages.

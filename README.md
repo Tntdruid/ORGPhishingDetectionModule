@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.33.0-blue?style=flat-square" alt="Version 1.33.0">
+  <img src="https://img.shields.io/badge/version-1.34.0-blue?style=flat-square" alt="Version 1.34.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -80,7 +80,8 @@ Et brandmatch kræver et brand-keyword sammen med mistænkelig kontekst eller en
 DMARC-godkendte meddelelser fra `burd.dk` kan omtale andre brands, som Burd leverer
 for, uden at udløse et brandmatch alene på grund af tekstomtalen. Det samme gælder
 tekstomtaler i godkendte meddelelser fra `kristeligt-dagblad.dk`, `km.dk`,
-`minvaccination.dk` og
+`minvaccination.dk`, `computershare.dk`, danske nyhedsmedier (Watch Medier, Børsen,
+Berlingske, Jyllands-Posten, Politiken, DR) og
 `paradoxinteractive.com`; brand-URL'er og tegn på forfalskning udløser stadig
 kontrol. Redaktionelle nyhedsbreve fra `digitalt.tv` med godkendt DKIM og
 `List-Unsubscribe` behandles tilsvarende som betroede tekstomtaler.
@@ -124,6 +125,15 @@ et andet topdomæne, fx jysk.com/jysk.dk) eller transportøren.
 Omtale af kundekontoen ("konto"), fakturaen ("faktura") eller betalingsmåden
 ("Betaling: Betalingskort") regnes ikke som risikokontekst her, og undtagelsen
 gælder også, når transportøren kun nævnes i teksten uden link.
+
+**Kun omtale.** Et brandmatch ignoreres automatisk, når afsenderen består DMARC
+med politikken `reject` eller `quarantine`, og mailen kun *nævner* brandet: ingen
+links til brandet, ingen forfalskning, ingen "persona"-vendinger om brandet (fx
+"din Klarna-konto", "Med venlig hilsen EasyPark", "Yousee Kundeservice", "© 2026
+Spotify", "hos Magasin") og ingen tegn på misbrug (Jira-invitation, gratis hosting,
+kendt kapret afsender). Det dækker nyhedsbreve og butiksmails, der omtaler brands,
+uden at hver afsender skal på en liste. Generiske svindeltyper som Cloud Services
+har `no_mention_exemption = true` og undtages aldrig.
 
 URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underdomæner til konfigurerede domæner accepteres, og jokertegn understøttes.
 
@@ -311,7 +321,9 @@ Sagerne i `tests/cases.lua` er forkortede versioner af rigtige phishing-mails og
 legitime mails, der tidligere gav falske markeringer (fx JYSK med GLS, Matas med
 Burd og PostNord med Pakkeshop Meny). Hver sag angiver, hvilke symboler der skal
 og ikke må ramme, og om mailen skal afvises. Tilføj en sag, når en ny kampagne
-eller falsk markering rettes, så rettelsen ikke går tabt senere.
+eller falsk markering rettes, så rettelsen ikke går tabt senere. Hver sag køres
+også en ekstra gang med streng DMARC (`reject`), så "kun omtale"-undtagelsen ikke
+kan skjule phishing.
 
 ### Test på serveren
 

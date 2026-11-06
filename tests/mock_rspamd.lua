@@ -88,6 +88,11 @@ local function new_task(case)
     if inserted[name] then
       return { { options = inserted[name] } }
     end
+    -- DMARC-politik: case.dmarc_policy eller miljøvariablen ORG_TEST_DMARC_POLICY
+    if name == "DMARC_POLICY_ALLOW" and preset[name] then
+      local policy = case.dmarc_policy or os.getenv("ORG_TEST_DMARC_POLICY") or "none"
+      return { { options = { case.from_domain or "", policy } } }
+    end
   end
   function t:set_pre_result(action, message)
     t.action = action

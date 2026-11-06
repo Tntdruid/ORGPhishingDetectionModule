@@ -18,7 +18,21 @@ end
 
 local symbols = mock.load_module(module_path, nil)
 
+-- Hver sag køres også med streng DMARC (reject), hvis den ikke selv angiver en
+-- politik, så "kun omtale"-undtagelsen ikke kan skjule phishing.
+local runs = {}
 for _, case in ipairs(cases) do
+  runs[#runs + 1] = case
+  if not case.dmarc_policy then
+    local strict = {}
+    for k, v in pairs(case) do strict[k] = v end
+    strict.dmarc_policy = "reject"
+    strict.name = case.name .. " [DMARC reject]"
+    runs[#runs + 1] = strict
+  end
+end
+
+for _, case in ipairs(runs) do
   local task = mock.scan(symbols, case)
   local errors = {}
 

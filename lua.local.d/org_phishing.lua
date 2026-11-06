@@ -61,6 +61,15 @@ local trusted_sender_domains = {
   "km.dk",
   -- Vaccinationspåmindelser, der henviser til e-Boks/MitID
   "minvaccination.dk",
+  -- Generalforsamlinger for børsselskaber (login med MitID på aktionærportal)
+  "computershare.dk",
+  "computershare.com",
+  -- Nyhedsmedier, der omtaler banker og selskaber i artikler
+  "medwatch.dk", "finanswatch.dk", "itwatch.dk", "energiwatch.dk",
+  "ejendomswatch.dk", "shippingwatch.dk", "mobilitywatch.dk", "agriwatch.dk",
+  "policywatch.dk", "fodevarewatch.dk", "detailwatch.dk", "advokatwatch.dk",
+  "borsen.dk", "berlingske.dk", "jyllands-posten.dk", "jp.dk",
+  "politiken.dk", "dr.dk",
 }
 
 local trusted_newsletter_domains = {
@@ -192,7 +201,9 @@ local carrier_risky_context = {
   "betalingsverifikation", "payment verification",
   -- "konto"/"account" alene er udeladt: butikkers ordrebekræftelser nævner
   -- typisk kundekontoen (fx "point ... synlige på din konto")
-  "login", "log in", "logge på", "adgangskode",
+  -- "login" alene er udeladt: butikker skriver fx "Nemt og uden login"
+  -- (MrPerfect.dk med GLS)
+  "log in", "logge på", "adgangskode",
   "password", "verify", "verification", "bekræft", "identitet",
   "identity", "konto på hold", "konto er sat på hold", "account on hold",
   "låst", "locked", "spærret", "blocked", "udløber", "expired",
@@ -476,6 +487,87 @@ end
 -- BRANDKONTROL
 ---------------------------------------------------------------------------
 
+---------------------------------------------------------------------------
+-- "KUN OMTALE": BRANDET NÆVNES, MEN MAILEN UDGIVER SIG IKKE FOR AT VÆRE DET
+---------------------------------------------------------------------------
+
+-- Defineres længere nede, men bruges af brand-callbacks (fremadrettet erklæring)
+local url_free_hosting
+local abused_sender_domains
+
+-- Vendinger, hvor mailen taler som brandet eller om modtagerens konto hos det
+-- (fx "din Klarna-konto", "Med venlig hilsen EasyPark", "© 2026 Spotify")
+local persona_templates = {
+  "din %s", "dit %s", "dine %s", "your %s",
+  "%s kundeservice", "%s support", "%s team", "%s sikkerhed", "%s security",
+  "%s%%-konto", "%s konto", "%s account", "%s billing", "%s premium",
+  "%s%%-abonnement", "hilsen,? %s", "regards,? %s", "holdet bag %s",
+  "the %s", "© ?%%d* ?%s", "hos %s", "fra %s a/s",
+}
+
+local function escape_pattern(s)
+  return (s:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%0"))
+end
+
+local function mail_text(task)
+  local parts = { task:get_subject() or "" }
+  for _, part in ipairs(task:get_text_parts() or {}) do
+    parts[#parts + 1] = part:get_content() or ""
+  end
+  return lower(table.concat(parts, " ")):gsub("%s+", " ")
+end
+
+local function has_persona(task, brand)
+  local text = mail_text(task)
+  for _, kw in ipairs(brand.keywords) do
+    local k = escape_pattern(lower(kw))
+    for _, tpl in ipairs(persona_templates) do
+      if text:find((tpl:gsub("%%s", function() return k end))) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- DMARC består med politikken reject eller quarantine
+local function strict_dmarc(task)
+  if not task:has_symbol("DMARC_POLICY_ALLOW") then
+    return false
+  end
+  local res = task.get_symbol and task:get_symbol("DMARC_POLICY_ALLOW")
+  for _, opt in ipairs(res and res[1] and res[1].options or {}) do
+    local o = lower(tostring(opt))
+    if o == "reject" or o == "quarantine" then
+      return true
+    end
+  end
+  return false
+end
+
+-- Afsender med streng DMARC, der kun nævner brandet uden persona, links til
+-- brandet, forfalskning eller tegn på misbrug: omtale, ikke efterligning.
+local function mention_only(task, brand)
+  -- Generiske "brands" (fx Cloud Services) er en svindeltype, ikke et firma
+  if brand.no_mention_exemption or not strict_dmarc(task) then
+    return false
+  end
+  if task:get_header("X-Atl-Po-Triggerid") then
+    return false
+  end
+  if abused_sender_domains and domain_matches(from_domain(task), abused_sender_domains) then
+    return false
+  end
+  if url_free_hosting then
+    for _, u in ipairs(task:get_urls() or {}) do
+      if url_free_hosting(u) then
+        return false
+      end
+    end
+  end
+  return not has_persona(task, brand)
+end
+
 local function check_brand(task, brand)
   local reasons = {}
 
@@ -550,6 +642,11 @@ for name, brand in pairs(brands) do
         -- tælles én gang for selve forfalskningen, ikke én gang per brand.
         -- Andet argument er en vægt, der ganges med symbolets score (ikke selve scoren)
         task:insert_result("ORG_PHISHING_SPOOF", 1.0, name .. ":" .. spoof_reason)
+      end
+
+      if not url_match and not spoof and mention_only(task, brand) then
+        logger.infox(task, "ORG_PHISHING: mention only (strict DMARC, no persona) ignored for %s", name)
+        return false
       end
 
       if not url_match and not spoof
@@ -716,7 +813,7 @@ local free_hosting_domains = {
   "shorturl.at", "rb.gy", "dke.to", "flowto.it", "beacons.ai", "linktr.ee",
 }
 
-local function url_free_hosting(u)
+function url_free_hosting(u)
   local host = u:get_host()
   if not host then
     return nil
@@ -1245,7 +1342,7 @@ rspamd_config:register_symbol({
 
 -- Afsenderdomæner, hvis konti gentagne gange er kapret til brand-phishing
 -- (fx en SendGrid-konto, der sender falske EasyPark-mails)
-local abused_sender_domains = {
+abused_sender_domains = {
   "reviewmgr.com",
 }
 

@@ -1,5 +1,12 @@
 # Ændringslog
 
+## 1.34.0 - 6. november 2026
+
+- Tilføjet "kun omtale"-undtagelse: brandmatch ignoreres automatisk, når afsenderen består DMARC med `reject`/`quarantine` og kun nævner brandet uden links til det, forfalskning, persona-vendinger ("din …", "hilsen …", "… kundeservice", "© … ") eller tegn på misbrug. Generiske svindeltyper kan undtages med `no_mention_exemption`.
+- Regressionstesten kører nu hver sag ekstra med streng DMARC.
+- Tilføjet Computershare (generalforsamlinger med MitID-login) og danske nyhedsmedier (Watch Medier, Børsen, Berlingske, Jyllands-Posten, Politiken, DR) som betroede afsendere, så omtale af MitID, banker og selskaber ikke giver brandmatch.
+- "login" alene tæller ikke længere som risikokontekst for transportører, så butikkers ordrebekræftelser med fx "Nemt og uden login" (MrPerfect.dk med GLS) ikke giver transportør-match.
+
 ## 1.33.0 - 6. november 2026
 
 - Tilføjet `ORG_PHISHING_STORAGE_SCAM` (10.0) for lagerplads-svindel uden brand: mindst tre forskellige trusler om sletning fra en afsender, der ikke er en rigtig lagerudbyder (Google, Apple, Microsoft, Dropbox m.fl. med DMARC undtages).

@@ -101,6 +101,8 @@ return {
     symbol = "ORG_PHISHING_CLOUDSERVICES",
     score = 8.0,
     reject_on_spoof = true,
+    -- Svindeltype, ikke et firma: "kun omtale"-undtagelsen gælder ikke
+    no_mention_exemption = true,
     keywords = {
       "cloud services",
       "cloud storage",

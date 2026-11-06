@@ -50,6 +50,9 @@ return {
       "email.coop.dk",
       "trk.coop.dk",
       "info.coop.dk",
+      -- Coop Bank (fx nyhedsbreve via Klaviyo fra send.coopbank.dk)
+      "coopbank.dk",
+      "coopbankinvestering.dk",
     },
     trusted_mention_senders = {
       "advisering.e-boks.dk",
@@ -78,6 +81,15 @@ return {
       "chat gpt",
       "gpt billing",
     },
+    -- AI/ChatGPT nævnes i mange nyhedsbreve, så der kræves målrettet kontekst
+    context_keywords = {
+      "chatgpt plus", "chatgpt pro", "openai account", "openai-konto",
+      "chatgpt-konto", "your chatgpt subscription", "dit chatgpt-abonnement",
+      "payment failed", "betaling mislykkedes", "update your payment",
+      "opdater din betaling", "subscription has been suspended",
+      "verify your account", "bekræft din konto", "account suspended",
+      "konto suspenderet", "billing information",
+    },
     domains = {
       "openai.com",
       "chatgpt.com",
@@ -104,6 +116,8 @@ return {
       "cloud®",
       "cloud-abonnement",
       "cloudlager",
+      "cloudplads",
+      "filer i skyen",
     },
     context_keywords = {
       "cloud storage is full",
@@ -151,12 +165,25 @@ return {
       "0 byte ledig",
       "brugt lagerplads",
       "rydde op i dit cloudlager",
+      "lagergrænsen",
+      "din lagerplads er fuld",
+      "bliver dine filer slettet",
+      "dine gemte filer kan blive slettet",
+      "få mere lagerplads",
+      "se muligheder for lagerplads",
+      "nye uploads er stoppet",
     },
     domains = {
       "cloudservices.com",
       "cloud-services.com",
     },
     url_requires_context = true,
+    -- Rigtige lagerudbydere sender selv "din lagerplads er fuld"-beskeder
+    trusted_mention_senders = {
+      "google.com", "apple.com", "icloud.com", "microsoft.com",
+      "onedrive.com", "dropbox.com", "dropboxmail.com", "box.com",
+      "pcloud.com", "jottacloud.com", "proton.me",
+    },
   },
 
   APPLE = {

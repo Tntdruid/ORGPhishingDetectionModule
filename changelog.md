@@ -1,5 +1,14 @@
 # Ændringslog
 
+## 1.33.0 - 6. november 2026
+
+- Tilføjet `ORG_PHISHING_STORAGE_SCAM` (10.0) for lagerplads-svindel uden brand: mindst tre forskellige trusler om sletning fra en afsender, der ikke er en rigtig lagerudbyder (Google, Apple, Microsoft, Dropbox m.fl. med DMARC undtages).
+- Udvidet Cloud Services med "Cloudplads", "Filer i skyen" og nye kontekstfraser; rigtige lagerudbydere er betroede afsendere for tekstomtale.
+- Brandmatch fra kendte kaprede afsenderdomæner (`reviewmgr.com`) afvises nu for alle brands.
+- Tilføjet `coopbank.dk` og `coopbankinvestering.dk` som legitime Coop-domæner, så nyhedsbreve fra Coop Bank ikke giver Coop-forfalskning.
+- OpenAI kræver nu målrettet kontekst (fx ChatGPT Plus, mislykket betaling, kontosuspension), så nyhedsbreve, der blot nævner ChatGPT eller AI, ikke giver brandmatch.
+- Tilføjet `ORG_PHISHING_HEADER_MISMATCH` (5.0) for spam, der genbruger Reply-To og List-Unsubscribe fra rigtige nyhedsbreve, så afsender, Reply-To og afmeldingsdomæne er tre uafhængige domæner, og ingen links går til nogen af dem.
+
 ## 1.32.0 - 2. november 2026
 
 - Tilføjet `minvaccination.dk` som betroet afsender, så vaccinationspåmindelser, der henviser til e-Boks eller MitID, ikke giver brandmatch.

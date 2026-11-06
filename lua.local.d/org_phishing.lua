@@ -767,6 +767,101 @@ for _, brand in pairs(brands) do
 end
 
 ---------------------------------------------------------------------------
+-- HEADERE KOPIERET FRA ANDRE AFSENDERE ("HEADER-SALAT")
+---------------------------------------------------------------------------
+
+-- Spam, der genbruger Reply-To og List-Unsubscribe fra rigtige nyhedsbreve,
+-- har tre identiteter uden indbyrdes sammenhæng: afsender, Reply-To og
+-- afmeldingsdomæne, og linker til endnu et fjerde domæne.
+local function header_domain(task, name, url_first)
+  local value = lower(task:get_header(name) or "")
+  if value == "" then
+    return nil
+  end
+  local d = url_first and value:match("https?://([%w%.%-]+)") or nil
+  d = d or value:match("@([%w%.%-]+)")
+  return d and base_domain((d:gsub("%.$", ""))) or nil
+end
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_HEADER_MISMATCH",
+  score = 5.0,
+  description = "Afsender, Reply-To og List-Unsubscribe peger på tre uafhængige domæner",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local from = base_domain(from_domain(task))
+    local reply = header_domain(task, "Reply-To", false)
+    local unsub = header_domain(task, "List-Unsubscribe", true)
+    if not (from and reply and unsub) then
+      return false
+    end
+    if from == reply or from == unsub or reply == unsub then
+      return false
+    end
+    -- Linker mailen til et af de tre domæner, hænger identiteterne sammen
+    for _, u in ipairs(task:get_urls() or {}) do
+      local h = u:get_host()
+      if h then
+        local b = base_domain(lower(h):gsub("%.$", ""))
+        if b == from or b == reply or b == unsub then
+          return false
+        end
+      end
+    end
+    return true, string.format("%s|%s|%s", from, reply, unsub)
+  end,
+})
+
+---------------------------------------------------------------------------
+-- LAGERPLADS-SVINDEL UDEN BRAND
+---------------------------------------------------------------------------
+
+-- Kampagner, der truer med sletning af filer pga. fuld lagerplads, skifter
+-- skabelon og navn hele tiden (Cloudnyt, Cloudplads, CloudOverblik ...). Flere
+-- forskellige trusler i samme mail fra en ikke-udbyder er et stærkt signal.
+local storage_scam_phrases = {
+  "lagerplads", "lagergrænse", "lagergrænsen", "lagerplads er fuld",
+  "lagerplads i skyen", "lagerplan", "cloudlager", "cloudplads",
+  "filer i skyen", "filer slettet", "bliver dine filer slettet",
+  "kan blive slettet", "sletning af dine gemte filer", "frigøre plads",
+  "frigør plads", "frigøre lagerplads", "mere lagerplads", "opdateres ikke",
+  "uploads er stoppet", "sikkerhedskopieret", "0 byte ledig",
+  "storage is full", "storage full", "files will be deleted", "free up space",
+}
+
+local storage_providers = {
+  "google.com", "apple.com", "icloud.com", "microsoft.com", "onedrive.com",
+  "dropbox.com", "dropboxmail.com", "box.com", "pcloud.com",
+  "jottacloud.com", "proton.me",
+}
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_STORAGE_SCAM",
+  score = 10.0,
+  description = "Flere trusler om sletning pga. fuld lagerplads fra en ikke-udbyder",
+  group = "phishing_meta",
+
+  callback = function(task)
+    if task:has_symbol("DMARC_POLICY_ALLOW")
+      and domain_matches(from_domain(task), storage_providers)
+    then
+      return false
+    end
+    local found = {}
+    for _, phrase in ipairs(storage_scam_phrases) do
+      if subject_contains(task, { phrase }) or body_contains(task, { phrase }) then
+        found[#found + 1] = phrase
+      end
+    end
+    if #found < 3 then
+      return false
+    end
+    return true, table.concat(found, ",", 1, math.min(#found, 4))
+  end,
+})
+
+---------------------------------------------------------------------------
 -- QR-PHISHING (QUISHING)
 ---------------------------------------------------------------------------
 
@@ -1148,6 +1243,12 @@ rspamd_config:register_symbol({
 -- AFVISNING VED BRANDMATCH + FORFALSKNING
 ---------------------------------------------------------------------------
 
+-- Afsenderdomæner, hvis konti gentagne gange er kapret til brand-phishing
+-- (fx en SendGrid-konto, der sender falske EasyPark-mails)
+local abused_sender_domains = {
+  "reviewmgr.com",
+}
+
 -- Brands med 'reject_on_spoof = true' afvises direkte, når både brandsymbolet
 -- og ORG_PHISHING_SPOOF har ramt. Et brandmatch alene giver fortsat kun score.
 -- Kun forfalsket visningsnavn/Reply-To afviser; subject-spoof er for svagt et
@@ -1245,6 +1346,7 @@ rspamd_config:register_symbol({
     local abused = task:has_symbol("ORG_PHISHING_HACKED_SITE") and "hacked-site"
       or task:has_symbol("ORG_PHISHING_JIRA_ABUSE") and "jira-abuse"
       or task:has_symbol("GOOGLE_AUTOGEN_FREEMAIL") and "google-autogen"
+      or domain_matches(from_domain(task), abused_sender_domains) and "abused-sender"
     if abused then
       local hacked = {}
       for name, brand in pairs(brands) do

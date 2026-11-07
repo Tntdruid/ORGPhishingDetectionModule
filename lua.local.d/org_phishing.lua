@@ -149,10 +149,31 @@ local function from_domain(task)
   return from and from[1] and lower(from[1].domain) or nil
 end
 
+-- Afsenderen er autentificeret: DMARC består, eller (for domæner uden
+-- DMARC-post, fx GLS' pakkeshop.dk) en gyldig DKIM-signatur fra samme domæne.
+local function sender_authenticated(task)
+  if task:has_symbol("DMARC_POLICY_ALLOW") then
+    return true
+  end
+  if not task:has_symbol("R_DKIM_ALLOW") then
+    return false
+  end
+  local from = from_domain(task)
+  local from_base = from and from:match("([^.]+%.[^.]+)$")
+  local res = task.get_symbol and task:get_symbol("R_DKIM_ALLOW")
+  for _, opt in ipairs(res and res[1] and res[1].options or {}) do
+    local d = lower(tostring(opt)):match("^([^:]+)")
+    if d and from_base and d:match("([^.]+%.[^.]+)$") == from_base then
+      return true
+    end
+  end
+  return false
+end
+
 local function authenticated_trusted_sender(task)
   local sender_domain = from_domain(task)
   if domain_matches(sender_domain, trusted_sender_domains)
-    and task:has_symbol("DMARC_POLICY_ALLOW")
+    and sender_authenticated(task)
   then
     return true
   end
@@ -165,7 +186,7 @@ end
 local function authenticated_brand_trusted_sender(task, brand)
   return brand.trusted_senders
     and domain_matches(from_domain(task), brand.trusted_senders)
-    and task:has_symbol("DMARC_POLICY_ALLOW")
+    and sender_authenticated(task)
 end
 
 -- Transportørernes egne domæner (brands med carrier_notification). Deres
@@ -181,7 +202,7 @@ end
 
 local function authenticated_brand_mention_sender(task, brand)
   local sender_domain = from_domain(task)
-  if not task:has_symbol("DMARC_POLICY_ALLOW") then
+  if not sender_authenticated(task) then
     return false
   end
   if domain_matches(sender_domain, carrier_domains) then
@@ -263,7 +284,7 @@ local neutral_url_hosts = { "w3.org" }
 local function authenticated_carrier_notification(task, brand, sender_domain)
   if not brand.carrier_notification
     or not sender_domain
-    or not task:has_symbol("DMARC_POLICY_ALLOW")
+    or not sender_authenticated(task)
     or subject_contains(task, carrier_risky_context)
     or body_contains(task, carrier_risky_context)
   then
@@ -944,7 +965,7 @@ rspamd_config:register_symbol({
   group = "phishing_meta",
 
   callback = function(task)
-    if task:has_symbol("DMARC_POLICY_ALLOW")
+    if sender_authenticated(task)
       and domain_matches(from_domain(task), storage_providers)
     then
       return false
@@ -998,7 +1019,7 @@ rspamd_config:register_symbol({
     end
     -- Ægte transportører med DMARC (fx returlabels med QR-kode) undtages
     local sender_domain = from_domain(task)
-    if task:has_symbol("DMARC_POLICY_ALLOW") then
+    if sender_authenticated(task) then
       for _, brand in pairs(brands) do
         if brand.carrier_notification and domain_matches(sender_domain, brand.domains) then
           return false

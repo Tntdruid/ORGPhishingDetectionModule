@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.35.0 - 7. november 2026
+
+- Betroede undtagelser (transportører, betroede afsendere m.fl.) accepterer nu også en gyldig DKIM-signatur fra afsenderens eget domæne, når domænet ikke har en DMARC-post (fx GLS' pakkeshop.dk med "PakkeShoppen hos Meny").
+
 ## 1.34.1 - 7. november 2026
 
 - Udvidet Cloud Services og `ORG_PHISHING_STORAGE_SCAM` med "Dit lager er fyldt"-varianten ("maksimale kapacitet", "sikkerhedskopiering", "rydde op i dit lager").

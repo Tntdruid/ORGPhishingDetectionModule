@@ -96,6 +96,10 @@ local function new_task(case)
       return { { options = inserted[name] } }
     end
     -- DMARC-politik: case.dmarc_policy eller miljøvariablen ORG_TEST_DMARC_POLICY
+    -- DKIM-domæne: case.dkim_domain (standard: afsenderdomænet)
+    if name == "R_DKIM_ALLOW" and preset[name] then
+      return { { options = { (case.dkim_domain or case.from_domain or "") .. ":s=s1" } } }
+    end
     if name == "DMARC_POLICY_ALLOW" and preset[name] then
       local policy = case.dmarc_policy or os.getenv("ORG_TEST_DMARC_POLICY") or "none"
       return { { options = { case.from_domain or "", policy } } }

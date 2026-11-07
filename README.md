@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.34.1-blue?style=flat-square" alt="Version 1.34.1">
+  <img src="https://img.shields.io/badge/version-1.35.0-blue?style=flat-square" alt="Version 1.35.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -134,6 +134,10 @@ Spotify", "hos Magasin") og ingen tegn på misbrug (Jira-invitation, gratis host
 kendt kapret afsender). Det dækker nyhedsbreve og butiksmails, der omtaler brands,
 uden at hver afsender skal på en liste. Generiske svindeltyper som Cloud Services
 har `no_mention_exemption = true` og undtages aldrig.
+
+Hvor undtagelserne kræver en "DMARC-godkendt" afsender, accepteres også en gyldig
+DKIM-signatur fra afsenderens eget domæne, når domænet ikke har en DMARC-post
+(fx GLS' `pakkeshop.dk`).
 
 URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underdomæner til konfigurerede domæner accepteres, og jokertegn understøttes.
 

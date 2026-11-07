@@ -281,6 +281,26 @@ return {
     reject = true,
   },
   {
+    name = "GLS pakkeshop.dk uden DMARC, men aligned DKIM: pakke hos Meny",
+    subject = "Du kan nu hente pakke 043309214549",
+    from_name = "GLS", from_domain = "pakkeshop.dk",
+    body = "Din pakke fra MrPerfect.dk er blevet leveret af din lokale GLS-chauffør. Den venter på dig i PakkeShoppen hos: "
+      .. "Meny Allerød. Dit pakkenummer er 043309214549. Med venlig hilsen GLS",
+    urls = { "email.gls.dk" },
+    symbols = { "R_DKIM_ALLOW" },
+    miss = { "ORG_PHISHING_MENY" },
+    reject = false,
+  },
+  {
+    name = "Forfalsket pakkeshop.dk uden gyldig DKIM nævner Meny og gebyr",
+    subject = "Din pakke venter",
+    from_name = "GLS", from_domain = "pakkeshop.dk",
+    body = "Din pakke venter hos Meny. Betal et gebyr på 15 kr for levering.",
+    urls = { "evil.example" },
+    symbols = { "R_DKIM_ALLOW" }, dkim_domain = "evil.example",
+    hit = { "ORG_PHISHING_MENY" },
+  },
+  {
     name = "Ægte Hetzner-mail fra hetzner.com",
     subject = "Your invoice",
     from_name = "Hetzner Online GmbH", from_domain = "hetzner.com",

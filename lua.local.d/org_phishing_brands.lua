@@ -619,6 +619,34 @@ return {
     },
   },
 
+  TRUSTPILOT = {
+    symbol = "ORG_PHISHING_TRUSTPILOT",
+    score = 8.0,
+    reject_on_spoof = true,
+    keywords = {
+      "trustpilot",
+    },
+    -- Butikker beder ofte om anmeldelser på Trustpilot, så kun målrettet
+    -- kontekst tæller: anmeldelsesmanipulation og virksomhedsphishing
+    context_keywords = {
+      "remove bad reviews", "remove trustpilot", "review removal",
+      "negative reviews", "bad reviews", "permanent reviews",
+      "permanent review", "fake reviews", "buy reviews",
+      "fjern dårlige anmeldelser", "fjerne dårlige anmeldelser",
+      "negative anmeldelser", "køb anmeldelser",
+      "your business profile", "your trustpilot account",
+      "verify your business", "claim your business",
+      "business account has been suspended", "profile has been suspended",
+      "din virksomhedsprofil", "din trustpilot-konto", "bekræft din virksomhed",
+    },
+    domains = {
+      "trustpilot.com",
+      "trustpilot.dk",
+      "trustpilotmail.com",
+    },
+    url_requires_context = true,
+  },
+
   DANSKEBANK = {
     symbol = "ORG_PHISHING_DANSKEBANK",
     score = 9.0,

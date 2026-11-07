@@ -515,6 +515,7 @@ end
 -- Defineres længere nede, men bruges af brand-callbacks (fremadrettet erklæring)
 local url_free_hosting
 local abused_sender_domains
+local freemail_domains
 
 -- Vendinger, hvor mailen taler som brandet eller om modtagerens konto hos det
 -- (fx "din Klarna-konto", "Med venlig hilsen EasyPark", "© 2026 Spotify")
@@ -579,6 +580,10 @@ local function mention_only(task, brand)
     return false
   end
   if abused_sender_domains and domain_matches(from_domain(task), abused_sender_domains) then
+    return false
+  end
+  -- Private gratis mailadresser er aldrig en seriøs afsender, der "kun nævner"
+  if freemail_domains and domain_matches(from_domain(task), freemail_domains) then
     return false
   end
   if url_free_hosting then
@@ -729,7 +734,7 @@ rspamd_config:register_symbol({
 
 -- Brands sender ikke fra gratis mailkonti. Et brandmatch fra fx gmail.com med
 -- links til andre domæner end brandets egne er et stærkt phishingtegn.
-local freemail_domains = {
+freemail_domains = {
   "gmail.com", "googlemail.com",
   "outlook.com", "outlook.dk", "hotmail.com", "hotmail.dk", "live.com", "live.dk",
   "msn.com", "yahoo.com", "yahoo.dk", "ymail.com", "aol.com",
@@ -980,6 +985,54 @@ rspamd_config:register_symbol({
       return false
     end
     return true, table.concat(found, ",", 1, math.min(#found, 4))
+  end,
+})
+
+---------------------------------------------------------------------------
+-- KOLD MAIL FRA FREEMAIL MED KONTAKT KUN VIA BESKEDAPPS
+---------------------------------------------------------------------------
+
+-- Svindel (falske anmeldelser, investeringer, jobtilbud) sendes typisk fra
+-- en gratis mailadresse til skjulte modtagere, hvor de eneste links går til
+-- WhatsApp/Telegram. Seriøse afsendere linker til deres egen hjemmeside.
+local messenger_hosts = {
+  "wa.me", "api.whatsapp.com", "chat.whatsapp.com", "whatsapp.com",
+  "t.me", "telegram.me", "telegram.dog", "signal.me", "m.me", "line.me",
+}
+
+local function undisclosed_recipients(task)
+  local to = lower(task:get_header("To") or "")
+  return to == "" or to:find("undisclosed%-recipients") ~= nil
+end
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_MESSENGER_LURE",
+  score = 7.0,
+  description = "Freemail til skjulte modtagere med kontakt kun via WhatsApp/Telegram",
+  group = "phishing_meta",
+
+  callback = function(task)
+    if not domain_matches(from_domain(task), freemail_domains) then
+      return false
+    end
+    if not undisclosed_recipients(task) then
+      return false
+    end
+    local found
+    for _, u in ipairs(task:get_urls() or {}) do
+      local h = u:get_host()
+      if h then
+        h = lower(h):gsub("%.$", "")
+        if not domain_matches(h, messenger_hosts) then
+          return false
+        end
+        found = found or h
+      end
+    end
+    if not found then
+      return false
+    end
+    return true, found
   end,
 })
 

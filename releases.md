@@ -1,5 +1,11 @@
 # Udgivelser
 
+## 1.36.0 - 7. november 2026
+
+- "Kun omtale"-undtagelsen gælder ikke for gratis mailadresser (fx Yahoo med DMARC `reject`).
+- Tilføjet Trustpilot-detektering for spam om anmeldelsesmanipulation ("remove bad reviews", "permanent reviews") og phishing mod virksomhedsprofiler, med krav om målrettet kontekst og `reject_on_spoof`. Almindelige invitationer til at skrive en anmeldelse rammer ikke.
+- Tilføjet `ORG_PHISHING_MESSENGER_LURE` (7.0) for kold mail fra freemail-afsendere til skjulte modtagere, hvor de eneste links går til WhatsApp, Telegram e.l. (fx falske Trustpilot-anmeldelser).
+
 ## 1.35.0 - 7. november 2026
 
 - Betroede undtagelser (transportører, betroede afsendere m.fl.) accepterer nu også en gyldig DKIM-signatur fra afsenderens eget domæne, når domænet ikke har en DMARC-post (fx GLS' pakkeshop.dk med "PakkeShoppen hos Meny").

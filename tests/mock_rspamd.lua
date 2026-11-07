@@ -62,8 +62,15 @@ local function new_task(case)
   function t:get_subject() return case.subject or "" end
   function t:get_header(name) return headers[name] end
   function t:get_from() return { { domain = case.from_domain, name = case.from_name or "" } } end
+  -- Som i Rspamd returnerer get_content() et tekstobjekt (rspamd_text), ikke
+  -- en streng: kode, der glemmer tostring(), fejler her ligesom på serveren.
+  local text_mt = {
+    __tostring = function(self) return self.value end,
+    __len = function(self) return #self.value end,
+  }
   function t:get_text_parts()
-    return { { get_content = function() return case.body or "" end } }
+    local content = setmetatable({ value = case.body or "" }, text_mt)
+    return { { get_content = function() return content end } }
   end
   function t:get_urls()
     local r = {}

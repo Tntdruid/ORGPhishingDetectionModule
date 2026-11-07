@@ -512,7 +512,9 @@ end
 local function mail_text(task)
   local parts = { task:get_subject() or "" }
   for _, part in ipairs(task:get_text_parts() or {}) do
-    parts[#parts + 1] = part:get_content() or ""
+    -- get_content() returnerer et rspamd_text-objekt, ikke en streng
+    local c = part:get_content()
+    parts[#parts + 1] = c and tostring(c) or ""
   end
   return lower(table.concat(parts, " ")):gsub("%s+", " ")
 end
@@ -924,6 +926,8 @@ local storage_scam_phrases = {
   "kan blive slettet", "sletning af dine gemte filer", "frigøre plads",
   "frigør plads", "frigøre lagerplads", "mere lagerplads", "opdateres ikke",
   "uploads er stoppet", "sikkerhedskopieret", "0 byte ledig",
+  "dit lager er fyldt", "maksimale kapacitet", "sikkerhedskopiering",
+  "rydde op i dit lager", "administrer lagerplads",
   "storage is full", "storage full", "files will be deleted", "free up space",
 }
 

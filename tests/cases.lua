@@ -608,6 +608,19 @@ return {
     reject = true,
   },
   {
+    name = "Cloudlager-variant: Dit lager er fyldt (Systemopdatering via Gmail)",
+    subject = "Din cloud-konto har brug for din opmærksomhed",
+    from_name = "Systemopdatering", from_domain = "gmail.com",
+    headers = { ["Message-ID"] = "<autogen-java-f01c4c73-962d-4fd8-a138-2e36bc1567af@google.com>" },
+    body = "Dit lager er fyldt. Tag kontrollen over dine filer i dag. Dit cloudlager har nået sin maksimale kapacitet. "
+      .. "Som følge heraf er sikkerhedskopiering af dine billeder, synkronisering af drev og opdatering af e-mail-data "
+      .. "midlertidigt sat på pause. Synkronisering af Cloud-drev. Bedes du gennemgå og rydde op i dit lager. Administrer lagerplads",
+    urls = { "accounts.ayiv.info" },
+    symbols = DMARC,
+    hit = { "ORG_PHISHING_CLOUDSERVICES", "ORG_PHISHING_STORAGE_SCAM", "GOOGLE_AUTOGEN_FREEMAIL" },
+    reject = true,
+  },
+  {
     name = "Gmail-afsender med autogen og kun Google-links",
     subject = "Formular",
     from_name = "Hans", from_domain = "gmail.com",

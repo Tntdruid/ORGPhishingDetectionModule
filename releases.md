@@ -1,5 +1,11 @@
 # Udgivelser
 
+## 1.34.1 - 7. november 2026
+
+- Udvidet Cloud Services og `ORG_PHISHING_STORAGE_SCAM` med "Dit lager er fyldt"-varianten ("maksimale kapacitet", "sikkerhedskopiering", "rydde op i dit lager").
+- Rettet fejl i "kun omtale"-undtagelsen (`invalid value (userdata) ... for 'concat'`): tekstdelenes indhold er et `rspamd_text`-objekt og konverteres nu til streng. Fejlen gjorde, at brandsymbolerne ikke gav resultat.
+- Den simulerede Rspamd i testene returnerer nu også et tekstobjekt fra `get_content()`, så denne type fejl fanges.
+
 ## 1.34.0 - 6. november 2026
 
 - Tilføjet "kun omtale"-undtagelse: brandmatch ignoreres automatisk, når afsenderen består DMARC med `reject`/`quarantine` og kun nævner brandet uden links til det, forfalskning, persona-vendinger ("din …", "hilsen …", "… kundeservice", "© … ") eller tegn på misbrug. Generiske svindeltyper kan undtages med `no_mention_exemption`.

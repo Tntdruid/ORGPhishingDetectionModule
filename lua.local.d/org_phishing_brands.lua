@@ -174,6 +174,10 @@ return {
       "få mere lagerplads",
       "se muligheder for lagerplads",
       "nye uploads er stoppet",
+      "dit lager er fyldt",
+      "maksimale kapacitet",
+      "rydde op i dit lager",
+      "synkronisering af cloud-drev",
     },
     domains = {
       "cloudservices.com",

@@ -301,6 +301,34 @@ return {
     hit = { "ORG_PHISHING_MENY" },
   },
   {
+    name = "Privat mail uden links: madklub nævner tilbud fra Kvickly",
+    subject = "Madtræf 12. november",
+    from_name = "Helge Laursen", from_domain = "gmail.com",
+    headers = { ["To"] = "Peter Bregnedal <peter@example.dk>, Jens <jens@example.dk>" },
+    body = "Kære venner. Hold 1 blev ved sidste træf efter sædvanlig lodtrækning: Peter, Hans, Jens og Helge. "
+      .. "Den afsluttende Irish coffee er på min regning, da jeg ikke kunne modstå et tilbud fra Kvickly.",
+    urls = {},
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_COOP" },
+    reject = false,
+  },
+  {
+    name = "Phishing uden links, men persona (din Coop-konto)",
+    subject = "Vigtigt",
+    from_name = "Kundeservice", from_domain = "evil.example",
+    body = "Din Coop-konto er spærret. Ring til os på 70 12 34 56 og bekræft dine oplysninger.",
+    urls = {},
+    hit = { "ORG_PHISHING_COOP" },
+  },
+  {
+    name = "Phishing uden links, men forfalsket visningsnavn (Kvickly)",
+    subject = "Du har vundet",
+    from_name = "Kvickly", from_domain = "evil.example",
+    body = "Tillykke, du er udtrukket i vores lodtrækning hos Kvickly. Svar med dine oplysninger.",
+    urls = {},
+    hit = { "ORG_PHISHING_COOP", "ORG_PHISHING_SPOOF" },
+  },
+  {
     name = "Ægte Hetzner-mail fra hetzner.com",
     subject = "Your invoice",
     from_name = "Hetzner Online GmbH", from_domain = "hetzner.com",
@@ -491,13 +519,36 @@ return {
     reject = true,
   },
   {
+    name = "Pakke-svindel: SamuelDelivery med ny ordlyd",
+    subject = "Please confirm your delivery details",
+    from_name = "SamuelDelivery", from_domain = "protraina.com",
+    body = "Shipment status. Delivery was unsuccessful today. Attempted delivery. Our driver visited, but nobody was there. "
+      .. "You can arrange redelivery at your convenience. Via your tracking portal, you can pick a new delivery day. "
+      .. "Your shipment will await you at the nearest collection hub for 15 business days before return.",
+    urls = { "portlanddroneproductions.com/h.php" },
+    symbols = DMARC,
+    hit = { "ORG_PHISHING_DELIVERY_SCAM" },
+    option = { ORG_PHISHING_DELIVERY_SCAM = "named-delivery" },
+    reject = true,
+  },
+  {
+    name = "Pakke-svindel uden bandens navn giver kun score",
+    subject = "Delivery attempt",
+    from_name = "Parcel Service", from_domain = "evil.example",
+    body = "Attempted delivery. Nobody was there. Please arrange redelivery via your tracking portal.",
+    urls = { "evil.example" },
+    hit = { "ORG_PHISHING_DELIVERY_SCAM" },
+    reject = false,
+  },
+  {
     name = "Ægte Royal Mail med samme vending",
     subject = "We missed you",
     from_name = "Royal Mail", from_domain = "royalmail.com",
-    body = "We missed you today. Our courier stopped by, but no one was available to receive the parcel.",
+    body = "We missed you today. Our courier stopped by, but no one was available to receive the parcel. "
+      .. "You can arrange redelivery or collect it at a pickup point.",
     urls = { "www.royalmail.com" },
     symbols = DMARC,
-    miss = { "ORG_PHISHING_CAMPAIGN" },
+    miss = { "ORG_PHISHING_CAMPAIGN", "ORG_PHISHING_DELIVERY_SCAM" },
     reject = false,
   },
   {

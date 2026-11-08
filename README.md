@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.36.0-blue?style=flat-square" alt="Version 1.36.0">
+  <img src="https://img.shields.io/badge/version-1.37.0-blue?style=flat-square" alt="Version 1.37.0">
   <img src="https://img.shields.io/badge/Rspamd-4.2.0+-green?style=flat-square" alt="Rspamd 4.2.0+">
   <img src="https://img.shields.io/badge/Lua-5.1-blueviolet?style=flat-square" alt="Lua 5.1">
   <img src="https://img.shields.io/badge/status-production_success-success?style=flat-square" alt="Production success">
@@ -132,8 +132,10 @@ links til brandet, ingen forfalskning, ingen "persona"-vendinger om brandet (fx
 "din Klarna-konto", "Med venlig hilsen EasyPark", "Yousee Kundeservice", "© 2026
 Spotify", "hos Magasin") og ingen tegn på misbrug (Jira-invitation, gratis hosting,
 kendt kapret afsender). Det dækker nyhedsbreve og butiksmails, der omtaler brands,
-uden at hver afsender skal på en liste. Generiske svindeltyper som Cloud Services
-har `no_mention_exemption = true` og undtages aldrig.
+uden at hver afsender skal på en liste. Det samme gælder en mail helt *uden links* (fx privat korrespondance som "et
+tilbud fra Kvickly"), når der ikke er persona-vendinger eller forfalskning;
+QR-phishing uden links fanges af `ORG_PHISHING_QR_LURE`. Generiske svindeltyper
+som Cloud Services har `no_mention_exemption = true` og undtages aldrig.
 
 Hvor undtagelserne kræver en "DMARC-godkendt" afsender, accepteres også en gyldig
 DKIM-signatur fra afsenderens eget domæne, når domænet ikke har en DMARC-post
@@ -159,6 +161,7 @@ URL- og afsenderdomæner matches uden hensyn til store og små bogstaver. Underd
 | `ORG_PHISHING_HEADER_MISMATCH` | Afsender, Reply-To og List-Unsubscribe peger på tre forskellige domæner, og ingen links går til nogen af dem (headere kopieret fra rigtige nyhedsbreve) | 5.0 |
 | `ORG_PHISHING_STORAGE_SCAM` | Mindst tre forskellige trusler om sletning pga. fuld lagerplads (fx "lagergrænsen", "kan blive slettet", "frigør plads") fra en afsender, der ikke er en rigtig lagerudbyder | 10.0 |
 | `ORG_PHISHING_MESSENGER_LURE` | Freemail-afsender til skjulte modtagere, hvor de eneste links går til WhatsApp, Telegram e.l. | 7.0 |
+| `ORG_PHISHING_DELIVERY_SCAM` | Mindst tre vendinger om mislykket levering (fx "attempted delivery", "arrange redelivery", "collection hub") fra en afsender, der ikke er en ægte transportør; visningsnavnet "<Navn>Delivery" afviser | 10.0 |
 | `ORG_PHISHING_REJECTED` | Markør, når modulet selv afviser en mail; bruges til automatisk fuzzy-læring | 0.0 |
 | `ORG_PHISHING_FREEMAIL` | Brandmatch fra en freemail-afsender (fx gmail.com) med links til andre domæner end brandets | 5.0 |
 | `ORG_PHISHING_REJECT` | Postfilter, der afviser mailen ved brandmatch + forfalskning for brands med `reject_on_spoof = true` | – |

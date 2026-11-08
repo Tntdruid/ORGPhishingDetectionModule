@@ -571,6 +571,24 @@ end
 
 -- Afsender med streng DMARC, der kun nævner brandet uden persona, links til
 -- brandet, forfalskning eller tegn på misbrug: omtale, ikke efterligning.
+-- Omtale i en mail helt uden links (fx privat korrespondance: "et tilbud fra
+-- Kvickly"). Brand-phishing skal altid sende ofret et sted hen; QR-phishing
+-- uden links fanges af ORG_PHISHING_QR_LURE.
+local neutral_link_hosts = { "w3.org", "fonts.googleapis.com", "fonts.gstatic.com" }
+
+local function linkless_mention(task, brand)
+  if brand.no_mention_exemption then
+    return false
+  end
+  for _, u in ipairs(task:get_urls() or {}) do
+    local h = u:get_host()
+    if h and not domain_matches(lower(h):gsub("%.$", ""), neutral_link_hosts) then
+      return false
+    end
+  end
+  return not has_persona(task, brand)
+end
+
 local function mention_only(task, brand)
   -- Generiske "brands" (fx Cloud Services) er en svindeltype, ikke et firma
   if brand.no_mention_exemption or not strict_dmarc(task) then
@@ -670,6 +688,11 @@ for name, brand in pairs(brands) do
         -- tælles én gang for selve forfalskningen, ikke én gang per brand.
         -- Andet argument er en vægt, der ganges med symbolets score (ikke selve scoren)
         task:insert_result("ORG_PHISHING_SPOOF", 1.0, name .. ":" .. spoof_reason)
+      end
+
+      if not url_match and not spoof and linkless_mention(task, brand) then
+        logger.infox(task, "ORG_PHISHING: mention without links ignored for %s", name)
+        return false
       end
 
       if not url_match and not spoof and mention_only(task, brand) then
@@ -935,6 +958,68 @@ rspamd_config:register_symbol({
       end
     end
     return true, string.format("%s|%s|%s", from, reply, unsub)
+  end,
+})
+
+---------------------------------------------------------------------------
+-- PAKKE-SVINDEL UDEN NAVNGIVEN TRANSPORTØR
+---------------------------------------------------------------------------
+
+-- Generiske "mislykket levering"-kampagner (JordanDelivery, SamuelDelivery ...)
+-- skifter ordlyd hver gang. Flere typiske vendinger fra en afsender, der ikke
+-- er en ægte transportør, er et stærkt signal.
+local delivery_scam_phrases = {
+  "attempted delivery", "delivery was unsuccessful", "delivery unsuccessful",
+  "we missed you", "nobody was there", "no one was available",
+  "our courier stopped by", "our driver visited", "arrange redelivery",
+  "arrange a new date", "choose a new delivery", "pick a new delivery",
+  "new delivery date", "new delivery day", "collection hub",
+  "collection location", "pickup point", "before return",
+  "before being returned", "15 business days", "15 working days",
+  "tracking portal", "your tracking page",
+  "levering mislykkedes", "vi kunne ikke levere", "ny leveringsdato",
+}
+
+local delivery_carrier_domains = {
+  "royalmail.com", "parcelforce.com", "evri.com", "hermesworld.com",
+  "dpd.co.uk", "dpd.com", "dpd.dk", "yodel.co.uk", "dhl.co.uk",
+  "amazon.com", "amazon.co.uk", "amazon.de",
+}
+
+rspamd_config:register_symbol({
+  name = "ORG_PHISHING_DELIVERY_SCAM",
+  score = 10.0,
+  description = "Flere vendinger om mislykket levering fra en ikke-transportør",
+  group = "phishing_meta",
+
+  callback = function(task)
+    local sender_domain = from_domain(task)
+    if sender_authenticated(task) then
+      if domain_matches(sender_domain, delivery_carrier_domains) then
+        return false
+      end
+      for _, brand in pairs(brands) do
+        if brand.carrier_notification and domain_matches(sender_domain, brand.domains) then
+          return false
+        end
+      end
+    end
+    local found = 0
+    for _, phrase in ipairs(delivery_scam_phrases) do
+      if subject_contains(task, { phrase }) or body_contains(task, { phrase }) then
+        found = found + 1
+      end
+    end
+    if found < 3 then
+      return false
+    end
+    -- Bandens visningsnavn: <Navn>Delivery (JordanDelivery, SamuelDelivery)
+    local from = task:get_from('mime')
+    local dn = lower(from and from[1] and from[1].name or "")
+    if dn:match("^%a+delivery$") and dn ~= "delivery" then
+      return true, "named-delivery"
+    end
+    return true, tostring(found) .. " phrases"
   end,
 })
 
@@ -1507,6 +1592,18 @@ rspamd_config:register_symbol({
   -- Samme mekanisme som Rspamds force_actions-modul (set_pre_result i postfilter)
   callback = function(task)
     -- Kendt kampagnefingeraftryk afvises uanset brand og forfalskning
+    -- Pakke-svindel med bandens visningsnavn (<Navn>Delivery) afvises
+    local ds = task.get_symbol and task:get_symbol("ORG_PHISHING_DELIVERY_SCAM")
+    for _, opt in ipairs(ds and ds[1] and ds[1].options or {}) do
+      if tostring(opt) == "named-delivery" then
+        logger.infox(task, "ORG_PHISHING: rejecting named delivery scam")
+        task:insert_result("ORG_PHISHING_REJECTED", 1.0, "delivery-scam")
+        auto_fuzzy_learn(task)
+        task:set_pre_result("reject", "Phishing rejected (delivery scam)", "org_phishing")
+        return
+      end
+    end
+
     if task:has_symbol("ORG_PHISHING_CAMPAIGN") then
       logger.infox(task, "ORG_PHISHING: rejecting known campaign")
       task:insert_result("ORG_PHISHING_REJECTED", 1.0, "campaign")

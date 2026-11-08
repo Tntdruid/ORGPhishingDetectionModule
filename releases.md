@@ -1,5 +1,10 @@
 # Udgivelser
 
+## 1.37.0 - 8. november 2026
+
+- Tilføjet `ORG_PHISHING_DELIVERY_SCAM` (10.0) for generisk pakke-svindel uden navngiven transportør: mindst tre vendinger om mislykket levering fra en afsender, der ikke er en ægte transportør. Bandens visningsnavn "<Navn>Delivery" (JordanDelivery, SamuelDelivery) afviser.
+- "Kun omtale"-undtagelsen gælder nu også mails helt uden links (fx privat korrespondance som "et tilbud fra Kvickly"), når der ikke er persona-vendinger eller forfalskning.
+
 ## 1.36.0 - 7. november 2026
 
 - "Kun omtale"-undtagelsen gælder ikke for gratis mailadresser (fx Yahoo med DMARC `reject`).

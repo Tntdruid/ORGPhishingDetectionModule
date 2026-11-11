@@ -823,6 +823,50 @@ return {
     reject = true,
   },
   {
+    name = "Punktum dk: blid betalingspåmindelse med beacons.ai",
+    subject = "Administration .dk-domæner",
+    from_name = "Supp-DK", from_domain = "reviewability.com",
+    body = "Punktum dk – Betalingspåmindelse. Kære kunde, Vi gør opmærksom på, at betalingen af det årlige gebyr på 125 DKK "
+      .. "for dit .dk-domæne muligvis mangler. Du kan kontrollere din betalingsstatus og dine domæneoplysninger via "
+      .. "Punktum dk's officielle hjemmeside. Med venlig hilsen, Kundeservice – Punktum dk",
+    urls = { "beacons.ai/pontkum55" },
+    hit = { "ORG_PHISHING_PUNKTUMDK", "ORG_PHISHING_FREE_HOSTING" },
+  },
+  {
+    name = "GLS: betal & frigiv pakke fra fremmed domæne (nbrb.go.ug)",
+    subject = "Pakke 032996407266 afventer betaling",
+    from_name = "GLS|Kundeservice", from_domain = "nbrb.go.ug",
+    body = "GLS | Betaling påkrævet – Frigiv din pakke. Kære kunde, Vi glæder os til at levere din pakke 032996407266. "
+      .. "Din lokale GLS-chauffør leverer pakken til PakkeShoppen. VIGTIGT: Din pakke kræver betaling på 25,78 DKK før levering. "
+      .. "Betaling påkrævet for pakke, inkl. moms · importgebyr. BETAL & FRIGIV PAKKE. Med venlig hilsen GLS Denmark",
+    urls = { "email.everbee.io/subscribe?shopName=Credicoop-ZGL1C1", "gls-group.com/DK/media/images/x.jpg" },
+    hit = { "ORG_PHISHING_GLS", "ORG_PHISHING_DELIVERY_SCAM" },
+    option = { ORG_PHISHING_SPOOF = "GLS:display-name-spoof" },
+    reject = true,
+  },
+  {
+    name = "CDON: ordrebekræftelse med forsendelse og betaling (ikke spam)",
+    subject = "Ordrebekræftelse 2adc199d",
+    from_name = "CDON", from_domain = "cdon.com",
+    body = "Tak for din bestilling! Ordrenummer: 2adc199d Betalingsmetode: MobilePay. Forventet levering: tors., 12 nov. "
+      .. "Forsendelse: 39 kr. At betale inkl. moms: 158 kr. Du modtager en e-mail fra os, når ordren forlader leverandøren. "
+      .. "Jeg har valgt at betale med faktura, hvornår kommer den? For spørgsmål om betaling og faktura, kontakt Qliro her. "
+      .. "Kontakt kundeservice",
+    urls = { "url2630.cdon.com/ls/click", "cdon.customer.voyado.com/x", "fonts.googleapis.com/css" },
+    miss = { "ORG_PHISHING_DELIVERY_SCAM", "ORG_PHISHING_KLARNA", "ORG_PHISHING_MOBILEPAY" },
+    reject = false,
+  },
+  {
+    name = "CDON: kvittering med fragtgebyr (ikke spam)",
+    subject = "Kvittering for dit køb hos CDON",
+    from_name = "CDON", from_domain = "cdon.com",
+    body = "Ordrekvittering Udstedt af CDON AB som agent på vegne af sælgeren. Betalingsmetode: MobilePay. Momsbeløb. "
+      .. "Gebyrer: Fragt 39,00 DKK. Levering: Du modtager en separat besked, når din ordre er afsendt. Fortrydelsesret 14 dage.",
+    urls = { "url2630.cdon.com/ls/click", "cdon.customer.voyado.com/x" },
+    miss = { "ORG_PHISHING_DELIVERY_SCAM", "ORG_PHISHING_MOBILEPAY" },
+    reject = false,
+  },
+  {
     name = "Ikke hacket side: almindelige mappenavne",
     subject = "Ny ordre",
     from_name = "Webshop", from_domain = "shop.example",

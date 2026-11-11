@@ -978,6 +978,9 @@ local delivery_scam_phrases = {
   "before being returned", "15 business days", "15 working days",
   "tracking portal", "your tracking page",
   "levering mislykkedes", "vi kunne ikke levere", "ny leveringsdato",
+  -- Dansk "betal for at frigive pakken"-svindel
+  "frigiv din pakke", "frigiv pakke", "afventer betaling", "betaling påkrævet",
+  "kræver betaling", "importgebyr",
 }
 
 local delivery_carrier_domains = {

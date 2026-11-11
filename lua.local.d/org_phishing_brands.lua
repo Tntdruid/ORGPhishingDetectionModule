@@ -554,6 +554,11 @@ return {
       -- Punktum dk A/S' ægte CVR-nummer, kopieret ind i falske footere
       "cvr 24210375",
     },
+    -- Bøjede og sammensatte ord matcher ikke den fælles kontekst ("betaling")
+    extra_context_keywords = {
+      "betalingspåmindelse", "betalingen", "betalingsstatus", "årlige gebyr",
+      "gebyr", "domæneoplysninger", "genaktivere", "fornyelse", "fornyelsen",
+    },
     spoof_keywords = {
       "punktum.dk",
       "punktum dk",
@@ -833,6 +838,8 @@ return {
       "gls-denmark.dk",
     },
     carrier_notification = true,
+    -- "GLS|Kundeservice" fra et fremmed domæne (nbrb.go.ug) med betalingskrav
+    reject_on_spoof = true,
   },
 
   DHL = {

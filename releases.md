@@ -1,5 +1,11 @@
 # Udgivelser
 
+## 1.38.0 - 11. november 2026
+
+- Udvidet Punktum.dk med ekstra kontekst ("betalingspåmindelse", "betalingen", "betalingsstatus", "årlige gebyr", "domæneoplysninger" m.fl.), så blidere formulerede betalingspåmindelser også giver brandmatch.
+- GLS afvises nu direkte ved forfalsket visningsnavn (`reject_on_spoof`), fx "GLS|Kundeservice" fra et fremmed domæne.
+- `ORG_PHISHING_DELIVERY_SCAM` kender nu danske "betal og frigiv pakken"-vendinger ("frigiv din pakke", "afventer betaling", "betaling påkrævet", "kræver betaling", "importgebyr").
+
 ## 1.37.0 - 8. november 2026
 
 - Tilføjet `ORG_PHISHING_DELIVERY_SCAM` (10.0) for generisk pakke-svindel uden navngiven transportør: mindst tre vendinger om mislykket levering fra en afsender, der ikke er en ægte transportør. Bandens visningsnavn "<Navn>Delivery" (JordanDelivery, SamuelDelivery) afviser.

@@ -1043,6 +1043,9 @@ local storage_scam_phrases = {
   "dit lager er fyldt", "maksimale kapacitet", "sikkerhedskopiering",
   "rydde op i dit lager", "administrer lagerplads",
   "storage is full", "storage full", "files will be deleted", "free up space",
+  "lagerplads brugt", "lagerpladsen er brugt op", "ingen ledig plads",
+  "lagergrænse nået", "lagergrænsen er overskredet", "dit lager er dødt",
+  "risiko for at blive slettet",
 }
 
 local storage_providers = {

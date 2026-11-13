@@ -867,6 +867,16 @@ return {
     reject = false,
   },
   {
+    name = "Lagerplads-svindel: \"dit lager er dødt\" (kun HTML, tizia.net)",
+    subject = "Dfff, dit lager er dødt! Gendan adgang med det samme",
+    from_name = "Lagerplads Manager", from_domain = "tizia.net",
+    body = "VIGTIG BESKED OM LAGERPLADS. Hej Dfff, Er din cloud-lagerplads fyldt? Når lagerpladsen er brugt op, kan nye "
+      .. "billeder, filer og e-mails muligvis ikke gemmes. Lagerplads brugt 100%. Ingen ledig plads. Lagergrænse nået. "
+      .. "Hvis problemet ikke bliver løst, kan gemte filer være i risiko for at blive slettet. SE DINE MULIGHEDER",
+    urls = { "jaraa.info/f/h6r0c4k7py?s=87", "mta3.tizia.net/ga/unsubscribe/2-1926821" },
+    hit = { "ORG_PHISHING_STORAGE_SCAM" },
+  },
+  {
     name = "Ikke hacket side: almindelige mappenavne",
     subject = "Ny ordre",
     from_name = "Webshop", from_domain = "shop.example",

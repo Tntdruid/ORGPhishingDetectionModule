@@ -1,5 +1,9 @@
 # Ændringslog
 
+## 1.38.1 - 13. november 2026
+
+- `ORG_PHISHING_STORAGE_SCAM` kender flere danske lagerplads-vendinger ("lagerplads brugt", "ingen ledig plads", "lagergrænse nået", "dit lager er dødt", "risiko for at blive slettet" m.fl.), så kortere HTML-only varianter også fanges.
+
 ## 1.38.0 - 11. november 2026
 
 - Udvidet Punktum.dk med ekstra kontekst ("betalingspåmindelse", "betalingen", "betalingsstatus", "årlige gebyr", "domæneoplysninger" m.fl.), så blidere formulerede betalingspåmindelser også giver brandmatch.

@@ -87,7 +87,12 @@ local function new_task(case)
   function t:has_symbol(name) return preset[name] or inserted[name] ~= nil end
   function t:insert_result(name, _, opt)
     inserted[name] = inserted[name] or {}
-    if opt then
+    -- Rspamd tager både en enkelt option og en tabel med flere
+    if type(opt) == "table" then
+      for _, o in ipairs(opt) do
+        table.insert(inserted[name], tostring(o))
+      end
+    elseif opt then
       table.insert(inserted[name], tostring(opt))
     end
   end

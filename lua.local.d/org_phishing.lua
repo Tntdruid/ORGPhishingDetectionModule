@@ -649,7 +649,7 @@ local function check_brand(task, brand)
     return false
   end
 
-  return true, table.concat(reasons, ","), url_signal
+  return true, reasons, url_signal
 end
 
 ---------------------------------------------------------------------------
@@ -725,7 +725,8 @@ for name, brand in pairs(brands) do
         return false
       end
 
-      logger.infox(task, "ORG_PHISHING: matched %s (%s)", name, reasons)
+      logger.infox(task, "ORG_PHISHING: matched %s (%s)", name, table.concat(reasons, ","))
+      -- Separate options: Rspamd 4.3+ procent-koder komma i en enkelt option
       return true, reasons
     end,
   })
@@ -804,7 +805,7 @@ rspamd_config:register_symbol({
     end
 
     table.sort(matches)
-    return true, table.concat(matches, ",")
+    return true, matches
   end,
 })
 
@@ -843,7 +844,7 @@ rspamd_config:register_symbol({
       return false
     end
     table.sort(matches)
-    return true, table.concat(matches, ",")
+    return true, matches
   end,
 })
 
@@ -1075,7 +1076,11 @@ rspamd_config:register_symbol({
     if #found < 3 then
       return false
     end
-    return true, table.concat(found, ",", 1, math.min(#found, 4))
+    local shown = {}
+    for i = 1, math.min(#found, 4) do
+      shown[i] = found[i]
+    end
+    return true, shown
   end,
 })
 
@@ -1248,7 +1253,7 @@ rspamd_config:register_symbol({
     end
 
     table.sort(matches)
-    return true, "brands=" .. table.concat(matches, ",")
+    return true, matches
   end
 })
 
@@ -1376,7 +1381,7 @@ rspamd_config:register_symbol({
     if #reasons == 0 then
       return false
     end
-    return true, table.concat(reasons, ",")
+    return true, reasons
   end,
 })
 
@@ -1634,7 +1639,7 @@ rspamd_config:register_symbol({
       end
       if #hacked > 0 then
         table.sort(hacked)
-        local which = table.concat(hacked, ",")
+        local which = table.concat(hacked, "+")
         logger.infox(task, "ORG_PHISHING: rejecting brand mail via %s (%s)", abused, which)
         task:insert_result("ORG_PHISHING_REJECTED", 1.0, abused .. ":" .. which)
         auto_fuzzy_learn(task)
@@ -1662,7 +1667,7 @@ rspamd_config:register_symbol({
     end
 
     table.sort(matches)
-    local which = table.concat(matches, ",")
+    local which = table.concat(matches, "+")
     logger.infox(task, "ORG_PHISHING: rejecting brand spoof (%s)", which)
     task:insert_result("ORG_PHISHING_REJECTED", 1.0, "spoof:" .. which)
     auto_fuzzy_learn(task)

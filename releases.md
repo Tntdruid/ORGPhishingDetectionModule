@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.38.2 - 14. november 2026
+
+- Klar til Rspamd 4.3: symbol-options sendes nu som separate værdier i stedet for én kommasepareret tekst, som Rspamd 4.3 ellers viser procent-kodet (`keywords%2Ccontext`). Flere brands i `ORG_PHISHING_REJECTED` adskilles med `+`. Virker fortsat på 4.2.
+
 ## 1.38.1 - 13. november 2026
 
 - `ORG_PHISHING_STORAGE_SCAM` kender flere danske lagerplads-vendinger ("lagerplads brugt", "ingen ledig plads", "lagergrænse nået", "dit lager er dødt", "risiko for at blive slettet" m.fl.), så kortere HTML-only varianter også fanges.

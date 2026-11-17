@@ -877,6 +877,17 @@ return {
     hit = { "ORG_PHISHING_STORAGE_SCAM" },
   },
   {
+    name = "Lagerplads-svindel: \"Du har brugt 99,8 % af din lagerplads\" (sjzwgyxy.com)",
+    subject = "Du har brugt 99,8 % af din lagerplads",
+    from_name = "Lagerbeskeder", from_domain = "sjzwgyxy.com",
+    body = "Drive · Lagerstatus. Hej Dfff. Din lagerplads er næsten fuld. Du har brugt 249,6 GB af 250 GB. "
+      .. "BRUGT LAGERPLADS 99,8 %. Gennemgå din lagerplads inden fristen. Du har 48 timer til at gøre det. Hvis du ikke "
+      .. "når at frigøre eller udvide lagerpladsen inden da, kan din adgang til delte filer og muligheden for at modtage "
+      .. "nye e-mails blive begrænset. Åbn din lageroversigt for at se, hvad der optager plads.",
+    urls = { "co21.sjzwgyxy.com/ga/click/2-8210395-415-981" },
+    hit = { "ORG_PHISHING_STORAGE_SCAM" },
+  },
+  {
     name = "Ikke hacket side: almindelige mappenavne",
     subject = "Ny ordre",
     from_name = "Webshop", from_domain = "shop.example",

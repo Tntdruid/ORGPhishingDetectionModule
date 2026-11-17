@@ -1,5 +1,9 @@
 # Udgivelser
 
+## 1.38.3 - 17. november 2026
+
+- `ORG_PHISHING_STORAGE_SCAM` kender også "lagerplads er næsten fuld", "brugt lagerplads", "gennemgå din lagerplads", "udvide lagerpladsen", "lageroversigt" og "modtage nye e-mails".
+
 ## 1.38.2 - 14. november 2026
 
 - Klar til Rspamd 4.3: symbol-options sendes nu som separate værdier i stedet for én kommasepareret tekst, som Rspamd 4.3 ellers viser procent-kodet (`keywords%2Ccontext`). Flere brands i `ORG_PHISHING_REJECTED` adskilles med `+`. Virker fortsat på 4.2.

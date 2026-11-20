@@ -292,18 +292,23 @@ local function authenticated_carrier_notification(task, brand, sender_domain)
   end
 
   for _, u in ipairs(task:get_urls() or {}) do
-    local host = u:get_host()
-    if not host then
-      return false
-    end
+    -- Links fra vedhæftede filer (fx handelsbetingelser som PDF hos Matas)
+    -- tæller ikke: butikken viser dem ikke i selve mailen
+    local flags = u.get_flags and u:get_flags() or {}
+    if not flags.content then
+      local host = u:get_host()
+      if not host then
+        return false
+      end
 
-    host = lower(host):gsub("%.$", "")
-    if not domain_matches(host, brand.domains)
-      and not domain_matches(host, { base_domain(sender_domain) })
-      and base_label(host) ~= base_label(sender_domain)
-      and not domain_matches(host, neutral_url_hosts)
-    then
-      return false
+      host = lower(host):gsub("%.$", "")
+      if not domain_matches(host, brand.domains)
+        and not domain_matches(host, { base_domain(sender_domain) })
+        and base_label(host) ~= base_label(sender_domain)
+        and not domain_matches(host, neutral_url_hosts)
+      then
+        return false
+      end
     end
   end
 
@@ -469,6 +474,21 @@ local function check_spoof(task, brand)
 
   if has_homoglyphs(dn) then
     return true, "display-name-homoglyph"
+  end
+
+  -- Visningsnavn med et ord én tastefejl fra brandnavnet (fx "Pumktum A/S").
+  -- Kun ord på mindst 6 bogstaver for at undgå tilfældige træf.
+  local dn_lower = lower(dn)
+  for _, kw in ipairs(spoof_keywords) do
+    for kw_word in lower(kw):gmatch("%a+") do
+      if #kw_word >= 6 then
+        for word in dn_lower:gmatch("%a+") do
+          if #word >= 6 and word ~= kw_word and within_one_edit(word, kw_word) then
+            return true, "display-name-lookalike"
+          end
+        end
+      end
+    end
   end
 
   -- Afsenderdomæne, der ligner brandet (fx "streamingpotify.dk")
@@ -863,6 +883,7 @@ local free_hosting_domains = {
   "square.site", "webflow.io", "framer.website", "tempurl.host",
   "bit.ly", "tinyurl.com", "is.gd", "cutt.ly", "rebrand.ly", "t.ly",
   "shorturl.at", "rb.gy", "dke.to", "flowto.it", "beacons.ai", "linktr.ee",
+  "framer.app", "share.google",
 }
 
 function url_free_hosting(u)
@@ -1531,6 +1552,7 @@ local reject_spoof_reasons = {
   ["reply-to-spoof"] = true,
   ["display-name-homoglyph"] = true,
   ["sender-domain-lookalike"] = true,
+  ["display-name-lookalike"] = true,
 }
 
 -- Brandmatch + visningsnavn med forvekslelige tegn afvises for alle brands,

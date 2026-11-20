@@ -1,5 +1,12 @@
 # Udgivelser
 
+## 1.39.0 - 20. november 2026
+
+- Butikkers mails med transportør (fx Matas med Burd) undtages nu, selvom vedhæftede PDF'er indeholder links til andre domæner – links fra vedhæftede filer tæller ikke i transportør-undtagelsen.
+- Ny forfalskningsgrund `display-name-lookalike`: et ord i visningsnavnet, der er én tastefejl fra brandnavnet (fx "Pumktum A/S"), regnes som forfalskning og afvises for brands med `reject_on_spoof`.
+- `reject_on_spoof` på Telmore, Silvan og Digital Post. Digital Post har fået domænerne mit.dk, borger.dk, digst.dk og e-boks.dk/.com samt ekstra kontekst ("ny meddelelse", "digitale postkasse", "log ind", "mitid").
+- `framer.app` og `share.google` tilføjet til gratis hosting/viderestilling.
+
 ## 1.38.3 - 17. november 2026
 
 - `ORG_PHISHING_STORAGE_SCAM` kender også "lagerplads er næsten fuld", "brugt lagerplads", "gennemgå din lagerplads", "udvide lagerpladsen", "lageroversigt" og "modtage nye e-mails".

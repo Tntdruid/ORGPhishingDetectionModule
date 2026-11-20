@@ -888,6 +888,76 @@ return {
     hit = { "ORG_PHISHING_STORAGE_SCAM" },
   },
   {
+    name = "Matas: ordre med Burd + links i vedhæftet PDF (ikke spam)",
+    subject = "Ordrebekræftelse fra Matas Webshop",
+    from_name = "Matas", from_domain = "web.matas.dk",
+    body = "Din ordre er nu afsendt med Burd. Du kan følge den med Track & Trace. Club Matas point synlige på din konto. "
+      .. "Dit digitale byttemærke er vedhæftet i mailen. Betalingsmetode Kort: VisaDankort. Burd 0,00 kr.",
+    urls = { "burd.dk/pages/track-and-trace", "images.matas.dk/encode/590540.jpg", "kundeservice.matas.dk/hc/da",
+      "link.web.matas.dk/wf/open", "www.matas.dk", "www.w3.org/1999/xhtml" },
+    content_urls = { "app.claimlane.com/c/matas", "kpo.naevneneshus.dk/External", "media.matas.dk/x.pdf" },
+    symbols = DMARC, dmarc_policy = "reject",
+    miss = { "ORG_PHISHING_BURD" },
+    reject = false,
+  },
+  {
+    name = "Punktum dk: \"Pumktum A/S\" (tastefejl i visningsnavn) med share.google",
+    subject = "Vigtigt: Dit .dk-domæne er suspenderet – Kræver øjeblikkelig handling #EeQhbzOd",
+    from_name = "Pumktum A/S", from_domain = "fourskin.net",
+    body = "Punktum dk A/S. Kære kunde, Vi kontakter dig angående dit .dk-domæne. Da vi endnu ikke har registreret din "
+      .. "indbetaling, er domænet nu blevet suspenderet som følge af et udestående beløb på 125 DKK. Betal nu. "
+      .. "Punktum dk A/S, Ørestads Boulevard 108, 11. DK-2300 København S",
+    urls = { "share.google/KerdYsvhhxd2MJQ48" },
+    hit = { "ORG_PHISHING_PUNKTUMDK", "ORG_PHISHING_FREE_HOSTING" },
+    option = { ORG_PHISHING_SPOOF = "PUNKTUMDK:display-name-lookalike" },
+    reject = true,
+  },
+  {
+    name = "Digital Post: \"ny meddelelse\" fra e-slides.net via Amazon SES",
+    subject = "Du har modtaget en ny brev",
+    from_name = "Digital Post", from_domain = "e-slides.net",
+    body = "Digital Post – Ny meddelelse. Hej, Du har modtaget en ny meddelelse i din digitale postkasse fra det offentlige. "
+      .. "Meddelelsen kræver din opmærksomhed. Log ind på Digital Post med MitID for at læse den. Log ind her",
+    urls = { "34fl07xm.r.eu-west-1.awstrack.me/L0/https:%2F%2Ftaabedeitorok.com%2Ftaa-check%2F/1" },
+    hit = { "ORG_PHISHING_DIGITALPOST" },
+    option = { ORG_PHISHING_SPOOF = "DIGITALPOST:display-name-spoof" },
+    reject = true,
+  },
+  {
+    name = "Ægte Digital Post-notifikation fra mit.dk (ikke spam)",
+    subject = "Du har modtaget ny Digital Post",
+    from_name = "Digital Post", from_domain = "mit.dk",
+    body = "Du har modtaget en ny meddelelse i din digitale postkasse. Log ind på mit.dk med MitID for at læse den.",
+    urls = { "mit.dk" },
+    symbols = DMARC,
+    miss = { "ORG_PHISHING_DIGITALPOST" },
+    reject = false,
+  },
+  {
+    name = "Telmore: opdater betalingsoplysninger via framer.app (ugandisk afsender)",
+    subject = "Sådan fortsætter dit abonnement uden afbrydelser",
+    from_name = "Telmore A/S", from_domain = "ubteb.go.ug",
+    body = "Telmore | Opdater dine betalingsoplysninger. Hej, Vi vil gerne minde dig om at tjekke dine betalingsoplysninger "
+      .. "hos Telmore. For at sikre, at dit mobilabonnement kører uden afbrydelser, beder vi dig opdatere dine "
+      .. "betalingsoplysninger inden for de næste 48 timer. Med venlig hilsen Telmore Kundeservice",
+    urls = { "cautious-overlay-979811.framer.app/" },
+    hit = { "ORG_PHISHING_TELMORE", "ORG_PHISHING_FREE_HOSTING" },
+    option = { ORG_PHISHING_SPOOF = "TELMORE:display-name-spoof" },
+    reject = true,
+  },
+  {
+    name = "Silvan: \"mette hos Silvan\" loyalitetsprogram med Makita-præmie",
+    subject = "Silvan | system reward notification",
+    from_name = "mette hos Silvan", from_domain = "e-c.co.il",
+    body = "Hej, Din konto er blevet udvalgt til denne måneds Loyalitetsprogram hos Silvan, og du er derfor inviteret til at "
+      .. "deltage. Vi inviterer dig til at besvare en kort kundeundersøgelse. Månedens præmie: Makita håndværktøjssæt. "
+      .. "Deltag i undersøgelsen inden for 24 timer.",
+    urls = { "terragrande.in/makitasponsor/", "url6858.e-c.co.il/ls/click" },
+    hit = { "ORG_PHISHING_SILVAN" },
+    option = { ORG_PHISHING_SPOOF = "SILVAN:display-name-spoof" },
+    reject = true,
+  },
+  {
     name = "Ikke hacket side: almindelige mappenavne",
     subject = "Ny ordre",
     from_name = "Webshop", from_domain = "shop.example",

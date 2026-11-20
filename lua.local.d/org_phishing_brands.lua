@@ -523,12 +523,22 @@ return {
   DIGITALPOST = {
     symbol = "ORG_PHISHING_DIGITALPOST",
     score = 9.0,
+    reject_on_spoof = true,
     keywords = {
       "digital post",
       "digitalpost",
     },
     domains = {
       "digitalpost.dk",
+      "mit.dk",
+      "borger.dk",
+      "digst.dk",
+      "e-boks.dk",
+      "e-boks.com",
+    },
+    -- "Du har modtaget en ny meddelelse ... Log ind med MitID"
+    extra_context_keywords = {
+      "ny meddelelse", "digitale postkasse", "log ind", "mitid",
     },
   },
 
@@ -1052,6 +1062,7 @@ return {
   TELMORE = {
     symbol = "ORG_PHISHING_TELMORE",
     score = 8.0,
+    reject_on_spoof = true,
     keywords = {
       "telmore",
     },
@@ -1278,6 +1289,7 @@ return {
   SILVAN = {
     symbol = "ORG_PHISHING_SILVAN",
     score = 8.0,
+    reject_on_spoof = true,
     keywords = {
       "silvan",
     },

@@ -80,6 +80,16 @@ local function new_task(case)
       r[#r + 1] = {
         get_host = function() return host end,
         get_path = function() return path end,
+        get_flags = function() return {} end,
+      }
+    end
+    -- Links fundet i vedhæftede filer (rspamd-flaget "content")
+    for _, u in ipairs(case.content_urls or {}) do
+      local host, path = u:match("^([^/]+)/?(.*)$")
+      r[#r + 1] = {
+        get_host = function() return host end,
+        get_path = function() return path end,
+        get_flags = function() return { content = true } end,
       }
     end
     return r

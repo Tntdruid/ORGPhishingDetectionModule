@@ -114,6 +114,9 @@ local function contains_any(text, patterns)
   -- Quoted-printable soft line breaks kan splitte ord (fx "Brin=\ng").
   -- Fjern dem før matching, så brand- og kontekstfraser stadig detekteres.
   text = tostring(text):gsub("=\r\n", ""):gsub("=\n", "")
+  -- Sporingsparametre (fx "utm_source=chatgpt.com" fra AI-henvisninger)
+  -- nævner ikke brandet i selve teksten
+  text = text:gsub("[Uu][Tt][Mm]_%w+=[^%s&\"'<>]*", "")
   for _, p in ipairs(patterns) do
     if contains_keyword(text, p) then
       return true
@@ -483,7 +486,10 @@ local function check_spoof(task, brand)
     for kw_word in lower(kw):gmatch("%a+") do
       if #kw_word >= 6 then
         for word in dn_lower:gmatch("%a+") do
-          if #word >= 6 and word ~= kw_word and within_one_edit(word, kw_word) then
+          -- Bøjninger ("service" mod "services") er ikke tastefejl
+          local inflected = word:sub(1, #kw_word) == kw_word
+            or kw_word:sub(1, #word) == word
+          if #word >= 6 and not inflected and within_one_edit(word, kw_word) then
             return true, "display-name-lookalike"
           end
         end
@@ -1070,6 +1076,9 @@ local storage_scam_phrases = {
   "risiko for at blive slettet", "lagerplads er næsten fuld", "brugt lagerplads",
   "gennemgå din lagerplads", "udvide lagerpladsen", "lageroversigt",
   "modtage nye e-mails",
+  -- Tysk
+  "speicherplatz", "cloud-speicher", "speichergrenze", "vollständig belegt",
+  "sicherungskopien", "maximale kapazität",
 }
 
 local storage_providers = {

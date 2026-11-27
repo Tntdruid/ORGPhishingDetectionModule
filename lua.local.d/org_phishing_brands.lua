@@ -81,7 +81,9 @@ return {
       "chat gpt",
       "gpt billing",
     },
-    -- AI/ChatGPT nævnes i mange nyhedsbreve, så der kræves målrettet kontekst
+    -- AI/ChatGPT nævnes i mange nyhedsbreve, så der kræves målrettet kontekst.
+    -- chatgpt.com optræder også som "utm_source=chatgpt.com" i almindelige links
+    url_requires_context = true,
     context_keywords = {
       "chatgpt plus", "chatgpt pro", "openai account", "openai-konto",
       "chatgpt-konto", "your chatgpt subscription", "dit chatgpt-abonnement",
@@ -120,6 +122,9 @@ return {
       "cloudlager",
       "cloudplads",
       "filer i skyen",
+      -- Tyske varianter (sendes også til danske modtagere)
+      "cloud-speicher",
+      "wolkenlager",
     },
     context_keywords = {
       "cloud storage is full",
@@ -178,6 +183,14 @@ return {
       "maksimale kapacitet",
       "rydde op i dit lager",
       "synkronisering af cloud-drev",
+      "lageret er nået til 100 procent",
+      "opgrader dit lager",
+      "explore storage plans",
+      "cloud storage options",
+      "speicherplatz ist vollständig belegt",
+      "speichergrenze ist erreicht",
+      "maximale kapazität",
+      "speicherplatz erhalten",
     },
     domains = {
       "cloudservices.com",

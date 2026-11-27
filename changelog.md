@@ -1,5 +1,11 @@
 # Ændringslog
 
+## 1.39.1 - 27. november 2026
+
+- `display-name-lookalike` ignorerer bøjninger, så fx "Service" ikke regnes som tastefejl af "services".
+- Lagerplads-svindel på tysk ("Cloud-Speicher", "Speicherplatz ist vollständig belegt", "Speichergrenze") og engelsk Black Friday-variant ("cloud storage options", "explore storage plans") fanges nu af `ORG_PHISHING_CLOUDSERVICES` og `ORG_PHISHING_STORAGE_SCAM`.
+- Sporingsparametre som `utm_source=chatgpt.com` tæller ikke længere som brandomtale, og OpenAI kræver nu målrettet kontekst også ved links til chatgpt.com (salgsmail fra Trustfeed fik fejlagtigt `ORG_PHISHING_OPENAI`).
+
 ## 1.39.0 - 20. november 2026
 
 - Butikkers mails med transportør (fx Matas med Burd) undtages nu, selvom vedhæftede PDF'er indeholder links til andre domæner – links fra vedhæftede filer tæller ikke i transportør-undtagelsen.

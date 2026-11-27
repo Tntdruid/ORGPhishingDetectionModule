@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Placeholder page on hosted domains: keep it out of search results. -->
+    <meta name="robots" content="noindex">
+    <title>Hostet af Bregnedal Systems</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath d='M48 3 88 16v30c0 26-16 42-40 50C24 88 8 72 8 46V16z' fill='%23287d7a'/%3E%3Cpath d='M48 3 88 16v30c0 26-16 42-40 50z' fill='%231f6866'/%3E%3Crect x='22' y='30' width='52' height='36' rx='5' fill='%23fff'/%3E%3Cpath d='m26 35 22 16 22-16' fill='none' stroke='%23287d7a' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <style>
+        :root {
+            --ink: #172b3a;
+            --muted: #60727d;
+            --paper: #f4f8f7;
+            --panel: #ffffff;
+            --line: #d9e5e1;
+            --accent: #d46f45;
+            --accent-dark: #ad4e2e;
+            --teal: #287d7a;
+            --teal-dark: #1f6866;
+            --check-ring: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --ink: #e7efed;
+                --muted: #a9bbb9;
+                --paper: #172321;
+                --panel: #1e2d2b;
+                --line: #3a514d;
+                --accent: #e58a61;
+                --accent-dark: #f0a27e;
+                --teal: #3b9992;
+                --teal-dark: #2f837d;
+                --check-ring: #172321;
+            }
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .wrap { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+        header { padding: 28px 0; }
+        .logo { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none; }
+        .logo svg { width: 44px; height: 44px; flex: none; }
+        .logo strong { display: block; font-size: 22px; letter-spacing: -.3px; }
+        .logo small { display: block; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: 3.5px; }
+
+        main { flex: 1; display: flex; align-items: center; padding: 24px 0 56px; }
+        .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 56px; align-items: center; }
+
+        .eyebrow { margin: 0 0 18px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+        .eyebrow span { color: var(--ink); overflow-wrap: anywhere; }
+
+        h1 { margin: 0 0 20px; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(36px, 5vw, 56px); font-weight: 400; line-height: 1.05; letter-spacing: -.02em; }
+        .lead { max-width: 520px; margin: 0 0 32px; color: var(--muted); font-size: 16px; line-height: 1.6; }
+
+        .cta { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 700; text-decoration: none; transition: background .15s; }
+        .cta:hover, .cta:focus-visible { background: var(--accent-dark); }
+        .cta:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+        .services { display: flex; flex-wrap: wrap; gap: 8px; margin: 36px 0 0; padding: 0; list-style: none; }
+        .services li { padding: 7px 12px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+
+        .card { position: relative; padding: 40px 32px 34px; background: var(--teal); color: #fff; }
+        .card::after { content: ""; position: absolute; inset: 14px -14px -14px 14px; z-index: -1; border: 1px solid var(--line); }
+        .card svg { display: block; width: 132px; height: 132px; margin: 0 auto 26px; }
+        .card h2 { margin: 0 0 10px; font-family: Georgia, 'Times New Roman', serif; font-size: 26px; font-weight: 400; text-align: center; }
+        .card p { margin: 0; color: rgba(255, 255, 255, .85); font-size: 14px; line-height: 1.55; text-align: center; }
+
+        footer { padding: 20px 0 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+        footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+        footer a { color: var(--muted); }
+
+        @media (max-width: 760px) {
+            .hero { grid-template-columns: 1fr; gap: 40px; }
+            .card { margin-right: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="wrap">
+            <a class="logo" href="https://mit.bregnedalsystems.dk/" aria-label="Bregnedal Systems">
+                <svg viewBox="0 0 96 96" aria-hidden="true">
+                    <path d="M48 5 85 17v29c0 24-15 39-37 47C26 85 11 70 11 46V17z" fill="var(--teal)"/>
+                    <path d="M48 5 85 17v29c0 24-15 39-37 47z" fill="var(--teal-dark)"/>
+                    <rect x="25" y="31" width="46" height="32" rx="5" fill="#fff"/>
+                    <path d="m28 35 20 15 20-15" fill="none" stroke="var(--teal)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="68" cy="62" r="11" fill="var(--accent)" stroke="var(--check-ring)" stroke-width="3"/>
+                    <path d="m63 62 3.5 3.5L73 59" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span><strong>Bregnedal</strong><small>SYSTEMS</small></span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="wrap hero">
+            <section>
+                <p class="eyebrow">Hostet af Bregnedal Systems<span id="domain"></span></p>
+                <h1>Vejen til en sikker og spamfri indbakke.</h1>
+                <p class="lead">Email hosting med effektivt spamfilter, webmail og dit eget domæne. Vi sørger for, at den vigtige post kommer frem, og at resten bliver væk.</p>
+                <a class="cta" href="https://mit.bregnedalsystems.dk/">Besøg Bregnedal Systems <span aria-hidden="true">→</span></a>
+                <ul class="services" aria-label="Tjenester">
+                    <li>Domæner</li>
+                    <li>Email</li>
+                    <li>CalDAV</li>
+                    <li>CardDAV</li>
+                    <li>Hosting</li>
+                </ul>
+            </section>
+
+            <aside class="card" aria-hidden="true">
+                <svg viewBox="0 0 96 96">
+                    <path d="M48 5 85 17v29c0 24-15 39-37 47C26 85 11 70 11 46V17z" fill="#ffffff"/>
+                    <path d="M48 5 85 17v29c0 24-15 39-37 47z" fill="#e6f0ef"/>
+                    <rect x="25" y="31" width="46" height="32" rx="5" fill="var(--teal)"/>
+                    <path d="m28 35 20 15 20-15" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="68" cy="62" r="11" fill="var(--accent)" stroke="#fff" stroke-width="3"/>
+                    <path d="m63 62 3.5 3.5L73 59" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h2>Din mail, filtreret og klar.</h2>
+                <p>Spam og phishing stoppes, før det når din indbakke.</p>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <span>© Bregnedal Systems · CVR 36338768</span>
+            <a href="https://mit.bregnedalsystems.dk/">mit.bregnedalsystems.dk</a>
+        </div>
+    </footer>
+
+    <script>
+        // Show which domain this page is on, e.g. "Hostet af Bregnedal Systems · eksempel.dk".
+        (function () {
+            var host = location.hostname.replace(/^www\./, '');
+            // Only show real domain names, not the server's IP address.
+            if (host && host.indexOf('.') > 0 && !/^[0-9.]+$/.test(host) && host.indexOf(':') === -1) {
+                document.getElementById('domain').textContent = ' · ' + host;
+            }
+        }());
+    </script>
+</body>
+</html>

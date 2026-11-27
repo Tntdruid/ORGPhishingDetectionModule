@@ -958,6 +958,46 @@ return {
     reject = true,
   },
   {
+    name = "Trustfeed-salgsmail med utm_source=chatgpt.com (ikke OpenAI)",
+    subject = "ræsenter din virksomhed, produkter og services på Trustfeed",
+    from_name = "Hannah Collins", from_domain = "trustdia.com",
+    body = "<https://tracking.sometyme.com/crt_visitor_id?id=41394403&redirect_url=https://www.trustfeed.com/"
+      .. "TrustfeedUserSignIn.aspx?utm_source=chatgpt.com> Vi vil gerne invitere din virksomhed til at blive en del af "
+      .. "Trustfeed. Priserne starter fra kun kr. 60,- om måneden ved årlig betaling. Se abonnementer og priser. "
+      .. "Registrér din virksomhed. https://www.trustfeed.com?utm_source=chatgpt.com",
+    urls = { "tracking.sometyme.com/crt_visitor_id", "www.trustfeed.com/TrustfeedUserSignIn.aspx", "chatgpt.com" },
+    miss = { "ORG_PHISHING_OPENAI" },
+  },
+  {
+    name = "Lagerplads-svindel på tysk fra Gmail (Google autogen)",
+    subject = "Status på din konto: Lageret er nået til 100 procent",
+    from_name = "Cloud System Notifikation", from_domain = "gmail.com",
+    headers = { ["Message-ID"] = "<autogen-java-97f5bbbc-7daf-473a-9b21-57cdbcfa6144@google.com>" },
+    body = "Ihr Cloud-Speicher ist voll. Erweitern Sie Ihren Speicherplatz um 2 TB. WOLKENLAGER. WICHTIGE MITTEILUNG ZU IHREM CLOUD-SPEICHER. Ihr Speicherplatz ist vollständig belegt! Ihr Cloud-Speicher hat seine maximale Kapazität erreicht. Ihre Speichergrenze ist erreicht. Neue Dateien und automatische Sicherungskopien können nicht mehr gespeichert werden. Jetzt 2 TB Speicherplatz erhalten",
+    urls = { "poia.info/4vFztX3409yIsY217knimyjjuzs261" },
+    hit = { "ORG_PHISHING_CLOUDSERVICES", "ORG_PHISHING_STORAGE_SCAM" },
+    reject = true,
+  },
+  {
+    name = "Cloud storage Black Friday med storage.googleapis.com (gitconnected.com)",
+    subject = "Reviewing seasonal cloud storage choices for home and work",
+    from_name = "Storage Notes", from_domain = "gitconnected.com",
+    body = "Cloud Storage. BLACK FRIDAY EDIT. Make room for what comes next. Your photos, documents and ideas keep growing. "
+      .. "This Black Friday, take a fresh look at your cloud storage options and find a colorful plan that fits. "
+      .. "Explore storage plans. Review plan details and pricing before you choose.",
+    urls = { "storage.googleapis.com/cloudefugfjmhdaa/li" },
+    hit = { "ORG_PHISHING_CLOUDSERVICES", "ORG_PHISHING_FREE_HOSTING" },
+  },
+  {
+    name = "Visningsnavn med bøjning (\"Service\" mod \"services\") er ikke en tastefejl",
+    subject = "Din lagerplads er fuld",
+    from_name = "Cloud Konto Service", from_domain = "example.org",
+    body = "Cloud services: din lagerplads er fuld. Få mere lagerplads.",
+    urls = { "example.org/plads" },
+    hit = { "ORG_PHISHING_CLOUDSERVICES" },
+    miss = { "ORG_PHISHING_SPOOF" },
+  },
+  {
     name = "Ikke hacket side: almindelige mappenavne",
     subject = "Ny ordre",
     from_name = "Webshop", from_domain = "shop.example",
